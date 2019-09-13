@@ -3,4 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="flatWhite">#F5F5F5</color>
+    <color name="flatTealBlue">#5AC8FA</color>
+    <color name="tomato">#ff6347</color>
+    <color name="lightOrange">#ffaa00</color>
+    <color name="lightGreen">#3dcc3d</color>
+    <color name="lightBlue">#00aaff</color>
+    <color name="lightTealBlue">#2bd9d9</color>
+    <color name="lightYellow">#ffd426</color>
+    <color name="darkFocus">#171228</color>
 </resources>

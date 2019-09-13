@@ -30,6 +30,7 @@
             android:name=".AboutActivity"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity android:name=".base.PermissionActivity" />
     </application>
 
 </manifest>

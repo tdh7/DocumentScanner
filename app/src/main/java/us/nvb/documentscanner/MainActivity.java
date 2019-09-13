@@ -27,9 +27,12 @@ import com.scanlibrary.ScanConstants;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+import us.nvb.documentscanner.base.PermissionActivity;
+
+public class MainActivity extends PermissionActivity {
 
     private static final int REQUEST_CODE = 99;
+    public static final String ACTION_PERMISSION_START_UP = "permission_start_up";
     //private ImageView scannedImageView;
     private ListView list;
     private ArrayList<String> alist;
@@ -51,6 +54,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
         list = findViewById(R.id.list);
+        //executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
+        executePermissionAction(new Intent(ACTION_PERMISSION_START_UP),PermissionActivity.PERMISSION_ALL);
+        //scannedImageView = (ImageView) findViewById(R.id.scannedImage);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(Intent intent, int permissionType, boolean granted) {
+        if(intent!=null) {
+            String action = intent.getAction();
+            if(action!=null)
+            switch (action) {
+                case ACTION_PERMISSION_START_UP:
+                    if(permissionType==PermissionActivity.PERMISSION_STORAGE && granted)
+                    showSavedList();
+                    break;
+            }
+        }
+    }
+
+    private void showSavedList() {
         list.setEmptyView(findViewById(R.id.empty_list));
         File file = new File(ScanConstants.PDF_PATH);
         alist = new ArrayList<>();
@@ -80,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         registerForContextMenu(list);
-        //scannedImageView = (ImageView) findViewById(R.id.scannedImage);
     }
 
     @Override

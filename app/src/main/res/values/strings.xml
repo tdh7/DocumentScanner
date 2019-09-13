@@ -3,4 +3,13 @@
     <string name="action_about">Thông tin</string>
     <string name="action_exit">Thoát</string>
     <string name="about_content">Môn: Quản lý dự án phần mềm\nNhóm: 10\nHọ tên: Nguyễn Văn Bình\nMSSV: 1412049\n\nPhần mềm hỗ trợ quét tài liệu từ hình ảnh chụp từ camera hoặc từ hình ảnh có sẵn trong thư viện ảnh. Phần mềm sẽ tự động nhận dạng vùng tài liệu, trong một số trường hợp không tự nhận dạng được thì có thể điều chỉnh bằng tay. Sau khi quét tài liệu xong, cho phép lưu ảnh ra file pdf và mở bằng ứng dụng đọc pdf có sẵn trong máy (có thể tích hợp đọc file pdf tuy nhiên thư viện khá nặng, sẽ gây tốn bộ nhớ nên em quyết định không tích hợp).</string>
+     <string name="ok_got_it">Ok, got it</string>
+    <string name="note_description">* This message will not display anymore when you pressed Ok button</string>
+    <string name="app_require_permissions">Permission required</string>
+    <string name="access_external_storage">Access External Storage</string>
+    <string name="access_camera">Access Camera</string>
+    <string name="storage_permission_description">Scanner requires storage permission to run correctly. Just accept the dialog that appears in next screen.</string>
+    <string name="camera_permisison_description">Allow Scanner access camera to take photos. Just accept the dialog that appear in next screen.</string>
+    <string name="permission_description">Scanner requires permission to run correctly. Please accept following dialogs that appear in next screen.</string>
+
 </resources>
