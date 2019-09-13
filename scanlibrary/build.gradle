@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 17
+        targetSdkVersion 29
+        versionCode 2
+        versionName "1.1.0"
         ndk
                 {
                     moduleName "Scanner"
@@ -28,6 +28,6 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    api 'com.android.support:support-v4:28.0.0'
+    api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.itextpdf:itextg:5.5.10'
 }

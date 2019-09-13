@@ -2,6 +2,7 @@
 
 buildscript {
     repositories {
+        google()
         repositories {
             jcenter()
             maven {
