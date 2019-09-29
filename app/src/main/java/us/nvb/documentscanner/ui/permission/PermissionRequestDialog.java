@@ -1,7 +1,6 @@
-package us.nvb.documentscanner.base;
+package us.nvb.documentscanner.ui.permission;
 
 import android.content.DialogInterface;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

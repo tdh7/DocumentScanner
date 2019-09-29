@@ -9,10 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
@@ -27,7 +23,11 @@ import com.scanlibrary.ScanConstants;
 import java.io.File;
 import java.util.ArrayList;
 
-import us.nvb.documentscanner.base.PermissionActivity;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import us.nvb.documentscanner.ui.page.AboutFragment;
+import us.nvb.documentscanner.ui.page.BlankFragment;
+import us.nvb.documentscanner.ui.permission.PermissionActivity;
 
 public class MainActivity extends PermissionActivity {
 
@@ -42,22 +42,15 @@ public class MainActivity extends PermissionActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startScan();
-            }
-        });
+        ButterKnife.bind(this);
+        initNavigation(savedInstanceState,R.id.container, BlankFragment.class);
 
         list = findViewById(R.id.list);
         //executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
         executePermissionAction(new Intent(ACTION_PERMISSION_START_UP),PermissionActivity.PERMISSION_ALL);
         //scannedImageView = (ImageView) findViewById(R.id.scannedImage);
     }
+
 
     @Override
     public void onRequestPermissionsResult(Intent intent, int permissionType, boolean granted) {
@@ -74,7 +67,7 @@ public class MainActivity extends PermissionActivity {
     }
 
     private void showSavedList() {
-        list.setEmptyView(findViewById(R.id.empty_list));
+        list.setEmptyView(findViewById(R.id.empty_list_view));
         File file = new File(ScanConstants.PDF_PATH);
         alist = new ArrayList<>();
         if (file.exists()) {
@@ -171,9 +164,15 @@ public class MainActivity extends PermissionActivity {
         return true;
     }
 
+    @OnClick(R.id.fab)
     protected void startScan() {
         Intent intent = new Intent(this, ScanActivity.class);
         startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @OnClick(R.id.app_bar)
+    void appBarClick() {
+        presentFragment(new AboutFragment());
     }
 
     @Override
@@ -223,25 +222,8 @@ public class MainActivity extends PermissionActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        switch (id) {
-
-            case R.id.action_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.action_exit:
-                finish();
-                System.exit(0);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
+    @OnClick(R.id.menu_icon)
+    void menuClick() {
+        presentFragment(new AboutFragment());
     }
 }

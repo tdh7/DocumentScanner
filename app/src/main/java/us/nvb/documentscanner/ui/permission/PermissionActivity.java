@@ -1,19 +1,20 @@
-package us.nvb.documentscanner.base;
+package us.nvb.documentscanner.ui.permission;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.ldt.navigation.ui.NavigationActivity;
+
 import java.util.ArrayList;
 
-public abstract class PermissionActivity extends AppCompatActivity implements PermissionRequestDialog.RequestResultCallback {
+public abstract class PermissionActivity extends NavigationActivity implements PermissionRequestDialog.RequestResultCallback {
     private static final String TAG = "PermissionActivity";
 
     public static final int PERMISSION_STORAGE = 1;
@@ -102,6 +103,7 @@ public abstract class PermissionActivity extends AppCompatActivity implements Pe
             onRequestPermissionsResult( mCurrentPermissionRequest,new String [] {"",""}, new int[] {PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_GRANTED} );
     }
 
+    @Override
     public final void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResult) {
         switch (requestCode) {
             case PERMISSION_STORAGE:
