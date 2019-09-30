@@ -28,6 +28,8 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    api 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    // Support Library
+    api 'androidx.appcompat:appcompat:1.1.0'
     api 'com.itextpdf:itextg:5.5.10'
 }

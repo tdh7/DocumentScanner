@@ -1,14 +1,16 @@
 package com.scanlibrary;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.ComponentCallbacks2;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-public class ScanActivity extends Activity implements IScanner, ComponentCallbacks2 {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+public class ScanActivity extends AppCompatActivity implements IScanner, ComponentCallbacks2 {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +23,7 @@ public class ScanActivity extends Activity implements IScanner, ComponentCallbac
     private void init() {
         pickImageFragment = new PickImageFragment();
 
-        android.app.FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.add(R.id.content, pickImageFragment);
@@ -39,7 +41,7 @@ public class ScanActivity extends Activity implements IScanner, ComponentCallbac
         Bundle bundle = new Bundle();
         bundle.putParcelable(ScanConstants.SELECTED_BITMAP, uri);
         fragment.setArguments(bundle);
-        android.app.FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(pickImageFragment);
         fragmentTransaction.add(R.id.content, fragment);
@@ -53,7 +55,7 @@ public class ScanActivity extends Activity implements IScanner, ComponentCallbac
         Bundle bundle = new Bundle();
         bundle.putParcelable(ScanConstants.SCANNED_RESULT, uri);
         fragment.setArguments(bundle);
-        android.app.FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content, fragment);
         fragmentTransaction.addToBackStack(ResultFragment.class.toString());
