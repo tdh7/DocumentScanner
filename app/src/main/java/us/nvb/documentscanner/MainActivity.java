@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import us.nvb.documentscanner.ui.page.AboutFragment;
 import us.nvb.documentscanner.ui.page.BlankFragment;
+import us.nvb.documentscanner.ui.page.SearchFragment;
 import us.nvb.documentscanner.ui.permission.PermissionActivity;
 
 public class MainActivity extends PermissionActivity {
@@ -50,21 +51,25 @@ public class MainActivity extends PermissionActivity {
         //executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
         executePermissionAction(new Intent(ACTION_PERMISSION_START_UP),PermissionActivity.PERMISSION_ALL);
         //scannedImageView = (ImageView) findViewById(R.id.scannedImage);
-        mAppBar.postDelayed(this::switchToSearchLabel,3000);
+        mAppBar.postDelayed(this::hideLogo,3000);
+
     }
 
-    @BindView(R.id.app_bar)
-    View mAppBar;
+    @BindView(R.id.app_bar) View mAppBar;
+    @BindView(R.id.app_icon) View mAppLogoIcon;
+    @BindView(R.id.app_title) View mAppTitle;
+    @BindView(R.id.search_hint) View mSearchHint;
+    @BindView(R.id.camera_icon) View mCameraIcon;
+    @BindView(R.id.add_image_icon) View mAddImageIcon;
 
-    @BindView(R.id.app_icon)
-    View mAppIconView;
-
-    @BindView(R.id.app_title)
-    View mAppTitleView;
-
-
-
-    private void switchToSearchLabel() {
+    private void hideLogo() {
+        mAppTitle.animate().alpha(0).scaleX(0.75f).scaleY(0.75f).setDuration(350).start();
+        mAppLogoIcon.animate().alpha(0).scaleX(0.75f).scaleY(0.75f).setDuration(350)
+                .withEndAction(() -> {
+                    mAddImageIcon.animate().alpha(1).scaleX(1).scaleY(1).setDuration(350).start();
+                    mCameraIcon.animate().alpha(1).scaleX(1).scaleY(1).setDuration(350).start();
+                    mSearchHint.animate().alpha(1).setDuration(350).start();
+                }).start();
 
     }
 
@@ -187,9 +192,19 @@ public class MainActivity extends PermissionActivity {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    @OnClick(R.id.app_bar)
+    @OnClick(R.id.search_hint)
     void appBarClick() {
-        presentFragment(new AboutFragment());
+        presentFragment(new SearchFragment());
+    }
+
+    @OnClick(R.id.add_image_icon)
+    void addPhoto() {
+
+    }
+
+    @OnClick(R.id.camera_icon)
+    void openCamera() {
+
     }
 
     @Override

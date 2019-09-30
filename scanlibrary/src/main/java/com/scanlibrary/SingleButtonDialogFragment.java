@@ -3,9 +3,10 @@ package com.scanlibrary;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.fragment.app.DialogFragment;
 
 @SuppressLint("ValidFragment")
 public class SingleButtonDialogFragment extends DialogFragment {

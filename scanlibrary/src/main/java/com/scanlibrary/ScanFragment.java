@@ -1,8 +1,6 @@
 package com.scanlibrary;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -19,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -169,7 +170,7 @@ public class ScanFragment extends Fragment {
 
     private void showErrorDialog() {
         SingleButtonDialogFragment fragment = new SingleButtonDialogFragment(R.string.ok, getString(R.string.cantCrop), "Error", true);
-        FragmentManager fm = getActivity().getFragmentManager();
+        androidx.fragment.app.FragmentManager fm = getActivity().getSupportFragmentManager();
         fragment.show(fm, SingleButtonDialogFragment.class.toString());
     }
 
@@ -234,7 +235,7 @@ public class ScanFragment extends Fragment {
 
     protected void showProgressDialog(String message) {
         progressDialogFragment = new ProgressDialogFragment(message);
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         progressDialogFragment.show(fm, ProgressDialogFragment.class.toString());
     }
 
