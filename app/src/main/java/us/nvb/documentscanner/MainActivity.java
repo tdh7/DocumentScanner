@@ -23,6 +23,7 @@ import com.scanlibrary.ScanConstants;
 import java.io.File;
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import us.nvb.documentscanner.ui.page.AboutFragment;
@@ -49,6 +50,22 @@ public class MainActivity extends PermissionActivity {
         //executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
         executePermissionAction(new Intent(ACTION_PERMISSION_START_UP),PermissionActivity.PERMISSION_ALL);
         //scannedImageView = (ImageView) findViewById(R.id.scannedImage);
+        mAppBar.postDelayed(this::switchToSearchLabel,3000);
+    }
+
+    @BindView(R.id.app_bar)
+    View mAppBar;
+
+    @BindView(R.id.app_icon)
+    View mAppIconView;
+
+    @BindView(R.id.app_title)
+    View mAppTitleView;
+
+
+
+    private void switchToSearchLabel() {
+
     }
 
 
