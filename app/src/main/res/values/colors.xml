@@ -8,8 +8,11 @@
     <color name="tomato">#ff6347</color>
     <color name="lightOrange">#ffaa00</color>
     <color name="lightGreen">#3dcc3d</color>
+    <color name="iconGreen">#1ABC9C</color>
     <color name="lightBlue">#00aaff</color>
     <color name="lightTealBlue">#2bd9d9</color>
     <color name="lightYellow">#ffd426</color>
     <color name="darkFocus">#171228</color>
+    <color name="flatYellow">#FFCC00</color>
+    <color name="flatOrange">#FF9500</color>
 </resources>

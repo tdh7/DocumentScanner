@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+  <!--  <item>
+        <shape
+            android:shape="rectangle">
+            <solid android:color="#FDFDFD" />
+            <stroke android:width="1dp" android:color="#55666666"/>
+            <padding
+                android:left="0dp"
+                android:bottom="0dp"
+                android:right="0dp"
+                android:top="0dp"/>
+            <corners android:radius="12dp" />
+        </shape>
+    </item>-->
+
+    <item>
+        <shape>
+            <corners android:radius="@dimen/app_bar_corner" />
+            <padding
+                android:top="1dp"
+                android:right="1dp"
+                android:bottom="1dp"
+                android:left="1dp"/>
+            <solid android:color="#00CCCCCC"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="@dimen/app_bar_corner" />
+            <padding
+                android:top="1dp"
+                android:right="1dp"
+                android:bottom="1dp"
+                android:left="1dp"/>
+            <solid android:color="#05CCCCCC"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="@dimen/app_bar_corner" />
+            <padding
+                android:top="1dp"
+                android:right="1dp"
+                android:bottom="1dp"
+                android:left="1dp"/>
+            <solid android:color="#10CCCCCC"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="@dimen/app_bar_corner" />
+            <padding
+                android:top="1dp"
+                android:right="1dp"
+                android:bottom="1dp"
+                android:left="1dp"/>
+            <solid android:color="#20CCCCCC"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="@dimen/app_bar_corner" />
+            <padding
+                android:top="1dp"
+                android:right="1dp"
+                android:bottom="1dp"
+                android:left="1dp"/>
+            <solid android:color="#30CCCCCC"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FAFAFA" />
+            <corners android:radius="@dimen/app_bar_corner" />
+            <stroke android:color="#88CCCCCC" android:width="1dp"/>
+        </shape>
+
+    </item>
+</layer-list>
