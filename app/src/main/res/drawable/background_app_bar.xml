@@ -56,7 +56,7 @@
                 android:right="1dp"
                 android:bottom="1dp"
                 android:left="1dp"/>
-            <solid android:color="#20CCCCCC"/>
+            <solid android:color="#17CCCCCC"/>
         </shape>
     </item>
     <item>
@@ -67,7 +67,7 @@
                 android:right="1dp"
                 android:bottom="1dp"
                 android:left="1dp"/>
-            <solid android:color="#30CCCCCC"/>
+            <solid android:color="#25CCCCCC"/>
         </shape>
     </item>
     <item>

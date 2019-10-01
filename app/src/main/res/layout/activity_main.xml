@@ -37,10 +37,10 @@
         app:layout_constraintTop_toTopOf="@id/app_bar"
         app:layout_constraintBottom_toBottomOf="@id/app_bar"
         app:layout_constraintEnd_toEndOf="@id/app_bar"
-        app:srcCompat="@drawable/camera_icon"
+        app:srcCompat="@drawable/ic_photo_camera_black_24dp"
         android:background="@drawable/ripple_transparent_50dp"
         android:tint="#626262"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="10dp"
         android:padding="11dp"
         android:alpha="0"
         android:scaleX="0"
@@ -88,6 +88,7 @@
         app:layout_constraintTop_toTopOf="@id/app_bar"
         android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="@id/app_bar"
+        tools:visibility="gone"
         />
     <ImageView
         android:id="@+id/app_icon"
@@ -98,19 +99,19 @@
         app:layout_constraintStart_toStartOf="@id/app_bar"
         android:src="@drawable/scan_stock_96"
         android:paddingTop="10dp"
-        android:tint="@color/flatOrange"
+        android:tint="#DE6501"
         android:paddingBottom="10dp"
         android:layout_marginEnd="4dp"
         app:layout_constraintEnd_toStartOf="@id/app_title"
         app:layout_constraintHorizontal_chainStyle="packed"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
     <TextView
         android:id="@+id/app_title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:fontFamily="@font/helvetica_font"
         android:textSize="15sp"
-        android:textColor="#626262"
+        android:textColor="#300D00"
         android:text="Scanner"
         android:textStyle="bold"
         android:paddingTop="4dp"
@@ -119,7 +120,7 @@
         app:layout_constraintTop_toTopOf="@id/app_bar"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@id/app_bar"
-        tools:visibility="gone"
+        tools:visibility="visible"
         />
         <TextView
             android:id="@+id/header_list"
