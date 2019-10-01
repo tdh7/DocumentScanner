@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,12 +18,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ScanConstants;
 
 import java.io.File;
 import java.util.ArrayList;
 
+import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -40,11 +46,16 @@ public class MainActivity extends PermissionActivity {
     private ArrayList<String> alist;
     private ArrayAdapter<String>adap;
 
+    @BindDimen(R.dimen.dp_unit)
+    float mOneDp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mDrawerParent.setScrimColor(0x33000000);
+        mDrawerParent.setDrawerElevation(mOneDp * 2f);
         initNavigation(savedInstanceState,R.id.container, BlankFragment.class);
 
         list = findViewById(R.id.list);
@@ -52,8 +63,10 @@ public class MainActivity extends PermissionActivity {
         executePermissionAction(new Intent(ACTION_PERMISSION_START_UP),PermissionActivity.PERMISSION_ALL);
         //scannedImageView = (ImageView) findViewById(R.id.scannedImage);
         mAppBar.postDelayed(this::hideLogo,3000);
-
     }
+
+    @BindView(R.id.drawer_parent)
+    DrawerLayout mDrawerParent;
 
     @BindView(R.id.app_bar) View mAppBar;
     @BindView(R.id.app_icon) View mAppLogoIcon;
@@ -72,7 +85,6 @@ public class MainActivity extends PermissionActivity {
                 }).start();
 
     }
-
 
     @Override
     public void onRequestPermissionsResult(Intent intent, int permissionType, boolean granted) {
@@ -186,27 +198,6 @@ public class MainActivity extends PermissionActivity {
         return true;
     }
 
-    @OnClick(R.id.fab)
-    protected void startScan() {
-        Intent intent = new Intent(this, ScanActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
-    }
-
-    @OnClick(R.id.search_hint)
-    void appBarClick() {
-        presentFragment(new SearchFragment());
-    }
-
-    @OnClick(R.id.add_image_icon)
-    void addPhoto() {
-
-    }
-
-    @OnClick(R.id.camera_icon)
-    void openCamera() {
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -256,6 +247,31 @@ public class MainActivity extends PermissionActivity {
 
     @OnClick(R.id.menu_icon)
     void menuClick() {
-        presentFragment(new AboutFragment());
+        //presentFragment(new AboutFragment());
+        mDrawerParent.openDrawer(GravityCompat.START);
+    }
+
+    /*
+    @OnClick(R.id.fab)
+    */
+    @OnClick(R.id.camera_icon)
+    protected void startScan() {
+        Intent intent = new Intent(this, ScanActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @OnClick(R.id.search_hint)
+    void appBarClick() {
+        presentFragment(new SearchFragment());
+    }
+
+    @OnClick(R.id.add_image_icon)
+    void addPhoto() {
+
+    }
+
+    @OnClick(R.id.camera_icon)
+    void openCamera() {
+
     }
 }
