@@ -80,7 +80,6 @@ public class ResultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 original.recycle();
-                System.gc();
                 getActivity().finish();
             }
         });
