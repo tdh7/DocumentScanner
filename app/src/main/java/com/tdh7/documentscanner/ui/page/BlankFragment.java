@@ -1,4 +1,4 @@
-package us.nvb.documentscanner.ui.page;
+package com.tdh7.documentscanner.ui.page;
 
 import android.view.LayoutInflater;
 import android.view.View;

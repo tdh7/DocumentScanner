@@ -1,4 +1,4 @@
-package us.nvb.documentscanner;
+package com.tdh7.documentscanner;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -36,10 +34,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
-import us.nvb.documentscanner.ui.page.AboutFragment;
-import us.nvb.documentscanner.ui.page.BlankFragment;
-import us.nvb.documentscanner.ui.page.SearchFragment;
-import us.nvb.documentscanner.ui.permission.PermissionActivity;
+
+import com.tdh7.documentscanner.ui.page.BlankFragment;
+import com.tdh7.documentscanner.ui.page.SearchFragment;
+import com.tdh7.documentscanner.ui.permission.PermissionActivity;
 
 public class MainActivity extends PermissionActivity {
     public static final String TAG ="MainActivity";

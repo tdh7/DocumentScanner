@@ -1,4 +1,4 @@
-package us.nvb.documentscanner.ui.permission;
+package com.tdh7.documentscanner.ui.permission;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import us.nvb.documentscanner.R;
+import com.tdh7.documentscanner.R;
 
 public class PermissionRequestDialog extends DialogFragment implements View.OnClickListener {
     public static final String TAG = "PermissionRequestDialog";
