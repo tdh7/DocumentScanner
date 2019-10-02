@@ -1,4 +1,4 @@
-package com.tdh7.documentscanner.ui.permission;
+package com.tdh7.documentscanner.ui.permissionscreen;
 
 import android.Manifest;
 import android.content.Intent;

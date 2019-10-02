@@ -35,9 +35,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-import com.tdh7.documentscanner.ui.page.BlankFragment;
-import com.tdh7.documentscanner.ui.page.SearchFragment;
-import com.tdh7.documentscanner.ui.permission.PermissionActivity;
+import com.tdh7.documentscanner.ui.fragments.BlankFragment;
+import com.tdh7.documentscanner.ui.fragments.SearchFragment;
+import com.tdh7.documentscanner.ui.permissionscreen.PermissionActivity;
 
 public class MainActivity extends PermissionActivity {
     public static final String TAG ="MainActivity";

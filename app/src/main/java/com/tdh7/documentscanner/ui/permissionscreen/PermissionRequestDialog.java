@@ -1,4 +1,4 @@
-package com.tdh7.documentscanner.ui.permission;
+package com.tdh7.documentscanner.ui.permissionscreen;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
