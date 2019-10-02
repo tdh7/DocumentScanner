@@ -32,4 +32,7 @@ dependencies {
     // Support Library
     api 'androidx.appcompat:appcompat:1.1.0'
     api 'com.itextpdf:itextg:5.5.10'
+
+    // Toasty
+    api 'com.github.GrenderG:Toasty:1.4.2'
 }

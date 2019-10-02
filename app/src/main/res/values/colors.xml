@@ -15,4 +15,6 @@
     <color name="darkFocus">#171228</color>
     <color name="flatYellow">#FFCC00</color>
     <color name="flatOrange">#FF9500</color>
+    <color name="scanner_theme_color">#DE6501</color>
+    <color name="scanner_text_color">#300D00</color>
 </resources>

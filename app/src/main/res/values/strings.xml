@@ -11,5 +11,8 @@
     <string name="storage_permission_description">Scanner requires storage permission to run correctly. Just accept the dialog that appears in next screen.</string>
     <string name="camera_permisison_description">Allow Scanner access camera to take photos. Just accept the dialog that appear in next screen.</string>
     <string name="permission_description">Scanner requires permission to run correctly. Please accept following dialogs that appear in next screen.</string>
+    <string name="about">Licenses &amp; About</string>
+    <string name="your_documents">Your documents</string>
+    <string name="open_pdf_error">Unable to open pdf file</string>
 
 </resources>
