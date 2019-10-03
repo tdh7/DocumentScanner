@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "us.nvb.documentscanner"
+        applicationId "com.tdh7.documentscanner"
         minSdkVersion 17
         targetSdkVersion 29
         versionCode 3
@@ -46,4 +46,7 @@ dependencies {
     // Butter Knife
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+
+    // Fotoapparat Camera Library
+    implementation 'io.fotoapparat:fotoapparat:2.7.0'
 }
