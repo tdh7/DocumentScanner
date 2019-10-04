@@ -3,7 +3,7 @@
     <string name="action_about">Thông tin</string>
     <string name="action_exit">Thoát</string>
     <string name="about_content">Môn: Quản lý dự án phần mềm\nNhóm: 10\nHọ tên: Nguyễn Văn Bình\nMSSV: 1412049\n\nPhần mềm hỗ trợ quét tài liệu từ hình ảnh chụp từ camera hoặc từ hình ảnh có sẵn trong thư viện ảnh. Phần mềm sẽ tự động nhận dạng vùng tài liệu, trong một số trường hợp không tự nhận dạng được thì có thể điều chỉnh bằng tay. Sau khi quét tài liệu xong, cho phép lưu ảnh ra file pdf và mở bằng ứng dụng đọc pdf có sẵn trong máy (có thể tích hợp đọc file pdf tuy nhiên thư viện khá nặng, sẽ gây tốn bộ nhớ nên em quyết định không tích hợp).</string>
-     <string name="ok_got_it">Ok, got it</string>
+    <string name="ok_got_it">Ok, got it</string>
     <string name="note_description">* This message will not display anymore when you pressed Ok button</string>
     <string name="app_require_permissions">Permission required</string>
     <string name="access_external_storage">Access External Storage</string>
@@ -14,5 +14,23 @@
     <string name="about">Licenses &amp; About</string>
     <string name="your_documents">Your documents</string>
     <string name="open_pdf_error">Unable to open pdf file</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="home_second">Home Second</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="hello_home_second">Hello HomeSecondFragment. Arg: %1$s</string>
+    <string name="hello_gallery_second">Hello HomeSecondFragment. Arg: %1$s</string>
+    <string name="hello_slideshow_second">Hello HomeSecondFragment. Arg: %1$s</string>
 
 </resources>

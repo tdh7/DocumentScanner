@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.tdh7.documentscanner.R;
@@ -36,5 +37,10 @@ public class SearchFragment extends NavigationFragment {
 
     @OnClick(R.id.back_button)
     void back() {dismiss();}
+    @BindView(R.id.back_button) View mBackButton;
 
+    @Override
+    public void onSetStatusBarMargin(int value) {
+        ((ViewGroup.MarginLayoutParams)mBackButton.getLayoutParams()).topMargin+=value;
+    }
 }

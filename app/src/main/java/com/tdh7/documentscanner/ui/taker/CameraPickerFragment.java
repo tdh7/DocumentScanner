@@ -14,7 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ldt.navigation.NavigationFragment;
+import com.scanlibrary.ScanComponent;
 import com.tdh7.documentscanner.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -24,6 +27,8 @@ import io.fotoapparat.configuration.CameraConfiguration;
 import io.fotoapparat.configuration.Configuration;
 import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.ScaleType;
+import io.fotoapparat.preview.Frame;
+import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.selector.AntiBandingModeSelectorsKt;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
@@ -48,8 +53,10 @@ public class CameraPickerFragment extends NavigationFragment {
     @Nullable
     @Override
     protected View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.camera_picker_layout,container,false);
+        View root = inflater.inflate(R.layout.camera_picker_layout,container,false);
+        return root;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -71,8 +78,10 @@ public class CameraPickerFragment extends NavigationFragment {
         mFotoapparat.stop();
     }
 
+    CameraConfiguration mCameraConfiguration;
+
     private void init() {
-         CameraConfiguration mCameraConfiguration = CameraConfiguration
+         mCameraConfiguration = CameraConfiguration
                 .builder()
                  .antiBandingMode(AntiBandingModeSelectorsKt.hz50())
                 .photoResolution(standardRatio(
@@ -97,13 +106,11 @@ public class CameraPickerFragment extends NavigationFragment {
                 .with(getContext())
                 .into(mCameraView)
                 .focusView(mFocusView)
-                .previewScaleType(ScaleType.CenterInside)
+                .previewScaleType(ScaleType.CenterCrop)
                 .lensPosition(back())
                 .build();
         mFotoapparat.updateConfiguration(mCameraConfiguration);
     }
-
-    Configuration mConfiguration;
 
     private Fotoapparat mFotoapparat;
 
@@ -116,10 +123,10 @@ public class CameraPickerFragment extends NavigationFragment {
    @BindView(R.id.focusView)
     FocusView mFocusView;
 
- /*   @Override
-    public int defaultTransition() {
-        return PresentStyle.STACK_LEFT;
-    }*/
+   @BindView(R.id.root)
+   View mRoot;
+
+   ScanComponent mScanComponent = new ScanComponent();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,20 +136,20 @@ public class CameraPickerFragment extends NavigationFragment {
     @Override
     public void onResume() {
         super.onResume();
-        resumeCamera();
-    }
-
-    private void resumeCamera() {
-        //mCameraKitView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        //mCameraKitView.onPause();
-        super.onPause();
+        mRoot.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     public interface CameraPickerListener {
         boolean onNewCapture(Bitmap bmp);
+    }
+
+    private class SampleFrameProcessor implements FrameProcessor {
+        @Override
+        public void process(@NonNull Frame frame) {
+            // Perform frame processing, if needed
+
+        }
     }
 }

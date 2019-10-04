@@ -15,7 +15,7 @@
         android:hardwareAccelerated="true"
         android:label="@string/app_name" >
         <activity
-            android:name=".ScanActivity"
+            android:name=".ScannerActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" >
         </activity>
