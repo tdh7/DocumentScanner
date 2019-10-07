@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,7 @@ public class PolygonView extends FrameLayout {
         paint.setAntiAlias(true);
     }
 
-    public Map<Integer, PointF> getPoints() {
+    public SparseArray<PointF> getPoints() {
 
         List<PointF> points = new ArrayList<PointF>();
         points.add(new PointF(pointer1.getX(), pointer1.getY()));
@@ -101,7 +102,7 @@ public class PolygonView extends FrameLayout {
         return getOrderedPoints(points);
     }
 
-    public Map<Integer, PointF> getOrderedPoints(List<PointF> points) {
+    public SparseArray<PointF> getOrderedPoints(List<PointF> points) {
 
         /*PointF centerPoint = new PointF();
         int size = points.size();
@@ -144,7 +145,7 @@ public class PolygonView extends FrameLayout {
             points.set(2, points.get(3));
             points.set(3, a);
         }
-        Map<Integer, PointF> orderedPoints = new HashMap<>();
+        SparseArray<PointF> orderedPoints = new SparseArray<>();
         orderedPoints.put(0, points.get(0));
         orderedPoints.put(1, points.get(1));
         orderedPoints.put(2, points.get(2));
@@ -152,13 +153,13 @@ public class PolygonView extends FrameLayout {
         return orderedPoints;
     }
 
-    public void setPoints(Map<Integer, PointF> pointFMap) {
+    public void setPoints(SparseArray<PointF> pointFMap) {
         if (pointFMap.size() == 4) {
             setPointsCoordinates(pointFMap);
         }
     }
 
-    private void setPointsCoordinates(Map<Integer, PointF> pointFMap) {
+    private void setPointsCoordinates(SparseArray<PointF> pointFMap) {
         pointer1.setX(pointFMap.get(0).x);
         pointer1.setY(pointFMap.get(0).y);
 
@@ -272,7 +273,7 @@ public class PolygonView extends FrameLayout {
         return super.onTouchEvent(event);
     }
 
-    public boolean isValidShape(Map<Integer, PointF> pointFMap) {
+    public boolean isValidShape(SparseArray<PointF> pointFMap) {
         return pointFMap.size() == 4;
     }
 

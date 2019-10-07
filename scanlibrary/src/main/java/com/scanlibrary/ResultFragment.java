@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -250,7 +249,7 @@ public class ResultFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        transformed = ((ScanActivity) getActivity()).getBWBitmap(original);
+                        transformed = ((ScannerActivity) getActivity()).getBWBitmap(original);
                     } catch (final OutOfMemoryError e) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -283,7 +282,7 @@ public class ResultFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        transformed = ((ScanActivity) getActivity()).getMagicColorBitmap(original);
+                        transformed = ((ScannerActivity) getActivity()).getMagicColorBitmap(original);
                     } catch (final OutOfMemoryError e) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -331,7 +330,7 @@ public class ResultFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        transformed = ((ScanActivity) getActivity()).getGrayBitmap(original);
+                        transformed = ((ScannerActivity) getActivity()).getGrayBitmap(original);
                     } catch (final OutOfMemoryError e) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

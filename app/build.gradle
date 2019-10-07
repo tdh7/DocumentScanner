@@ -5,10 +5,14 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.tdh7.documentscanner"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 3
         versionName "1.1.1"
+
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
+
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

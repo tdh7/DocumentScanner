@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +105,7 @@ public class ScanFragment extends Fragment {
         Bitmap scaledBitmap = scaledBitmap(original, sourceFrame.getWidth(), sourceFrame.getHeight());
         sourceImageView.setImageBitmap(scaledBitmap);
         Bitmap tempBitmap = ((BitmapDrawable) sourceImageView.getDrawable()).getBitmap();
-        Map<Integer, PointF> pointFs = getEdgePoints(tempBitmap);
+        SparseArray<PointF> pointFs = getEdgePoints(tempBitmap);
         polygonView.setPoints(pointFs);
         polygonView.setVisibility(View.VISIBLE);
         int padding = (int) getResources().getDimension(R.dimen.scanPadding);
@@ -113,9 +114,9 @@ public class ScanFragment extends Fragment {
         polygonView.setLayoutParams(layoutParams);
     }
 
-    private Map<Integer, PointF> getEdgePoints(Bitmap tempBitmap) {
+    private SparseArray<PointF> getEdgePoints(Bitmap tempBitmap) {
         List<PointF> pointFs = getContourEdgePoints(tempBitmap);
-        Map<Integer, PointF> orderedPoints = orderedValidEdgePoints(tempBitmap, pointFs);
+        SparseArray<PointF> orderedPoints = orderedValidEdgePoints(tempBitmap, pointFs);
         return orderedPoints;
     }
 
@@ -139,8 +140,8 @@ public class ScanFragment extends Fragment {
         return pointFs;
     }
 
-    private Map<Integer, PointF> getOutlinePoints(Bitmap tempBitmap) {
-        Map<Integer, PointF> outlinePoints = new HashMap<>();
+    private  static SparseArray<PointF> getOutlinePoints(Bitmap tempBitmap) {
+        SparseArray<PointF> outlinePoints = new SparseArray<>();
         outlinePoints.put(0, new PointF(0, 0));
         outlinePoints.put(1, new PointF(tempBitmap.getWidth(), 0));
         outlinePoints.put(2, new PointF(0, tempBitmap.getHeight()));
@@ -148,8 +149,8 @@ public class ScanFragment extends Fragment {
         return outlinePoints;
     }
 
-    private Map<Integer, PointF> orderedValidEdgePoints(Bitmap tempBitmap, List<PointF> pointFs) {
-        Map<Integer, PointF> orderedPoints = polygonView.getOrderedPoints(pointFs);
+    private SparseArray<PointF> orderedValidEdgePoints(Bitmap tempBitmap, List<PointF> pointFs) {
+        SparseArray<PointF> orderedPoints = polygonView.getOrderedPoints(pointFs);
         if (!polygonView.isValidShape(orderedPoints)) {
             orderedPoints = getOutlinePoints(tempBitmap);
         }
@@ -159,7 +160,7 @@ public class ScanFragment extends Fragment {
     private class ScanButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Map<Integer, PointF> points = polygonView.getPoints();
+            SparseArray<PointF> points = polygonView.getPoints();
             if (isScanPointsValid(points)) {
                 new ScanAsyncTask(points).execute();
             } else {
@@ -174,7 +175,7 @@ public class ScanFragment extends Fragment {
         fragment.show(fm, SingleButtonDialogFragment.class.toString());
     }
 
-    private boolean isScanPointsValid(Map<Integer, PointF> points) {
+    private boolean isScanPointsValid(SparseArray<PointF> points) {
         return points.size() == 4;
     }
 
@@ -184,7 +185,7 @@ public class ScanFragment extends Fragment {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
     }
 
-    private Bitmap getScannedBitmap(Bitmap original, Map<Integer, PointF> points) {
+    private Bitmap getScannedBitmap(Bitmap original, SparseArray<PointF> points) {
         int width = original.getWidth();
         int height = original.getHeight();
         float xRatio = (float) original.getWidth() / sourceImageView.getWidth();
@@ -205,9 +206,9 @@ public class ScanFragment extends Fragment {
 
     private class ScanAsyncTask extends AsyncTask<Void, Void, Bitmap> {
 
-        private Map<Integer, PointF> points;
+        private SparseArray<PointF> points;
 
-        public ScanAsyncTask(Map<Integer, PointF> points) {
+        public ScanAsyncTask(SparseArray<PointF> points) {
             this.points = points;
         }
 

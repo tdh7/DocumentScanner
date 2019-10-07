@@ -10,20 +10,26 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class ScannerActivity extends AppCompatActivity implements IScanner, ComponentCallbacks2 {
+    private ScanComponent mScanComponent = new ScanComponent();
 
-    public native Bitmap getScannedBitmap(Bitmap bitmap, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
+    public Bitmap getScannedBitmap(Bitmap bitmap, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+        return mScanComponent.getScannedBitmap(bitmap,x1,y1,x2,y2,x3,y3,x4,y4);
+    }
 
-    public native Bitmap getGrayBitmap(Bitmap bitmap);
+    public Bitmap getGrayBitmap(Bitmap bitmap) {
+        return mScanComponent.getGrayBitmap(bitmap);
+    }
 
-    public native Bitmap getMagicColorBitmap(Bitmap bitmap);
+    public Bitmap getMagicColorBitmap(Bitmap bitmap) {
+        return mScanComponent.getMagicColorBitmap(bitmap);
+    }
 
-    public native Bitmap getBWBitmap(Bitmap bitmap);
+    public Bitmap getBWBitmap(Bitmap bitmap) {
+        return mScanComponent.getBWBitmap(bitmap);
+    }
 
-    public native float[] getPoints(Bitmap bitmap);
-
-    static {
-        System.loadLibrary("opencv_java3");
-        System.loadLibrary("Scanner");
+    public float[] getPoints(Bitmap bitmap) {
+        return mScanComponent.getPoints(bitmap);
     }
 
     @Override

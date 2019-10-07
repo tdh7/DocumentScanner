@@ -1,9 +1,7 @@
 package com.scanlibrary;
 
 import android.graphics.Bitmap;
-
-
-public class ScanActivity {
+class ScanActivity {
 
     public native Bitmap getScannedBitmap(Bitmap bitmap, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
 

@@ -28,8 +28,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.ldt.navigation.NavigationFragment;
-import com.scanlibrary.ScanActivity;
 import com.scanlibrary.ScanConstants;
+import com.scanlibrary.ScannerActivity;
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.taker.CameraPickerFragment;
@@ -294,7 +294,7 @@ public class MainFragment extends NavigationFragment {
     */
     @OnClick(R.id.pick_photo_icon)
     protected void startScan() {
-        Intent intent = new Intent(getActivity(), ScanActivity.class);
+        Intent intent = new Intent(getActivity(), ScannerActivity.class);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
