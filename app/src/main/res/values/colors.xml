@@ -15,6 +15,15 @@
     <color name="darkFocus">#171228</color>
     <color name="flatYellow">#FFCC00</color>
     <color name="flatOrange">#FF9500</color>
+    <color name="flatRed">#FF3B30</color>
     <color name="scanner_theme_color">#DE6501</color>
     <color name="scanner_text_color">#300D00</color>
+    <color name="heavyOrange">#AF8700</color>
+    <color name="heavyRed">#770000</color>
+    <color name="heavyTealBlue">#0058AA</color>
+    <color name="heavyYellow">#802D00</color>
+    <color name="heavyGreen">#005800</color>
+    <color name="heavyBlue">#00218B</color>
+    <color name="heavyPurple">#162EA6</color>
+    <color name="heavyPink">#B60024</color>
 </resources>

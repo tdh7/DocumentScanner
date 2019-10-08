@@ -3,4 +3,21 @@
     <declare-styleable name="MarkerView">
         <attr name="showIfNoDetect" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="CaptureView">
+        <attr name="captureMode" format="enum">
+            <enum name="autoCapture" value="0"/>
+            <enum name="manualCapture" value="1"/>
+        </attr>
+
+        <attr name="insideColor" format="color"/>
+        <attr name="insideActiveColor" format="color"/>
+        <attr name="outlineColor" format="color"/>
+        <attr name="autolineColor" format="color"/>
+        
+        <attr name="strokeOutlinePercent" format="float"/>
+        <attr name="distancePercent" format="float" />
+        <attr name="distanceActivePercent" format="float"/>
+        <attr name="animateSwitchDuration" format="integer"/>
+        <attr name="autoDurationPerRound" format="integer" />
+    </declare-styleable>
 </resources>

@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,10 +32,14 @@ import com.ldt.navigation.PresentStyle;
 import com.scanlibrary.PolygonView;
 import com.scanlibrary.ScanComponent;
 import com.scanlibrary.ScannerActivity;
+import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.MainActivity;
+import com.tdh7.documentscanner.ui.widget.CaptureView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
+import com.tdh7.documentscanner.util.PreferenceUtil;
 import com.tdh7.documentscanner.util.RenderScriptHelper;
+import com.tdh7.documentscanner.util.Tool;
 import com.tdh7.documentscanner.util.Util;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +55,7 @@ import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
 import io.fotoapparat.configuration.Configuration;
@@ -57,6 +64,9 @@ import io.fotoapparat.parameter.Resolution;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
+import io.fotoapparat.result.BitmapPhoto;
+import io.fotoapparat.result.PhotoResult;
+import io.fotoapparat.result.WhenDoneListener;
 import io.fotoapparat.selector.AntiBandingModeSelectorsKt;
 import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.view.CameraView;
@@ -93,6 +103,21 @@ public class CameraPickerFragment extends NavigationFragment {
         ButterKnife.bind(this,view);
 
         init();
+        restoreCaptureMode();
+    }
+
+    private void restoreCaptureMode() {
+        mCaptureMode = PreferenceUtil.getInstance().getSavedCaptureMode();
+        if(mCaptureMode==CaptureView.MODE_AUTO_CAPTURE) {
+            mCaptureIcon.setTranslationY(63*mDpUnit);
+            mCaptureIcon.setScaleX(0.4f);
+            mCaptureIcon.setScaleY(0.4f);
+            mAutoCaptureButton.setTextColor(getResources().getColor(R.color.flatOrange));
+            mManualCaptureButton.setTextColor(getResources().getColor(R.color.flatWhite));
+            mAutoCaptureButton.setTranslationX(0);
+            mManualCaptureButton.setTranslationX(0);
+            mCaptureIcon.setCaptureMode(mCaptureMode);
+        }
     }
 
     @Override
@@ -152,7 +177,17 @@ public class CameraPickerFragment extends NavigationFragment {
 
     @Override
     public void onSetStatusBarMargin(int value) {
-        ((ViewGroup.MarginLayoutParams)mStatusView.getLayoutParams()).topMargin =value;
+        ((ViewGroup.MarginLayoutParams)mStatusView.getLayoutParams()).height = value;
+
+       int height = Tool.getScreenSize(getContext())[1];
+       int fragmentHeight = getActivity().findViewById(R.id.container).getHeight();
+
+       if(fragmentHeight<height) {
+           // this means a navigation bar existed
+           ((ViewGroup.MarginLayoutParams)mCameraCardView.getLayoutParams()).topMargin = value;
+       } else {
+           // do nothing
+       }
     }
 
     private EdgeFrameProcessor mEdgeFrameProcessor ;
@@ -180,10 +215,13 @@ public class CameraPickerFragment extends NavigationFragment {
    @BindView(R.id.root)
    View mRoot;
 
-   @BindView(R.id.capture_icon)
-   ImageView mCaptureIcon;
+   @BindView(R.id.camera_card_view)
+   View mCameraCardView;
 
-   private boolean mAutoCaptureMode = true;
+   @BindView(R.id.capture_icon)
+   CaptureView mCaptureIcon;
+
+   private int mCaptureMode = CaptureView.MODE_AUTO_CAPTURE;
 
    @BindView(R.id.auto_capture_text)
    TextView mAutoCaptureButton;
@@ -191,13 +229,27 @@ public class CameraPickerFragment extends NavigationFragment {
    @BindView(R.id.manual_text)
    TextView mManualCaptureButton;
 
+   @OnClick(R.id.capture_icon)
+   void capture() {
+       mCaptureIcon.onCaptured();
+       PhotoResult result = mFotoapparat.takePicture();
+       result.toBitmap().whenDone(new WhenDoneListener<BitmapPhoto>() {
+           @Override
+           public void whenDone(BitmapPhoto bitmapPhoto) {
+               Toasty.success(App.getInstance(),"Take it!").show();
+           }
+       });
+   }
+
     @OnClick(R.id.manual_text)
     void manualCapture() {
-       if(mAutoCaptureMode) {
-           mAutoCaptureMode =false;
 
+       if(mCaptureMode!=CaptureView.MODE_MANUAL_CAPTURE) {
+           mCaptureMode = CaptureView.MODE_MANUAL_CAPTURE;
+           PreferenceUtil.getInstance().setSavedOriginal3DPhoto(mCaptureMode);
+           mCaptureIcon.setCaptureMode(mCaptureMode);
 
-           mCaptureIcon.animate().scaleX(1f).scaleY(1f).translationY(0).withEndAction(new Runnable() {
+           mCaptureIcon.animate().scaleX(1f).scaleY(1f).translationY(0).setInterpolator(new DecelerateInterpolator()).withEndAction(new Runnable() {
                @Override
                public void run() {
                    mManualCaptureButton.setTextColor(getResources().getColor(R.color.flatOrange));
@@ -211,9 +263,11 @@ public class CameraPickerFragment extends NavigationFragment {
    }
     @OnClick(R.id.auto_capture_text)
    void autoCapture() {
-       if(!mAutoCaptureMode) {
-           mAutoCaptureMode = true;
-           mCaptureIcon.animate().scaleX(0.4f).scaleY(0.4f).translationY(63*mDpUnit)
+       if(mCaptureMode!=CaptureView.MODE_AUTO_CAPTURE) {
+           mCaptureMode = CaptureView.MODE_AUTO_CAPTURE;
+           PreferenceUtil.getInstance().setSavedOriginal3DPhoto(mCaptureMode);
+           mCaptureIcon.setCaptureMode(mCaptureMode);
+           mCaptureIcon.animate().scaleX(0.4f).scaleY(0.4f).translationY(63*mDpUnit).setInterpolator(new OvershootInterpolator())
                    .withEndAction(new Runnable() {
                        @Override
                        public void run() {
