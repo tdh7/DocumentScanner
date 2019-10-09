@@ -35,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
+import com.scanlibrary.SelectImageActivity;
 import com.tdh7.documentscanner.ui.fragments.BlankFragment;
 import com.tdh7.documentscanner.ui.fragments.SearchFragment;
 import com.tdh7.documentscanner.ui.permissionscreen.PermissionActivity;
@@ -302,7 +303,8 @@ public class MainActivity extends PermissionActivity {
 
     @OnClick(R.id.add_image_icon)
     void addPhoto() {
-
+        Intent intent = new Intent(this, SelectImageActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.camera_icon)

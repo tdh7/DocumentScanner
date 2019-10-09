@@ -39,6 +39,7 @@ dependencies {
 
     // Design
     implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
 
     // Navigation Controller
     implementation 'com.github.tdh7:NavigationController:1.0.0'
