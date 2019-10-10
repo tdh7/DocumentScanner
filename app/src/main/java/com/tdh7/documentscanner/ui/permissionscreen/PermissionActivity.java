@@ -34,6 +34,10 @@ public abstract class PermissionActivity extends NavigationActivity implements P
         }
     }
 
+    public final void executePermissionActionWithCallback(PermissionSessionRequestCallback callback, Intent intent, int permission) {
+
+    }
+
     public final void executeWriteStorageAction(Intent intent) {
         if(intent==null) return;
         mCurrentPermissionRequest = PERMISSION_STORAGE;
@@ -104,6 +108,7 @@ public abstract class PermissionActivity extends NavigationActivity implements P
 
     @Override
     public final void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResult) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResult);
         switch (requestCode) {
             case PERMISSION_STORAGE:
                 if(permissions.length >0&& grantResult.length>0)
@@ -172,11 +177,11 @@ public abstract class PermissionActivity extends NavigationActivity implements P
     }
 
     public interface PermissionSessionRequestCallback {
-
+        void onRequestPermissionsResult(Intent intent, int permissionType, boolean granted);
     }
 
     public interface PermissionCallback {
-        public void onPermissionChanged(int permission, boolean result);
+        public void onReceivePermissionResult(int permission, boolean result);
     }
 
     public ArrayList<PermissionCallback> mPermissionCallbacks = new ArrayList<>();

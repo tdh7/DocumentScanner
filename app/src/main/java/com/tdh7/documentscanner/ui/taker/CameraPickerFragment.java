@@ -25,6 +25,7 @@ import android.widget.TextView;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.renderscript.RenderScript;
 
 import com.ldt.navigation.NavigationFragment;
@@ -35,6 +36,7 @@ import com.scanlibrary.ScannerActivity;
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.MainActivity;
+import com.tdh7.documentscanner.ui.scansession.WorkingSessionFragment;
 import com.tdh7.documentscanner.ui.widget.CaptureView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 import com.tdh7.documentscanner.util.PreferenceUtil;
@@ -55,11 +57,8 @@ import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
-import io.fotoapparat.configuration.Configuration;
-import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Resolution;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
@@ -68,7 +67,6 @@ import io.fotoapparat.result.BitmapPhoto;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.result.WhenDoneListener;
 import io.fotoapparat.selector.AntiBandingModeSelectorsKt;
-import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
 
@@ -86,8 +84,9 @@ import static io.fotoapparat.selector.ResolutionSelectorsKt.highestResolution;
 import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
 
-public class CameraPickerFragment extends NavigationFragment {
+public class CameraPickerFragment extends NavigationFragment implements CaptureView.CaptureListener, WhenDoneListener<BitmapPhoto> {
     private static final String TAG = "CameraPickerFragment";
+    public static final int PERMISSION_CAMERA = 1;
 
     @Nullable
     @Override
@@ -96,6 +95,46 @@ public class CameraPickerFragment extends NavigationFragment {
         return root;
     }
 
+    private View mPermissionView = null;
+
+    private void bindPermissionScreen() {
+        boolean hasPermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED;
+        if(hasPermission) {
+            removePermissionScreenIfAny();
+            mFotoapparat.start();
+        }
+        else showPermissionScreen();
+    }
+
+    private void showPermissionScreen() {
+        if(getContext()!=null&&mPermissionView==null) {
+         mPermissionView = LayoutInflater.from(getContext()).inflate(R.layout.camera_ask_permission,mRoot,false);
+        View button = mPermissionView.findViewById(R.id.button);
+        if(button!=null) button.setOnClickListener(this::allowAccess);
+         mRoot.addView(mPermissionView);
+        }
+    }
+
+    private void allowAccess(View ignored) {
+        requestPermissions(new String[] {
+                Manifest.permission.CAMERA},PERMISSION_CAMERA);
+    }
+
+
+
+    private void removePermissionScreenIfAny() {
+        if(getContext()!=null&&mPermissionView!=null) {
+            mPermissionView.findViewById(R.id.button).setOnClickListener(null);
+            mRoot.removeView(mPermissionView);
+            mPermissionView = null;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        bindPermissionScreen();
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -118,12 +157,13 @@ public class CameraPickerFragment extends NavigationFragment {
             mManualCaptureButton.setTranslationX(0);
             mCaptureIcon.setCaptureMode(mCaptureMode);
         }
+        mCaptureIcon.setCaptureListener(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mFotoapparat.start();
+        bindPermissionScreen();
     }
 
     @Override
@@ -213,7 +253,7 @@ public class CameraPickerFragment extends NavigationFragment {
     FocusView mFocusView;
 
    @BindView(R.id.root)
-   View mRoot;
+   ViewGroup mRoot;
 
    @BindView(R.id.camera_card_view)
    View mCameraCardView;
@@ -229,20 +269,8 @@ public class CameraPickerFragment extends NavigationFragment {
    @BindView(R.id.manual_text)
    TextView mManualCaptureButton;
 
-   @OnClick(R.id.capture_icon)
-   void capture() {
-       mCaptureIcon.onCaptured();
-       PhotoResult result = mFotoapparat.takePicture();
-       result.toBitmap().whenDone(new WhenDoneListener<BitmapPhoto>() {
-           @Override
-           public void whenDone(BitmapPhoto bitmapPhoto) {
-               Toasty.success(App.getInstance(),"Take it!").show();
-           }
-       });
-   }
-
     @OnClick(R.id.manual_text)
-    void manualCapture() {
+    void switchToManualCapture() {
 
        if(mCaptureMode!=CaptureView.MODE_MANUAL_CAPTURE) {
            mCaptureMode = CaptureView.MODE_MANUAL_CAPTURE;
@@ -262,7 +290,7 @@ public class CameraPickerFragment extends NavigationFragment {
        }
    }
     @OnClick(R.id.auto_capture_text)
-   void autoCapture() {
+   void switchToAutoCapture() {
        if(mCaptureMode!=CaptureView.MODE_AUTO_CAPTURE) {
            mCaptureMode = CaptureView.MODE_AUTO_CAPTURE;
            PreferenceUtil.getInstance().setSavedOriginal3DPhoto(mCaptureMode);
@@ -322,13 +350,25 @@ public class CameraPickerFragment extends NavigationFragment {
             @Override
             public void run() {
                 mPreviewView.setImageBitmap(bitmap);
-                mPreviewView.setRotation(-rotate);
+               // mPreviewView.setRotation(-rotate);
             }
         });
     }
 
-    public interface CameraPickerListener {
-        boolean onNewCapture(Bitmap bmp);
+    @Override
+    public boolean onNewCapture() {
+            PhotoResult result = mFotoapparat.takePicture();
+            result.toBitmap().whenDone(this);
+        return true;
+    }
+
+    @Override
+    public void whenDone(@org.jetbrains.annotations.Nullable BitmapPhoto bitmapPhoto) {
+        mCaptureIcon.unlockCapture();
+        if(bitmapPhoto!=null) {
+           // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
+            presentFragment(WorkingSessionFragment.newInstance(bitmapPhoto));
+        }
     }
 
     @BindView(R.id.markerView)
@@ -414,17 +454,21 @@ public class CameraPickerFragment extends NavigationFragment {
                 long start = System.currentTimeMillis();
                 byte[] byteArray = frame.getImage();
                 Resolution size = frame.getSize();
-                frame.getRotation();
+                int rotate = frame.getRotation();
                 long tick1 = System.currentTimeMillis();
                 Bitmap bitmap = RenderScriptHelper.convertYuvToRgbIntrinsic(mRenderScript,byteArray,size.width,size.height);
-                if(Math.max(size.width,size.height)>768) bitmap = Util.resizeBitmap(bitmap,768);
+                Bitmap temp = bitmap;
+                if(Math.max(size.width,size.height)>768) bitmap = Util.resizeBitmap(temp,768);
+                temp.recycle();
+                temp = bitmap;
+                if(rotate!=0) bitmap = Util.rotateBitmap(temp,-rotate);
                 size = new Resolution(bitmap.getWidth(),bitmap.getHeight());
                 long tick2 = System.currentTimeMillis();
                 cpf.setPreview(bitmap, frame.getRotation());
 
                 Log.d(TAG, "process: image size = "+ frame.getSize().width+"x"+frame.getSize().height+", rotation = "+frame.getRotation());
 
-                float[] points = cpf.getScanComponent().getPoints(bitmap);
+                float[] points = null;// cpf.getScanComponent().getPoints(bitmap);
 
                 if(points!=null) {
                         StringBuilder pbuilder = new StringBuilder("Points detected : ");
@@ -433,7 +477,7 @@ public class CameraPickerFragment extends NavigationFragment {
                         }
                         Log.d(TAG, pbuilder.toString());
                         long tick3 = System.currentTimeMillis();
-                   List<PointF> pf = getContourEdgePoints(points,1f/size.width,1f/size.height,frame.getRotation());
+                   List<PointF> pf = getContourEdgePoints(points,1f/size.width,1f/size.height,0);
                    long tick4 = System.currentTimeMillis();
                     Log.d(TAG, "process: tick1 = "+(tick1-start)+", tick2 = "+ (tick2-tick1)+", tick3 = "+(tick3-tick2)+", tick4 = "+(tick4-tick3));
                    if(pf!=null) {

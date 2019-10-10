@@ -1,22 +1,24 @@
 package com.tdh7.documentscanner.ui.widget;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
+import android.media.AudioManager;
+import android.media.MediaActionSound;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.Nullable;
 
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.util.Util;
 
 public class CaptureView extends View {
     private static final String TAG = "CaptureView";
@@ -36,12 +38,12 @@ public class CaptureView extends View {
             mAutoAnimator.start();
         } else if(mCaptureMode!=MODE_AUTO_CAPTURE && mAutoAnimator.isRunning()) {
             mCurrentActiveValue = 0;
-            mAutoAnimator.cancel();
+            mAutoAnimator.end();
         }
         update();
     }
 
-    public void onCaptured() {
+    protected void onCaptured() {
         if(mActiveAnimator.isRunning()) mAutoAnimator.cancel();
         mCurrentActiveValue = 0;
         mActiveAnimator.start();
@@ -50,6 +52,7 @@ public class CaptureView extends View {
     private int mCaptureMode = MODE_AUTO_CAPTURE;
 
     Paint mPaint;
+    private float mDpUnit = 1;
     private int mOutsideColor = 0xffff9500;
     private int mAutolineColor = 0xffff9500;
     private int mInsideColor = 0xffff9500;
@@ -144,6 +147,7 @@ public class CaptureView extends View {
     private void init(AttributeSet attrs) {
         initValueAnimator();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mDpUnit = getResources().getDimension(R.dimen.dp_unit);
         if(attrs!=null) {
             TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.CaptureView);
             mInsideColor = t.getColor(R.styleable.CaptureView_insideColor,0xffff9500);
@@ -162,6 +166,100 @@ public class CaptureView extends View {
 
 
         setWillNotDraw(false);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touchDown(event);
+                break;
+            case MotionEvent.ACTION_UP:
+                touchUp(event);
+            case MotionEvent.ACTION_MOVE:
+                touchMove(event);
+                break;
+        }
+        return true;
+    }
+    private boolean mIsUnlockCapture = true;
+
+    public void unlockCapture() {
+        mIsUnlockCapture = true;
+    }
+
+    public void lockCapture() {
+        mIsUnlockCapture = false;
+    }
+
+    public interface CaptureListener {
+        /**
+         *
+         * @return True if captured
+         */
+        boolean onNewCapture();
+    }
+    private CaptureListener mCaptureListener;
+    public void setCaptureListener(CaptureListener listener) {
+        mCaptureListener = listener;
+    }
+
+    public void removeCaptureListener() {
+        mCaptureListener = null;
+    }
+
+    private boolean mIsTouchDown = false;
+
+    private void touchDown(MotionEvent e) {
+        mIsTouchDown = true;
+        mTouchX = e.getX();
+        mTouchY = e.getY();
+        invalidate();
+    }
+    private float mTouchX = 0;
+    private float mTouchY = 0;
+
+    private void touchUp(MotionEvent e) {
+        if(mIsTouchDown) {
+            if(Math.max(Math.abs(mTouchX - e.getX()), Math.abs(mTouchY - e.getY()))<= mDpUnit*10f) {
+                tapConfirm(e);
+            }
+            mIsTouchDown = false;
+            invalidate();
+        }
+    }
+
+    private void touchMove(MotionEvent e) {
+        if(mIsTouchDown) {
+            if(!mRectF.contains(e.getX(), e.getY())) {
+                mIsTouchDown = false;
+                invalidate();
+            }
+        }
+    }
+
+    MediaActionSound sound = new MediaActionSound();
+    private void shootSound() {
+        AudioManager audio = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        if(audio!=null) {
+            switch (audio.getRingerMode()) {
+                case AudioManager.RINGER_MODE_NORMAL:
+                    sound.play(MediaActionSound.SHUTTER_CLICK);
+                    break;
+                case AudioManager.RINGER_MODE_SILENT:
+                case AudioManager.RINGER_MODE_VIBRATE:
+                    Util.vibrate(getContext());
+                    break;
+            }
+        }
+    }
+
+    private void tapConfirm(MotionEvent e) {
+        if(mCaptureListener!=null&&mCaptureListener.onNewCapture()) {
+            onCaptured();
+            shootSound();
+        }
     }
 
     private int mDrawTop;
@@ -234,13 +332,14 @@ public class CaptureView extends View {
 
         percent -= interpolate(mDistancePercent, mDistanceActivePercent,mCurrentActiveValue);
 
-        if(mCurrentActiveValue==0)
+        if(mCurrentActiveValue==0&&!mIsTouchDown)
         mPaint.setColor(mInsideColor);
         else mPaint.setColor(mInsideActiveColor);
 
         mPaint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(mCenterX,mCenterY, percent*mRadius,mPaint);
     }
+
     private RectF mRectF;
 
     private void drawAutoCapture(Canvas canvas){

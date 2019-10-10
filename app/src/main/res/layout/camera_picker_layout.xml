@@ -54,11 +54,12 @@
     </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/preview"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_control_view"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        android:layout_marginStart="16dp"
+        android:visibility="visible"/>
     <View
         android:id="@+id/bottom_control_view"
         android:layout_width="0dp"
@@ -99,14 +100,13 @@
         app:layout_constraintEnd_toStartOf="@id/guide_line"
         android:clickable="true"
         android:focusable="true"
-
         tools:scaleX="1"
         tools:scaleY="1"
         tools:translationY="0dp"
         android:layout_marginEnd="16dp"
         app:strokeOutlinePercent="0.16"
-        app:distancePercent="0.09"
-        app:distanceActivePercent="0.12"
+        app:distancePercent="0.07"
+        app:distanceActivePercent="0.1"
         app:insideActiveColor="#BBFF9500"
         app:animateSwitchDuration="125"
         app:autoDurationPerRound="1600"
@@ -149,7 +149,8 @@
         android:tint="#FAF3DD"
         android:padding="9dp"
         app:layout_constraintStart_toStartOf="@id/camera_card_view"
-        app:layout_constraintTop_toBottomOf="@id/status_bar"/>
+        app:layout_constraintTop_toBottomOf="@id/status_bar"
+        android:elevation="4dp"/>
     <TextView
         android:id="@+id/antibanding"
         android:layout_width="wrap_content"
@@ -171,7 +172,7 @@
         android:id="@+id/flash"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:text="Flash"
+        android:text="Flash Off"
         android:textSize="14sp"
         android:textColor="@color/flatWhite"
         app:layout_constraintTop_toTopOf="@id/back_button"
@@ -212,4 +213,5 @@
         tools:listitem="@layout/item_scan_page"
         tools:itemCount="10"
         tools:layoutManager="LinearLayoutManager"
-        /></androidx.constraintlayout.widget.ConstraintLayout>
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

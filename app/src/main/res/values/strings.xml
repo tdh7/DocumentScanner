@@ -32,5 +32,6 @@
     <string name="hello_home_second">Hello HomeSecondFragment. Arg: %1$s</string>
     <string name="hello_gallery_second">Hello HomeSecondFragment. Arg: %1$s</string>
     <string name="hello_slideshow_second">Hello HomeSecondFragment. Arg: %1$s</string>
+    <string name="allow_access">Allow Access</string>
 
 </resources>

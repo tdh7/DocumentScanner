@@ -1,9 +1,15 @@
 package com.tdh7.documentscanner.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 
 import androidx.annotation.NonNull;
+
+import static android.content.Context.VIBRATOR_SERVICE;
 
 public final class Util {
     public static Bitmap resizeBitmap(@NonNull Bitmap src, int maxForSmallerSize) {
@@ -28,7 +34,6 @@ public final class Util {
             dstWidth = Math.round(maxForSmallerSize * ratio);
             dstHeight = maxForSmallerSize;
         }
-
         return Bitmap.createScaledBitmap(src, dstWidth, dstHeight, false);
     }
 
@@ -50,5 +55,56 @@ public final class Util {
         // recreate the new Bitmap
         return Bitmap.createBitmap(image, 0, 0, width, height,
                 matrix, false);
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    public static Bitmap resizeThenRotateBitmap(Bitmap src, int maxForSmallerSize, float angle) {
+        int width = src.getWidth();
+        int height = src.getHeight();
+
+        final int dstWidth;
+        final int dstHeight;
+
+        if (width < height) {
+            if (maxForSmallerSize >= width) {
+                return src;
+            }
+            float ratio = (float) height / width;
+            dstWidth = maxForSmallerSize;
+            dstHeight = Math.round(maxForSmallerSize * ratio);
+        } else {
+            if (maxForSmallerSize >= height) {
+                return src;
+            }
+            float ratio = (float) width / height;
+            dstWidth = Math.round(maxForSmallerSize * ratio);
+            dstHeight = maxForSmallerSize;
+        }
+
+        Matrix matrix = new Matrix();
+        // resize the bit map
+        matrix.setScale(dstWidth, dstHeight);
+        matrix.postRotate(angle);
+        // recreate the new Bitmap
+        return Bitmap.createBitmap(src, 0, 0, width, height,
+                matrix, false);
+    }
+
+    public static void vibrate(Context context) {
+        if(context==null) return;
+        Vibrator vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
+        if(vibrator!=null) {
+            if (Build.VERSION.SDK_INT >= 26) {
+                vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(50);
+            }
+        }
     }
 }
