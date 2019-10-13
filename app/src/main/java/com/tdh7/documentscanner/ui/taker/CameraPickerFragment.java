@@ -64,6 +64,7 @@ import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.BitmapPhoto;
+import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.result.WhenDoneListener;
 import io.fotoapparat.selector.AntiBandingModeSelectorsKt;
@@ -84,7 +85,7 @@ import static io.fotoapparat.selector.ResolutionSelectorsKt.highestResolution;
 import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
 
-public class CameraPickerFragment extends NavigationFragment implements CaptureView.CaptureListener, WhenDoneListener<BitmapPhoto> {
+public class CameraPickerFragment extends NavigationFragment implements CaptureView.CaptureListener, WhenDoneListener<Bitmap> {
     private static final String TAG = "CameraPickerFragment";
     public static final int PERMISSION_CAMERA = 1;
 
@@ -140,7 +141,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
-
         init();
         restoreCaptureMode();
     }
@@ -172,13 +172,18 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
         mFotoapparat.stop();
     }
 
+    @Override
+    public int defaultDuration() {
+        return 150;
+    }
+
     CameraConfiguration mCameraConfiguration;
 
     private void init() {
         mEdgeFrameProcessor = new EdgeFrameProcessor(this);
          mCameraConfiguration = CameraConfiguration
                 .builder()
-                 .antiBandingMode(AntiBandingModeSelectorsKt.hz50())
+                .antiBandingMode(AntiBandingModeSelectorsKt.hz50())
                 .photoResolution(standardRatio(
                         highestResolution()
                 ))
@@ -246,8 +251,9 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
     @BindView(R.id.status_bar)
     View mStatusView;
 
-   @BindView(R.id.camera_view)
-   CameraView mCameraView;
+
+    @BindView(R.id.camera_view)
+    CameraView mCameraView;
 
    @BindView(R.id.focusView)
     FocusView mFocusView;
@@ -357,18 +363,39 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
 
     @Override
     public boolean onNewCapture() {
-            PhotoResult result = mFotoapparat.takePicture();
-            result.toBitmap().whenDone(this);
+
+        PhotoResult result = mFotoapparat.takePicture();
+        result.toBitmap()/*.transform(b-> Util.rotateBitmap(b.bitmap,-b.rotationDegrees))*/.whenDone(mBitmapPhotoResultListener);
+      //  mFotoapparat.stop();
+
         return true;
     }
 
-    @Override
-    public void whenDone(@org.jetbrains.annotations.Nullable BitmapPhoto bitmapPhoto) {
-        mCaptureIcon.unlockCapture();
-        if(bitmapPhoto!=null) {
-           // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
-            presentFragment(WorkingSessionFragment.newInstance(bitmapPhoto));
+    private WhenDoneListener<BitmapPhoto> mBitmapPhotoResultListener = new WhenDoneListener<BitmapPhoto>() {
+        @Override
+        public void whenDone(@Nullable BitmapPhoto bitmapPhoto) {
+            mCaptureIcon.unlockCapture();
+            if(bitmapPhoto!=null) {
+                // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
+                presentFragment(WorkingSessionFragment.newInstance(bitmapPhoto));
+            }
         }
+    };
+
+    private WhenDoneListener<Bitmap> mBitmapResultListener = new WhenDoneListener<Bitmap>() {
+        @Override
+        public void whenDone(@org.jetbrains.annotations.Nullable Bitmap bitmap) {
+            mCaptureIcon.unlockCapture();
+            if(bitmap!=null) {
+                // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
+                presentFragment(WorkingSessionFragment.newInstance(bitmap));
+            }
+        }
+    };
+
+    @Override
+    public void whenDone(Bitmap bitmapPhoto) {
+
     }
 
     @BindView(R.id.markerView)
