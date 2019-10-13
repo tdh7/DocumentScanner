@@ -85,7 +85,7 @@ import static io.fotoapparat.selector.ResolutionSelectorsKt.highestResolution;
 import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
 
-public class CameraPickerFragment extends NavigationFragment implements CaptureView.CaptureListener, WhenDoneListener<Bitmap> {
+public class CameraPickerFragment extends NavigationFragment implements CaptureView.CaptureListener {
     private static final String TAG = "CameraPickerFragment";
     public static final int PERMISSION_CAMERA = 1;
 
@@ -365,7 +365,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
     public boolean onNewCapture() {
 
         PhotoResult result = mFotoapparat.takePicture();
-        result.toBitmap()/*.transform(b-> Util.rotateBitmap(b.bitmap,-b.rotationDegrees))*/.whenDone(mBitmapPhotoResultListener);
+        result.toBitmap().whenDone(mBitmapPhotoResultListener);
       //  mFotoapparat.stop();
 
         return true;
@@ -392,11 +392,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
             }
         }
     };
-
-    @Override
-    public void whenDone(Bitmap bitmapPhoto) {
-
-    }
 
     @BindView(R.id.markerView)
     MarkerView mMarkerView;

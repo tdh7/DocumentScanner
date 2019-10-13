@@ -63,36 +63,10 @@ public final class Util {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    public static Bitmap resizeThenRotateBitmap(Bitmap src, int maxForSmallerSize, float angle) {
-        int width = src.getWidth();
-        int height = src.getHeight();
-
-        final int dstWidth;
-        final int dstHeight;
-
-        if (width < height) {
-            if (maxForSmallerSize >= width) {
-                return src;
-            }
-            float ratio = (float) height / width;
-            dstWidth = maxForSmallerSize;
-            dstHeight = Math.round(maxForSmallerSize * ratio);
-        } else {
-            if (maxForSmallerSize >= height) {
-                return src;
-            }
-            float ratio = (float) width / height;
-            dstWidth = Math.round(maxForSmallerSize * ratio);
-            dstHeight = maxForSmallerSize;
-        }
-
-        Matrix matrix = new Matrix();
-        // resize the bit map
-        matrix.setScale(dstWidth, dstHeight);
-        matrix.postRotate(angle);
-        // recreate the new Bitmap
-        return Bitmap.createBitmap(src, 0, 0, width, height,
-                matrix, false);
+    public static Bitmap resizeThenRotate(Bitmap bitmap, int maxForSmallerSize, float angle) {
+         Bitmap temp = Util.resizeBitmap(bitmap, maxForSmallerSize);
+        if (angle != 0) temp = Util.rotateBitmap(temp,angle);
+        return temp;
     }
 
     public static void vibrate(Context context) {

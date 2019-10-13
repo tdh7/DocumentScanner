@@ -58,15 +58,15 @@ public class WorkingSessionFragment extends NavigationFragment {
         } else if(mBitmapObject instanceof BitmapPhoto) {
           //  mImageView.setRotation(-((BitmapPhoto) mBitmapPhoto).rotationDegrees);
             mImageView.setImageBitmap(((BitmapPhoto) mBitmapObject).bitmap);
-            rotateImage(mImageView,- ((BitmapPhoto) mBitmapObject).rotationDegrees);
+            rotateImage(mImageView,((BitmapPhoto) mBitmapObject).bitmap,- ((BitmapPhoto) mBitmapObject).rotationDegrees);
         }
     }
 
-    private void rotateImage(ImageView imageView, float angle) {
+    private void rotateImage(ImageView imageView,Bitmap bitmap, float angle) {
         Matrix matrix = new Matrix();
         imageView.setScaleType(ImageView.ScaleType.MATRIX); //required
         if(imageView.getDrawable()!=null)
-        matrix.postRotate(angle, imageView.getDrawable().getBounds().width()/2,imageView.getDrawable().getBounds().height()/2);
+        matrix.postRotate(angle, bitmap.getHeight()/2,bitmap.getWidth()/2);
         imageView.setImageMatrix(matrix);
     }
 
