@@ -43,14 +43,7 @@
             android:id="@+id/markerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            tools:background="#444"
-            app:layout_constraintTop_toTopOf="@id/camera_view"
-            app:layout_constraintBottom_toBottomOf="@id/camera_view"
-            app:layout_constraintStart_toStartOf="@id/camera_view"
-            app:layout_constraintEnd_toEndOf="@id/camera_view"
-            android:visibility="invisible"
-            tools:visibility="gone"/>
+            android:visibility="visible"/>
     </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/preview"

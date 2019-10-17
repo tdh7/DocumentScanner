@@ -7,5 +7,4 @@ import java.util.ArrayList;
 public class DocumentPage {
     public Bitmap mOriginalBitmap;
     public Bitmap mOriginalDocumentBitmap;
-    public
 }

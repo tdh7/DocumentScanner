@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -13,9 +14,8 @@ import androidx.annotation.Nullable;
 import com.tdh7.documentscanner.R;
 
 import java.util.List;
-
-
 public class MarkerView extends View {
+    private static final String TAG = "MarkerView";
     public MarkerView(Context context) {
         super(context);
         init(null);
@@ -49,10 +49,14 @@ public class MarkerView extends View {
                 0xff1ABC9C};
 
         initPaint();
+        setWillNotDraw(false);
     }
 
     private float w = 0;
     private float h = 0;
+    public float[] getViewPort() {
+        return new float[] {w,h};
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -80,28 +84,47 @@ public class MarkerView extends View {
             invalidate();
         }
     }
+    private boolean mShouldDrawMarker = false;
 
-    public void setPoints(List<PointF> pointFMap) {
-        if (pointFMap.size() == 4) {
-            for (int i = 0; i < 4; i++) {
-                mPointFs[i].set(pointFMap.get(i));
+    public synchronized void setPoints(float[] points) {
+        if(points==null || points.length!=8) {
+            if(mShouldDrawMarker) {
+                mShouldDrawMarker = false;
+                invalidate();
             }
+        } else {
+            mShouldDrawMarker = true;
+            mPointFs[0].x = points[0];
+            mPointFs[1].x = points[1];
+            mPointFs[2].x = points[2];
+            mPointFs[3].x = points[3];
+
+            mPointFs[0].y = points[4];
+            mPointFs[1].y = points[5];
+            mPointFs[2].y = points[6];
+            mPointFs[3].y = points[7];
+            Log.d(TAG, "setPoints: " +
+                    "p[0] = ("+mPointFs[0].x+"; "+mPointFs[1].y+"), " +
+                    "p[1] = ("+mPointFs[1].x+"; "+mPointFs[1].y+"), "+
+                    "p[2] = ("+mPointFs[1].x+"; "+mPointFs[1].y+"), "+
+                    "p[3] = ("+mPointFs[1].x+"; "+mPointFs[1].y+")");
             invalidate();
+
         }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(mPointFs!=null) {
+        if(mPointFs!=null&&mShouldDrawMarker) {
             for (int i = 0, mPointFsLength = mPointFs.length; i < mPointFsLength; i++) {
                 PointF p = mPointFs[i];
                 paint.setColor(color[i]);
                 paint.setStrokeWidth(oneDp * 2);
                 canvas.drawCircle(p.x * w, p.y * h, oneDp * 4, paint);
 
-               // paint.setColor(0xFFFFFFFF);
-             //   paint.setStrokeWidth(oneDp);
-          //      canvas.drawCircle(p.x * w, p.y * h, oneDp * 30, paint);
+                // paint.setColor(0xFFFFFFFF);
+                //   paint.setStrokeWidth(oneDp);
+                //      canvas.drawCircle(p.x * w, p.y * h, oneDp * 30, paint);
             }
         }
     }
