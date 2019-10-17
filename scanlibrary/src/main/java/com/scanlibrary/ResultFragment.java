@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import es.dmoral.toasty.Toasty;
+
 public class ResultFragment extends Fragment {
 
     private View view;
@@ -211,25 +213,33 @@ public class ResultFragment extends Fragment {
                                 //end save
 
                                 //open file with another program
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                      /*          Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                startActivity(intent);
+                                startActivity(intent);*/
                                 //end open
 
                                 data.putExtra(ScanConstants.SCANNED_RESULT, fo.getName());
                                 getActivity().setResult(Activity.RESULT_OK, data);
 
                                 original.recycle();
-                                System.gc();
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Toasty.success(getContext(),"Save successfully!").show();
                                         dismissDialog();
                                         getActivity().finish();
                                     }
                                 });
                             } catch (Exception e) {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toasty.error(getContext(),"Sorry, something went wrong!").show();
+                                        dismissDialog();
+                                        getActivity().finish();
+                                    }
+                                });
                                 e.printStackTrace();
                             }
                         }

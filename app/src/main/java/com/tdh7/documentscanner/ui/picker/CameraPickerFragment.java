@@ -1,57 +1,32 @@
-package com.tdh7.documentscanner.ui.taker;
+package com.tdh7.documentscanner.ui.picker;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.ImageFormat;
-import android.graphics.PointF;
-import android.graphics.YuvImage;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.util.Size;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.renderscript.RenderScript;
 
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
-import com.scanlibrary.PolygonView;
-import com.scanlibrary.ScanComponent;
-import com.scanlibrary.ScannerActivity;
-import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.scansession.WorkingSessionFragment;
-import com.tdh7.documentscanner.ui.widget.CaptureView;
+import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 import com.tdh7.documentscanner.util.PreferenceUtil;
-import com.tdh7.documentscanner.util.RenderScriptHelper;
 import com.tdh7.documentscanner.util.Tool;
-import com.tdh7.documentscanner.util.Util;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.ref.WeakReference;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -59,33 +34,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
-import io.fotoapparat.parameter.Resolution;
 import io.fotoapparat.parameter.ScaleType;
-import io.fotoapparat.preview.Frame;
-import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.result.BitmapPhoto;
-import io.fotoapparat.result.PendingResult;
 import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.result.WhenDoneListener;
-import io.fotoapparat.selector.AntiBandingModeSelectorsKt;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
 
 import static io.fotoapparat.selector.AspectRatioSelectorsKt.standardRatio;
-import static io.fotoapparat.selector.FlashSelectorsKt.autoFlash;
-import static io.fotoapparat.selector.FlashSelectorsKt.autoRedEye;
-import static io.fotoapparat.selector.FlashSelectorsKt.off;
-import static io.fotoapparat.selector.FlashSelectorsKt.torch;
-import static io.fotoapparat.selector.FocusModeSelectorsKt.autoFocus;
-import static io.fotoapparat.selector.FocusModeSelectorsKt.continuousFocusPicture;
-import static io.fotoapparat.selector.FocusModeSelectorsKt.fixed;
 import static io.fotoapparat.selector.LensPositionSelectorsKt.back;
 import static io.fotoapparat.selector.PreviewFpsRangeSelectorsKt.highestFps;
-import static io.fotoapparat.selector.ResolutionSelectorsKt.highestResolution;
-import static io.fotoapparat.selector.SelectorsKt.firstAvailable;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
 
-public class CameraPickerFragment extends NavigationFragment implements CaptureView.CaptureListener {
+public class CameraPickerFragment extends NavigationFragment implements CaptureIconView.CaptureListener {
     private static final String TAG = "CameraPickerFragment";
     public static final int PERMISSION_CAMERA = 1;
 
@@ -147,7 +108,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
 
     private void restoreCaptureMode() {
         mCaptureMode = PreferenceUtil.getInstance().getSavedCaptureMode();
-        if(mCaptureMode==CaptureView.MODE_AUTO_CAPTURE) {
+        if(mCaptureMode== CaptureIconView.MODE_AUTO_CAPTURE) {
             mCaptureIcon.setTranslationY(63*mDpUnit);
             mCaptureIcon.setScaleX(0.4f);
             mCaptureIcon.setScaleY(0.4f);
@@ -179,11 +140,15 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
 
     private CameraConfiguration mCameraConfiguration;
 
+    @Override
+    public void onDestroy() {
+        mAutoCapturer.destroy();
+        mEdgeFrameProcessor.destroy();
+        super.onDestroy();
+    }
+
     private void init() {
-        if(getContext()!=null) {
-            mEdgeFrameProcessor = new EdgeFrameProcessor(getContext(), this);
-        }
-         mCameraConfiguration = CameraConfiguration
+   /*      mCameraConfiguration = CameraConfiguration
                 .builder()
                 .antiBandingMode(AntiBandingModeSelectorsKt.hz50())
                 .photoResolution(standardRatio(
@@ -203,7 +168,8 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
                 .previewFpsRange(highestFps())
                 .sensorSensitivity(highestSensorSensitivity())
                 .frameProcessor(mEdgeFrameProcessor)
-                .build();
+                .build();*/
+   if(getContext()==null) return;
         mFotoapparat = Fotoapparat
                 .with(getContext())
                 .previewFpsRange(highestFps())
@@ -214,7 +180,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
                 .previewScaleType(ScaleType.CenterCrop)
                 .lensPosition(back())
                 .build();
-        mFotoapparat.updateConfiguration(mCameraConfiguration);
     }
 
     @Override
@@ -238,7 +203,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
     }
 
     private EdgeFrameProcessor mEdgeFrameProcessor ;
-
+    private AutoCapturer mAutoCapturer;
     private Fotoapparat mFotoapparat;
 
     @BindDimen(R.dimen.dp_unit)
@@ -261,9 +226,9 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
    View mCameraCardView;
 
    @BindView(R.id.capture_icon)
-   CaptureView mCaptureIcon;
+   CaptureIconView mCaptureIcon;
 
-   private int mCaptureMode = CaptureView.MODE_AUTO_CAPTURE;
+   private int mCaptureMode = CaptureIconView.MODE_AUTO_CAPTURE;
 
    @BindView(R.id.auto_capture_text)
    TextView mAutoCaptureButton;
@@ -274,8 +239,8 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
     @OnClick(R.id.manual_text)
     void switchToManualCapture() {
 
-       if(mCaptureMode!=CaptureView.MODE_MANUAL_CAPTURE) {
-           mCaptureMode = CaptureView.MODE_MANUAL_CAPTURE;
+       if(mCaptureMode!= CaptureIconView.MODE_MANUAL_CAPTURE) {
+           mCaptureMode = CaptureIconView.MODE_MANUAL_CAPTURE;
            PreferenceUtil.getInstance().setSavedOriginal3DPhoto(mCaptureMode);
            mCaptureIcon.setCaptureMode(mCaptureMode);
 
@@ -293,8 +258,8 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
    }
     @OnClick(R.id.auto_capture_text)
    void switchToAutoCapture() {
-       if(mCaptureMode!=CaptureView.MODE_AUTO_CAPTURE) {
-           mCaptureMode = CaptureView.MODE_AUTO_CAPTURE;
+       if(mCaptureMode!= CaptureIconView.MODE_AUTO_CAPTURE) {
+           mCaptureMode = CaptureIconView.MODE_AUTO_CAPTURE;
            PreferenceUtil.getInstance().setSavedOriginal3DPhoto(mCaptureMode);
            mCaptureIcon.setCaptureMode(mCaptureMode);
            mCaptureIcon.animate().scaleX(0.4f).scaleY(0.4f).translationY(63*mDpUnit).setInterpolator(new OvershootInterpolator())
@@ -319,6 +284,10 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getContext()!=null) {
+            mEdgeFrameProcessor = new EdgeFrameProcessor(getContext(), this);
+            mAutoCapturer = new AutoCapturer(this);
+        }
     }
 
     @Override
@@ -370,6 +339,10 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
         });
     }
 
+    public void fireCapture() {
+        mCaptureIcon.fireCapture();
+    }
+
     @Override
     public boolean onNewCapture() {
 
@@ -404,6 +377,31 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureV
 
     @BindView(R.id.markerView)
     MarkerView mMarkerView;
+
+    @BindView(R.id.toast_text_view)
+    TextView mToastTextView;
+
+    private boolean mIsToastVisible = false;
+    private void toast(String text) {
+        if(!mIsToastVisible)
+            mToastTextView
+                    .animate()
+                    .alpha(1)
+                    .withStartAction(() -> mToastTextView.setVisibility(View.VISIBLE))
+            .setStartDelay(350)
+            .setDuration(350)
+            .start();
+    }
+
+    private void hideToast() {
+        mToastTextView
+                .animate()
+                .alpha(0)
+                .withEndAction(() -> mToastTextView.setVisibility(View.GONE))
+                .setStartDelay(350)
+                .setDuration(350)
+                .start();
+    }
 
     Handler mHandler = new Handler();
     public Handler getHandler() {

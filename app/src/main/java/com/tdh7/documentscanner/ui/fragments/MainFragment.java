@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.camera2.CameraDevice;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +31,7 @@ import com.scanlibrary.ScanConstants;
 import com.scanlibrary.ScannerActivity;
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
-import com.tdh7.documentscanner.ui.taker.CameraPickerFragment;
+import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 
 import java.io.File;
 import java.util.ArrayList;

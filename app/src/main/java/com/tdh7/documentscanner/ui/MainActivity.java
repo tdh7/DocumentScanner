@@ -5,12 +5,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.fragments.MainFragment;
 import com.tdh7.documentscanner.ui.permissionscreen.PermissionActivity;
-import com.tdh7.documentscanner.ui.taker.CameraPickerFragment;
+import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 
 public class MainActivity extends PermissionActivity {
     public static final String TAG ="MainActivity";

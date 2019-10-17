@@ -3,7 +3,7 @@
     <declare-styleable name="MarkerView">
         <attr name="showIfNoDetect" format="boolean"/>
     </declare-styleable>
-    <declare-styleable name="CaptureView">
+    <declare-styleable name="CaptureIconView">
         <attr name="captureMode" format="enum">
             <enum name="autoCapture" value="0"/>
             <enum name="manualCapture" value="1"/>

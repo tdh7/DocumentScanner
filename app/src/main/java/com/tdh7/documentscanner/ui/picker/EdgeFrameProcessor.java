@@ -1,4 +1,4 @@
-package com.tdh7.documentscanner.ui.taker;
+package com.tdh7.documentscanner.ui.picker;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -31,6 +31,11 @@ public class EdgeFrameProcessor implements FrameProcessor {
     }
 
     private ScanComponent mScanComponent = new ScanComponent();
+    public void destroy() {
+        mWeakFragment.clear();
+        mScanComponent = null;
+        mRenderScript = null;
+    }
 
         EdgeFrameProcessor(@NonNull Context context, @NonNull CameraPickerFragment fragment) {
             mWeakFragment = new WeakReference<>(fragment);

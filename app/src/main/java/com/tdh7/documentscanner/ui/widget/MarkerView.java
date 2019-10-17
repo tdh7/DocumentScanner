@@ -3,6 +3,7 @@ package com.tdh7.documentscanner.ui.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -113,6 +114,24 @@ public class MarkerView extends View {
         }
     }
 
+    private void drawPolygon(Canvas mCanvas, float x, float y, float radius, float sides, float startAngle, boolean anticlockwise, Paint paint) {
+
+        if (sides < 3) { return; }
+
+        float a = ((float) Math.PI *2) / sides * (anticlockwise ? -1 : 1);
+        mCanvas.save();
+        mCanvas.translate(x, y);
+        mCanvas.rotate(startAngle);
+        Path path = new Path();
+        path.moveTo(radius, 0);
+        for(int i = 1; i < sides; i++) {
+            path.lineTo(radius * (float) Math.cos(a * i), radius * (float) Math.sin(a * i));
+        }
+        path.close();
+        mCanvas.drawPath(path, paint);
+        mCanvas.restore();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if(mPointFs!=null&&mShouldDrawMarker) {
@@ -121,7 +140,6 @@ public class MarkerView extends View {
                 paint.setColor(color[i]);
                 paint.setStrokeWidth(oneDp * 2);
                 canvas.drawCircle(p.x * w, p.y * h, oneDp * 4, paint);
-
                 // paint.setColor(0xFFFFFFFF);
                 //   paint.setStrokeWidth(oneDp);
                 //      canvas.drawCircle(p.x * w, p.y * h, oneDp * 30, paint);

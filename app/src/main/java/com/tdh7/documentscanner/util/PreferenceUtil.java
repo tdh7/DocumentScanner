@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
 import com.tdh7.documentscanner.App;
-import com.tdh7.documentscanner.ui.widget.CaptureView;
+import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 
 public final class PreferenceUtil {
     public static final String SAVED_CAPTURE_MODE = "saved_capture_mode";
@@ -25,7 +25,7 @@ public final class PreferenceUtil {
     }
 
     public int getSavedCaptureMode() {
-        return mPreferences.getInt(SAVED_CAPTURE_MODE, CaptureView.MODE_MANUAL_CAPTURE);
+        return mPreferences.getInt(SAVED_CAPTURE_MODE, CaptureIconView.MODE_MANUAL_CAPTURE);
     }
 
     public void setSavedOriginal3DPhoto(int mode) {

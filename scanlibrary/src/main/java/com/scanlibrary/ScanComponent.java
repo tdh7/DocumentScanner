@@ -2,7 +2,7 @@ package com.scanlibrary;
 
 import android.graphics.Bitmap;
 
-public class ScanComponent {
+public final class ScanComponent {
     private ScanActivity mScanLibrary = new ScanActivity();
 
     public ScanComponent() {
