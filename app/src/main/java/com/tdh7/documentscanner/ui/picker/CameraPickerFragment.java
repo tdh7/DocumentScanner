@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat;
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.controller.session.picker.AutoCapturer;
+import com.tdh7.documentscanner.controller.session.picker.EdgeFrameProcessor;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.scansession.WorkingSessionFragment;
 import com.tdh7.documentscanner.ui.widget.CaptureIconView;
@@ -109,6 +111,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     private void restoreCaptureMode() {
         mCaptureMode = PreferenceUtil.getInstance().getSavedCaptureMode();
         if(mCaptureMode== CaptureIconView.MODE_AUTO_CAPTURE) {
+            mToastTextView.setTranslationY(63* mDpUnit);
             mCaptureIcon.setTranslationY(63*mDpUnit);
             mCaptureIcon.setScaleX(0.4f);
             mCaptureIcon.setScaleY(0.4f);
@@ -117,6 +120,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
             mAutoCaptureButton.setTranslationX(0);
             mManualCaptureButton.setTranslationX(0);
             mCaptureIcon.setCaptureMode(mCaptureMode);
+            mEdgeFrameProcessor.activeAutoCapture();
         }
         mCaptureIcon.setCaptureListener(this);
     }
@@ -142,7 +146,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     @Override
     public void onDestroy() {
-        mAutoCapturer.destroy();
         mEdgeFrameProcessor.destroy();
         super.onDestroy();
     }
@@ -203,7 +206,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     }
 
     private EdgeFrameProcessor mEdgeFrameProcessor ;
-    private AutoCapturer mAutoCapturer;
     private Fotoapparat mFotoapparat;
 
     @BindDimen(R.dimen.dp_unit)
@@ -243,7 +245,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
            mCaptureMode = CaptureIconView.MODE_MANUAL_CAPTURE;
            PreferenceUtil.getInstance().setSavedOriginal3DPhoto(mCaptureMode);
            mCaptureIcon.setCaptureMode(mCaptureMode);
-
+           mToastTextView.animate().translationY(0).setInterpolator(new OvershootInterpolator()).start();
            mCaptureIcon.animate().scaleX(1f).scaleY(1f).translationY(0).setInterpolator(new DecelerateInterpolator()).withEndAction(new Runnable() {
                @Override
                public void run() {
@@ -254,6 +256,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
            mAutoCaptureButton.animate().translationX(24*mDpUnit).start();
            mManualCaptureButton.animate().translationX(-24*mDpUnit).start();
+           mEdgeFrameProcessor.deactiveAutoCapture();
        }
    }
     @OnClick(R.id.auto_capture_text)
@@ -262,6 +265,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
            mCaptureMode = CaptureIconView.MODE_AUTO_CAPTURE;
            PreferenceUtil.getInstance().setSavedOriginal3DPhoto(mCaptureMode);
            mCaptureIcon.setCaptureMode(mCaptureMode);
+           mToastTextView.animate().translationY(63*mDpUnit).start();
            mCaptureIcon.animate().scaleX(0.4f).scaleY(0.4f).translationY(63*mDpUnit).setInterpolator(new OvershootInterpolator())
                    .withEndAction(new Runnable() {
                        @Override
@@ -273,6 +277,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
            mAutoCaptureButton.animate().translationX(0).start();
            mManualCaptureButton.animate().translationX(0).start();
+           mEdgeFrameProcessor.activeAutoCapture();
        }
    }
 
@@ -286,7 +291,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         super.onCreate(savedInstanceState);
         if(getContext()!=null) {
             mEdgeFrameProcessor = new EdgeFrameProcessor(getContext(), this);
-            mAutoCapturer = new AutoCapturer(this);
         }
     }
 
@@ -317,13 +321,13 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     ImageView mPreviewView;
 
     public void setPreview(Bitmap bitmap, float rotate) {
-        mHandler.post(new Runnable() {
+      /*  mHandler.post(new Runnable() {
             @Override
             public void run() {
                 mPreviewView.setImageBitmap(bitmap);
                // mPreviewView.setRotation(-rotate);
             }
-        });
+        });*/
     }
 
     public float[] getViewPort() {
@@ -340,7 +344,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     }
 
     public void fireCapture() {
-        mCaptureIcon.fireCapture();
+        mHandler.post(mCaptureIcon::fireCapture);
     }
 
     @Override
@@ -382,25 +386,32 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     TextView mToastTextView;
 
     private boolean mIsToastVisible = false;
-    private void toast(String text) {
-        if(!mIsToastVisible)
-            mToastTextView
-                    .animate()
-                    .alpha(1)
-                    .withStartAction(() -> mToastTextView.setVisibility(View.VISIBLE))
-            .setStartDelay(350)
-            .setDuration(350)
-            .start();
-    }
-
-    private void hideToast() {
+    public void toast(final String text) {
+        mHandler.post(() -> {
+    if(!mIsToastVisible)
         mToastTextView
                 .animate()
-                .alpha(0)
-                .withEndAction(() -> mToastTextView.setVisibility(View.GONE))
-                .setStartDelay(350)
-                .setDuration(350)
-                .start();
+                .alpha(1)
+                .withStartAction(() -> {
+                    mToastTextView.setText(text);
+                    mToastTextView.setVisibility(View.VISIBLE);
+                })
+        .setStartDelay(350)
+        .setDuration(350)
+        .start();
+        });
+    }
+
+    public void hideToast() {
+        mHandler.post(() -> {
+            mToastTextView
+                    .animate()
+                    .alpha(0)
+                    .withEndAction(() -> mToastTextView.setVisibility(View.GONE))
+                    .setStartDelay(350)
+                    .setDuration(350)
+                    .start();
+        });
     }
 
     Handler mHandler = new Handler();
@@ -409,4 +420,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     }
 
 
+    public boolean isLockingCapture() {
+        return mCaptureIcon.isLockingCapture();
+    }
 }

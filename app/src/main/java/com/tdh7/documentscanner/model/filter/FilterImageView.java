@@ -10,6 +10,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.tdh7.documentscanner.model.filter.canvas.CanvasFilter;
+
 public class FilterImageView extends View {
     public FilterImageView(Context context) {
         super(context);
@@ -30,8 +32,9 @@ public class FilterImageView extends View {
     Bitmap mSampleBitmap;
 
     Bitmap mFilteredBitmap;
-    BitmapFilter mFilter;
-    public void setFilter(BitmapFilter filter) {
+
+    CanvasFilter mFilter;
+    public void setFilter(CanvasFilter filter) {
         mFilter = filter;
 
     }
@@ -42,6 +45,7 @@ public class FilterImageView extends View {
         mOriginRectF.top = 0;
         mOriginRectF.right = bitmap.getWidth();
         mOriginRectF.bottom = bitmap.getWidth();
+        requestUpdate();
     }
 
     protected void requestUpdate(){
@@ -56,7 +60,10 @@ public class FilterImageView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawOriginal(canvas);
+        //drawOriginal(canvas);
+        if(mFilter!= null) {
+            mFilter.filter(mBitmap,canvas,mDrawRectF);
+        }
     }
 
     private int mDrawTop;

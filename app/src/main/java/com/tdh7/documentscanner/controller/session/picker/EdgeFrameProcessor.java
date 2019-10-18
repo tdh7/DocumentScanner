@@ -1,4 +1,4 @@
-package com.tdh7.documentscanner.ui.picker;
+package com.tdh7.documentscanner.controller.session.picker;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.renderscript.RenderScript;
 
 import com.scanlibrary.ScanComponent;
+import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 import com.tdh7.documentscanner.util.RenderScriptHelper;
 import com.tdh7.documentscanner.util.Util;
 
@@ -29,18 +30,30 @@ public class EdgeFrameProcessor implements FrameProcessor {
     public ScanComponent getScanComponent() {
         return mScanComponent;
     }
+    private AutoCapturer mAutoCapturer;
 
     private ScanComponent mScanComponent = new ScanComponent();
     public void destroy() {
+        if(mAutoCapturer!=null)
+        mAutoCapturer.destroy();
         mWeakFragment.clear();
         mScanComponent = null;
         mRenderScript = null;
     }
 
-        EdgeFrameProcessor(@NonNull Context context, @NonNull CameraPickerFragment fragment) {
-            mWeakFragment = new WeakReference<>(fragment);
-            mRenderScript = RenderScript.create(context);
-        }
+    public void activeAutoCapture() {
+        if(mAutoCapturer!=null) mAutoCapturer.activeAutoCapture();
+    }
+
+    public void deactiveAutoCapture() {
+        if(mAutoCapturer!=null) mAutoCapturer.deactiveAutoCapture();
+    }
+
+    public EdgeFrameProcessor(@NonNull Context context, @NonNull CameraPickerFragment fragment) {
+        mWeakFragment = new WeakReference<>(fragment);
+        mRenderScript = RenderScript.create(context);
+        mAutoCapturer = new AutoCapturer(fragment);
+    }
 
      /*   private SparseArray<PointF> getEdgePoints( MarkerView view,float[] points, int w, int h) {
             List<PointF> pointFs = getContourEdgePoints(points,(float) view.getWidth()/w,(float) view.getHeight()/h);
@@ -131,6 +144,7 @@ public class EdgeFrameProcessor implements FrameProcessor {
                 Log.d(TAG, "process: image size = "+ frame.getSize().width+"x"+frame.getSize().height+", rotation = "+frame.getRotation());
                 float[] points = getScanComponent().getPoints(croppedBitmap);
                 convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
+                mAutoCapturer.onProcess(points);
                 cpf.setPoints(points);
                 /*if(points!=null) {
                     StringBuilder pbuilder = new StringBuilder("Points detected : ");

@@ -13,7 +13,7 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"/>
-    <com.tdh7.documentscanner.ui.widget.RotateAbleImageView
+    <com.tdh7.documentscanner.model.filter.FilterImageView
         android:id="@+id/filter_image_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -21,6 +21,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:scaleType="matrix"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

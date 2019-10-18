@@ -2,11 +2,8 @@ package com.tdh7.documentscanner.ui.widget;
 
 import android.content.Context;
 import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -61,8 +58,8 @@ public class RotateAbleImageView extends AppCompatImageView {
         final Matrix matrix = getImageMatrix();
 
         float scale;
-        final int viewWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-        final int viewHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+        final int viewWidth = r - l;
+        final int viewHeight = b -t;
         final int drawableWidth = getDrawable().getIntrinsicWidth();
         final int drawableHeight = getDrawable().getIntrinsicHeight();
 
@@ -70,8 +67,9 @@ public class RotateAbleImageView extends AppCompatImageView {
         mOriginRectF.right = drawableWidth;
         mOriginRectF.bottom = drawableHeight;
 
-        matrix.setRectToRect(mOriginRectF,mDrawRectF, Matrix.ScaleToFit.START);
-      //  matrix.postRotate(-270f,viewWidth/2,viewHeight/2);
+       // matrix.setRectToRect(mOriginRectF,mDrawRectF, Matrix.ScaleToFit.START);
+        matrix.postRotate(-270f,drawableWidth/2,drawableHeight/2);
+        matrix.postScale((float) viewWidth/drawableWidth, (float)viewHeight/drawableHeight);
         setImageMatrix(matrix);
 
         return super.setFrame(l, t, r, b);

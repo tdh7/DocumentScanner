@@ -15,6 +15,7 @@ import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.model.filter.FilterImageView;
+import com.tdh7.documentscanner.model.filter.canvas.QuickViewCanvasFilter;
 import com.tdh7.documentscanner.ui.widget.RotateAbleImageView;
 
 import butterknife.BindDimen;
@@ -42,7 +43,6 @@ public class WorkingSessionFragment extends NavigationFragment {
         return fragment;
     }
 
-
     private Object mBitmapObject;
 
     @Nullable
@@ -56,27 +56,20 @@ public class WorkingSessionFragment extends NavigationFragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
         if(mBitmapObject instanceof Bitmap) {
-           mImageView.setImageBitmap((Bitmap) mBitmapObject);
+           mImageView.setBitmap((Bitmap) mBitmapObject);
         } else if(mBitmapObject instanceof BitmapPhoto) {
           //  mImageView.setRotation(-((BitmapPhoto) mBitmapPhoto).rotationDegrees);
-            mImageView.setImageBitmap(((BitmapPhoto) mBitmapObject).bitmap);
+            mImageView.setFilter(new QuickViewCanvasFilter().setRotateValue(-((BitmapPhoto) mBitmapObject).rotationDegrees));
+            mImageView.setBitmap(((BitmapPhoto) mBitmapObject).bitmap);
           //  rotateImage(mImageView,((BitmapPhoto) mBitmapObject).bitmap,- ((BitmapPhoto) mBitmapObject).rotationDegrees);
         }
-    }
-
-    private void rotateImage(ImageView imageView,Bitmap bitmap, float angle) {
-        Matrix matrix = new Matrix();
-        imageView.setScaleType(ImageView.ScaleType.MATRIX); //required
-        if(imageView.getDrawable()!=null)
-        matrix.postRotate(angle, bitmap.getHeight()/2,bitmap.getWidth()/2);
-        imageView.setImageMatrix(matrix);
     }
 
     @BindView(R.id.status_bar)
     View mStatusView;
 
     @BindView(R.id.filter_image_view)
-    RotateAbleImageView mImageView;
+    FilterImageView mImageView;
 
     @Override
     public void onSetStatusBarMargin(int value) {
