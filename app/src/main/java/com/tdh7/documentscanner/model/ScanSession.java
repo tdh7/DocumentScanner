@@ -1,4 +1,4 @@
 package com.tdh7.documentscanner.model;
 
-public class DocumentSession {
+public class ScanSession {
 }

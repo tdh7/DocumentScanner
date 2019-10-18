@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.model.filter.FilterImageView;
+import com.tdh7.documentscanner.ui.widget.RotateAbleImageView;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -58,7 +60,7 @@ public class WorkingSessionFragment extends NavigationFragment {
         } else if(mBitmapObject instanceof BitmapPhoto) {
           //  mImageView.setRotation(-((BitmapPhoto) mBitmapPhoto).rotationDegrees);
             mImageView.setImageBitmap(((BitmapPhoto) mBitmapObject).bitmap);
-            rotateImage(mImageView,((BitmapPhoto) mBitmapObject).bitmap,- ((BitmapPhoto) mBitmapObject).rotationDegrees);
+          //  rotateImage(mImageView,((BitmapPhoto) mBitmapObject).bitmap,- ((BitmapPhoto) mBitmapObject).rotationDegrees);
         }
     }
 
@@ -73,8 +75,8 @@ public class WorkingSessionFragment extends NavigationFragment {
     @BindView(R.id.status_bar)
     View mStatusView;
 
-    @BindView(R.id.image_view)
-    ImageView mImageView;
+    @BindView(R.id.filter_image_view)
+    RotateAbleImageView mImageView;
 
     @Override
     public void onSetStatusBarMargin(int value) {

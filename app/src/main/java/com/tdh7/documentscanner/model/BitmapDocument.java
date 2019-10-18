@@ -4,8 +4,7 @@ import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 
-public class DocumentPage {
+public class BitmapDocument {
     public Bitmap mOriginalBitmap;
     public Bitmap mOriginalDocumentBitmap;
-    public
 }
