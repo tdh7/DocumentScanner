@@ -2,8 +2,6 @@ package com.tdh7.documentscanner.model;
 
 import android.graphics.PointF;
 
-import java.util.ArrayList;
-
 public class Edge {
     public Edge() {
         mPoints = new PointF[4];
@@ -26,4 +24,5 @@ public class Edge {
         mPoints[i].y = pointY;
         return this;
     }
+
 }

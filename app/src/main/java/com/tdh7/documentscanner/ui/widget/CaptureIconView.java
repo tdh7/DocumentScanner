@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.util.Util;
 
-public class CaptureView extends View {
+public class CaptureIconView extends View {
     private static final String TAG = "CaptureView";
 
     public static final int MODE_AUTO_CAPTURE = 0;
@@ -109,17 +109,17 @@ public class CaptureView extends View {
 
 
 
-    public CaptureView(Context context) {
+    public CaptureIconView(Context context) {
         super(context);
         init(null);
     }
 
-    public CaptureView(Context context, @Nullable AttributeSet attrs) {
+    public CaptureIconView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public CaptureView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CaptureIconView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
@@ -149,18 +149,18 @@ public class CaptureView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mDpUnit = getResources().getDimension(R.dimen.dp_unit);
         if(attrs!=null) {
-            TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.CaptureView);
-            mInsideColor = t.getColor(R.styleable.CaptureView_insideColor,0xffff9500);
-            mInsideActiveColor = t.getColor(R.styleable.CaptureView_insideActiveColor,0xffffaa00);
-            mOutsideColor = t.getColor(R.styleable.CaptureView_outlineColor,0xffff9500);
-            mAutolineColor = t.getColor(R.styleable.CaptureView_autolineColor,0xffff9500);
-            mStrokeOutlinePercent = t.getFloat(R.styleable.CaptureView_strokeOutlinePercent,5f/60);
-            mDistancePercent = t.getFloat(R.styleable.CaptureView_distancePercent,3f/60);
+            TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.CaptureIconView);
+            mInsideColor = t.getColor(R.styleable.CaptureIconView_insideColor,0xffff9500);
+            mInsideActiveColor = t.getColor(R.styleable.CaptureIconView_insideActiveColor,0xffffaa00);
+            mOutsideColor = t.getColor(R.styleable.CaptureIconView_outlineColor,0xffff9500);
+            mAutolineColor = t.getColor(R.styleable.CaptureIconView_autolineColor,0xffff9500);
+            mStrokeOutlinePercent = t.getFloat(R.styleable.CaptureIconView_strokeOutlinePercent,5f/60);
+            mDistancePercent = t.getFloat(R.styleable.CaptureIconView_distancePercent,3f/60);
 
-            mDistanceActivePercent = t.getFloat(R.styleable.CaptureView_distanceActivePercent,5f/60);
-            setAnimateSwitchDuration(t.getInteger(R.styleable.CaptureView_animateSwitchDuration,350));
-            setAutoDurationPerRound(t.getInteger(R.styleable.CaptureView_autoDurationPerRound,600));
-            setCaptureMode(t.getInt(R.styleable.CaptureView_captureMode,MODE_AUTO_CAPTURE));
+            mDistanceActivePercent = t.getFloat(R.styleable.CaptureIconView_distanceActivePercent,5f/60);
+            setAnimateSwitchDuration(t.getInteger(R.styleable.CaptureIconView_animateSwitchDuration,350));
+            setAutoDurationPerRound(t.getInteger(R.styleable.CaptureIconView_autoDurationPerRound,600));
+            setCaptureMode(t.getInt(R.styleable.CaptureIconView_captureMode,MODE_AUTO_CAPTURE));
             t.recycle();
         }
 
@@ -193,6 +193,14 @@ public class CaptureView extends View {
         mIsUnlockCapture = false;
     }
 
+    public void fireCapture() {
+        tapConfirm();
+    }
+
+    public boolean isLockingCapture() {
+        return !mIsUnlockCapture;
+    }
+
     public interface CaptureListener {
         /**
          *
@@ -223,7 +231,7 @@ public class CaptureView extends View {
     private void touchUp(MotionEvent e) {
         if(mIsTouchDown) {
             if(Math.max(Math.abs(mTouchX - e.getX()), Math.abs(mTouchY - e.getY()))<= mDpUnit*10f) {
-                tapConfirm(e);
+                tapConfirm();
             }
             mIsTouchDown = false;
             invalidate();
@@ -255,7 +263,7 @@ public class CaptureView extends View {
         }
     }
 
-    private void tapConfirm(MotionEvent e) {
+    private void tapConfirm() {
         if(mCaptureListener!=null&&mCaptureListener.onNewCapture()) {
             onCaptured();
             shootSound();

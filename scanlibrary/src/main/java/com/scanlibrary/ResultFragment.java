@@ -213,7 +213,7 @@ public class ResultFragment extends Fragment {
                                 //end save
 
                                 //open file with another program
-                            /*    Intent intent = new Intent(Intent.ACTION_VIEW);
+                      /*          Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                 startActivity(intent);*/
@@ -226,28 +226,22 @@ public class ResultFragment extends Fragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Toasty.success(getContext(),"Save successfully!").show();
                                         dismissDialog();
-                                        Toasty.success(getContext(),"Save file successfully").show();
                                         getActivity().finish();
                                     }
                                 });
-
                             } catch (Exception e) {
-                                e.printStackTrace();
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        dismissDialog();
                                         Toasty.error(getContext(),"Sorry, something went wrong!").show();
+                                        dismissDialog();
                                         getActivity().finish();
-
                                     }
                                 });
+                                e.printStackTrace();
                             }
-
-                            System.gc();
-
-
                         }
                     });
 

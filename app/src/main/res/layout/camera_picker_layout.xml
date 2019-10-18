@@ -43,14 +43,8 @@
             android:id="@+id/markerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            tools:background="#444"
-            app:layout_constraintTop_toTopOf="@id/camera_view"
-            app:layout_constraintBottom_toBottomOf="@id/camera_view"
-            app:layout_constraintStart_toStartOf="@id/camera_view"
-            app:layout_constraintEnd_toEndOf="@id/camera_view"
-            android:visibility="invisible"
-            tools:visibility="gone"/>
+            android:visibility="visible"
+            tools:background="@color/flatTealBlue"/>
     </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/preview"
@@ -90,7 +84,7 @@
         android:paddingEnd="12dp"
         android:translationX="24dp"
       />
-    <com.tdh7.documentscanner.ui.widget.CaptureView
+    <com.tdh7.documentscanner.ui.widget.CaptureIconView
         android:id="@+id/capture_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -213,5 +207,29 @@
         tools:listitem="@layout/item_scan_page"
         tools:itemCount="10"
         tools:layoutManager="LinearLayoutManager"
+        />
+    <TextView
+        android:id="@+id/toast_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        app:layout_constraintBottom_toTopOf="@id/capture_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="@string/looking_for_document"
+        android:layout_marginBottom="16dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/helvetica_font"
+        android:background="@drawable/background_toast_for_camera"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textColor="#444"
+        android:visibility="gone"
+        android:alpha="0"
+        tools:visibility="visible"
+        tools:alpha="1"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

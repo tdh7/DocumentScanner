@@ -80,4 +80,21 @@ public final class Util {
             }
         }
     }
+
+    public static Bitmap centerCropBitmap(Bitmap bitmap, float[] viewPort) {
+        float wPerHDest = viewPort[0]/viewPort[1];
+        float wOrg = bitmap.getWidth();
+        float hOrg = bitmap.getHeight();
+        float wPerHOrg = wOrg/hOrg;
+        Bitmap result;
+        if(wPerHOrg<wPerHDest) {
+            float hDest = wOrg/wPerHDest;
+            result = Bitmap.createBitmap(bitmap,0,(int)(hOrg/2 - hDest/2),(int)wOrg,(int)hDest);
+        } else {
+            // the result shorter than origin
+            float wDest = hOrg*wPerHDest;
+            result = Bitmap.createBitmap(bitmap,(int)(wOrg/2 - wDest/2),0,(int)wDest,(int)hOrg);
+        }
+        return result;
+    }
 }
