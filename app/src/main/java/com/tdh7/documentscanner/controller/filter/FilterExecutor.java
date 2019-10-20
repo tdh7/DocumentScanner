@@ -1,4 +1,4 @@
-package com.tdh7.documentscanner.model.filter;
+package com.tdh7.documentscanner.controller.filter;
 
 import android.graphics.Bitmap;
 

@@ -193,7 +193,7 @@ public class CaptureIconView extends View {
         mIsUnlockCapture = false;
     }
 
-    public void fireCapture() {
+    public void fireCaptureByAutoCapturer() {
         tapConfirm();
     }
 
@@ -247,8 +247,8 @@ public class CaptureIconView extends View {
         }
     }
 
-    MediaActionSound sound = new MediaActionSound();
     private void shootSound() {
+        MediaActionSound sound = new MediaActionSound();
         AudioManager audio = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         if(audio!=null) {
             switch (audio.getRingerMode()) {

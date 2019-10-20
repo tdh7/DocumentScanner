@@ -1,12 +1,11 @@
 package com.tdh7.documentscanner.ui.scansession;
 
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +13,9 @@ import androidx.annotation.Nullable;
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
-import com.tdh7.documentscanner.model.filter.FilterImageView;
-import com.tdh7.documentscanner.model.filter.canvas.QuickViewCanvasFilter;
-import com.tdh7.documentscanner.ui.widget.RotateAbleImageView;
+import com.tdh7.documentscanner.controller.filter.FilterImageView;
+import com.tdh7.documentscanner.controller.filter.canvas.CanvasFilter;
+import com.tdh7.documentscanner.controller.filter.canvas.QuickViewCanvasFilter;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -28,6 +27,11 @@ public class WorkingSessionFragment extends NavigationFragment {
 
     @BindDimen(R.dimen.dp_unit)
     float mDpUnit = 1;
+
+    public static WorkingSessionFragment newInstance() {
+        WorkingSessionFragment fragment = new WorkingSessionFragment();
+        return fragment;
+    }
 
     public static WorkingSessionFragment newInstance(Bitmap bitmap) {
 
@@ -48,7 +52,7 @@ public class WorkingSessionFragment extends NavigationFragment {
     @Nullable
     @Override
     protected View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.working_session,container,false);
+        return inflater.inflate(R.layout.crop_edge_quick_view,container,false);
     }
 
     @Override
@@ -58,10 +62,11 @@ public class WorkingSessionFragment extends NavigationFragment {
         if(mBitmapObject instanceof Bitmap) {
            mImageView.setBitmap((Bitmap) mBitmapObject);
         } else if(mBitmapObject instanceof BitmapPhoto) {
-          //  mImageView.setRotation(-((BitmapPhoto) mBitmapPhoto).rotationDegrees);
-            mImageView.setFilter(new QuickViewCanvasFilter().setRotateValue(-((BitmapPhoto) mBitmapObject).rotationDegrees));
+            CanvasFilter filter = mImageView.getFilter();
+            if(filter instanceof QuickViewCanvasFilter) ((QuickViewCanvasFilter) filter).setRotateValue( 360 - ((BitmapPhoto) mBitmapObject).rotationDegrees);
             mImageView.setBitmap(((BitmapPhoto) mBitmapObject).bitmap);
-          //  rotateImage(mImageView,((BitmapPhoto) mBitmapObject).bitmap,- ((BitmapPhoto) mBitmapObject).rotationDegrees);
+        } else {
+            mImageView.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.ys));
         }
     }
 

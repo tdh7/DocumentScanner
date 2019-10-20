@@ -20,4 +20,17 @@
         <attr name="animateSwitchDuration" format="integer"/>
         <attr name="autoDurationPerRound" format="integer" />
     </declare-styleable>
+    <declare-styleable name="FilterImageView">
+        <attr name="filterParameter" format="float"/>
+        <attr name="filterParameter1" format="float"/>
+        <attr name="filterParameter2" format="float"/>
+        <attr name="bitmapSrc" format="reference"/>
+        <attr name="filterClass"/>
+        <attr name="drawBitmapIfNoFilter" format="boolean"/>
+        <attr name="filter" format="enum">
+            <enum name="none" value="0"/>
+            <enum name="quickView" value="1"/>
+            <enum name="fullQuickView" value="2"/>
+        </attr>
+    </declare-styleable>
 </resources>

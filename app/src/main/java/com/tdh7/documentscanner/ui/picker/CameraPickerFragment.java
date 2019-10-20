@@ -16,15 +16,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
-import com.tdh7.documentscanner.controller.session.picker.AutoCapturer;
-import com.tdh7.documentscanner.controller.session.picker.EdgeFrameProcessor;
+import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
+import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
 import com.tdh7.documentscanner.ui.MainActivity;
-import com.tdh7.documentscanner.ui.scansession.WorkingSessionFragment;
 import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 import com.tdh7.documentscanner.util.PreferenceUtil;
@@ -36,14 +36,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
+import io.fotoapparat.configuration.UpdateConfiguration;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.result.BitmapPhoto;
-import io.fotoapparat.result.PhotoResult;
 import io.fotoapparat.result.WhenDoneListener;
 import io.fotoapparat.view.CameraView;
 import io.fotoapparat.view.FocusView;
 
-import static io.fotoapparat.selector.AspectRatioSelectorsKt.standardRatio;
+import static io.fotoapparat.selector.FlashSelectorsKt.autoFlash;
+import static io.fotoapparat.selector.FlashSelectorsKt.off;
+import static io.fotoapparat.selector.FlashSelectorsKt.on;
+import static io.fotoapparat.selector.FlashSelectorsKt.torch;
 import static io.fotoapparat.selector.LensPositionSelectorsKt.back;
 import static io.fotoapparat.selector.PreviewFpsRangeSelectorsKt.highestFps;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
@@ -51,6 +54,11 @@ import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensor
 public class CameraPickerFragment extends NavigationFragment implements CaptureIconView.CaptureListener {
     private static final String TAG = "CameraPickerFragment";
     public static final int PERMISSION_CAMERA = 1;
+
+    public static CameraPickerFragment newInstance() {
+        CameraPickerFragment fragment = new CameraPickerFragment();
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -73,7 +81,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     private void showPermissionScreen() {
         if(getContext()!=null&&mPermissionView==null) {
          mPermissionView = LayoutInflater.from(getContext()).inflate(R.layout.camera_ask_permission,mRoot,false);
-        View button = mPermissionView.findViewById(R.id.button);
+        View button = mPermissionView.findViewById(R.id.button_two);
         if(button!=null) button.setOnClickListener(this::allowAccess);
          mRoot.addView(mPermissionView);
         }
@@ -88,7 +96,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     private void removePermissionScreenIfAny() {
         if(getContext()!=null&&mPermissionView!=null) {
-            mPermissionView.findViewById(R.id.button).setOnClickListener(null);
+            mPermissionView.findViewById(R.id.button_two).setOnClickListener(null);
             mRoot.removeView(mPermissionView);
             mPermissionView = null;
         }
@@ -147,6 +155,9 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     @Override
     public void onDestroy() {
         mEdgeFrameProcessor.destroy();
+        mEdgeFrameProcessor = null;
+        mCropEdgeQuickView.destroy();
+        mCropEdgeQuickView = null;
         super.onDestroy();
     }
 
@@ -183,6 +194,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
                 .previewScaleType(ScaleType.CenterCrop)
                 .lensPosition(back())
                 .build();
+        mCropEdgeQuickView.init(this);
     }
 
     @Override
@@ -190,8 +202,10 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         return false;
     }
 
+    public float mStatusHeight = 0;
     @Override
     public void onSetStatusBarMargin(int value) {
+        mStatusHeight = value;
         ((ViewGroup.MarginLayoutParams)mStatusView.getLayoutParams()).height = value;
 
        int height = Tool.getScreenSize(getContext())[1];
@@ -205,6 +219,10 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
        }
     }
 
+    public EdgeFrameProcessor getEdgeFrameProcessor() {
+        return mEdgeFrameProcessor;
+    }
+
     private EdgeFrameProcessor mEdgeFrameProcessor ;
     private Fotoapparat mFotoapparat;
 
@@ -216,21 +234,81 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
 
     @BindView(R.id.camera_view)
-    CameraView mCameraView;
+    public CameraView mCameraView;
 
    @BindView(R.id.focusView)
     FocusView mFocusView;
 
    @BindView(R.id.root)
+   public
    ViewGroup mRoot;
 
    @BindView(R.id.camera_card_view)
    View mCameraCardView;
 
    @BindView(R.id.capture_icon)
+   public
    CaptureIconView mCaptureIcon;
 
    private int mCaptureMode = CaptureIconView.MODE_AUTO_CAPTURE;
+
+    public static final int FLASH_AUTO = 0;
+    public static final int FLASH_OFF = 1;
+    public static final int FLASH_ON = 2;
+    public static final int FLASH_TORCH = 3;
+
+   private int mFlashMode = FLASH_AUTO;
+    @OnClick(R.id.flash)
+    void switchFlashMode() {
+        int next;
+        switch (mFlashMode) {
+            case FLASH_AUTO:
+                next = FLASH_ON;
+                break;
+            case FLASH_ON:
+                next = FLASH_OFF;
+                break;
+            case FLASH_OFF:
+                next = FLASH_TORCH;
+                break;
+            case FLASH_TORCH:
+                next = FLASH_AUTO;
+                break;
+                default:
+                    next = -1;
+        }
+
+        if(next!=-1) {
+            mFlashMode = next;
+            updateFlashMode();
+        }
+    }
+    private void updateFlashMode() {
+        UpdateConfiguration.Builder builder = new UpdateConfiguration.Builder();
+        switch (mFlashMode) {
+            case FLASH_AUTO:
+                builder.flash(autoFlash());
+                toast("Flash Auto");
+                hideToast();
+                break;
+            case FLASH_ON:
+                builder.flash(on());
+                toast("Flash On");
+                hideToast();
+                break;
+            case FLASH_OFF:
+                builder.flash(off());
+                toast("Flash Off");
+                hideToast();
+                break;
+            case FLASH_TORCH:
+                builder.flash(torch());
+                toast("Flash Torch");
+                hideToast();
+                break;
+        }
+        mFotoapparat.updateConfiguration(builder.build());
+    }
 
    @BindView(R.id.auto_capture_text)
    TextView mAutoCaptureButton;
@@ -256,7 +334,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
            mAutoCaptureButton.animate().translationX(24*mDpUnit).start();
            mManualCaptureButton.animate().translationX(-24*mDpUnit).start();
-           mEdgeFrameProcessor.deactiveAutoCapture();
+           mEdgeFrameProcessor.disableAutoCapturer();
        }
    }
     @OnClick(R.id.auto_capture_text)
@@ -343,38 +421,50 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         });
     }
 
-    public void fireCapture() {
-        mHandler.post(mCaptureIcon::fireCapture);
+    public void fireCaptureByAutoCapturer(float[] mAverages, float[] mLatest) {
+        mHandler.post(mCaptureIcon::fireCaptureByAutoCapturer);
     }
 
     @Override
     public boolean onNewCapture() {
-
-        PhotoResult result = mFotoapparat.takePicture();
-        result.toBitmap().whenDone(mBitmapPhotoResultListener);
+        mEdgeFrameProcessor.setActiveProcessor(false);
+        mCaptureIcon.lockCapture();
+        mFotoapparat.takePicture().toBitmap().whenDone(mBitmapPhotoResultListener);
       //  mFotoapparat.stop();
 
         return true;
     }
 
+    public void onQuickViewAttach() {
+
+    }
+
+    public void onQuickViewDetach() {
+        mEdgeFrameProcessor.setActiveProcessor(true);
+        mCaptureIcon.unlockCapture();
+    }
+
+    private CropEdgeQuickView mCropEdgeQuickView = new CropEdgeQuickView();
+
     private WhenDoneListener<BitmapPhoto> mBitmapPhotoResultListener = new WhenDoneListener<BitmapPhoto>() {
         @Override
         public void whenDone(@Nullable BitmapPhoto bitmapPhoto) {
-            mCaptureIcon.unlockCapture();
             if(bitmapPhoto!=null) {
                 // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
-                presentFragment(WorkingSessionFragment.newInstance(bitmapPhoto));
-            }
-        }
-    };
+              //  presentFragment(WorkingSessionFragment.newInstance(bitmapPhoto));
+                int previewRotate = (360 - mEdgeFrameProcessor.getRotateDegree()) % 360 ;
+                int captureRotate = (360 - bitmapPhoto.rotationDegrees) % 360;
 
-    private WhenDoneListener<Bitmap> mBitmapResultListener = new WhenDoneListener<Bitmap>() {
-        @Override
-        public void whenDone(@org.jetbrains.annotations.Nullable Bitmap bitmap) {
-            mCaptureIcon.unlockCapture();
-            if(bitmap!=null) {
-                // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
-                presentFragment(WorkingSessionFragment.newInstance(bitmap));
+                    // preview 270 => rotate 360 - 270 = 90
+                    // capture 270 => rotate 360 - 270 = 90
+                    // mean that preview is the same as capture
+                    // => rotating 90 + 0 makes capture  shown as same as capture
+                // rotate 90 + (90 - 90) => a + (b-a)
+                    // preview 270 => rotate 360 - 270 = 90
+                    // capture 0 => rotate 0
+                    // rotate 0 will make capture after the preview 90 degree
+                    //  => rotate 0 + 90 == 0 + (9- 0)
+                    mCropEdgeQuickView.attachThenPresent(bitmapPhoto.bitmap,previewRotate);
             }
         }
     };
@@ -385,20 +475,29 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     @BindView(R.id.toast_text_view)
     TextView mToastTextView;
 
-    private boolean mIsToastVisible = false;
+    public void toast(final @StringRes int s) {
+        mHandler.post(() -> {
+            if(mToastTextView.getVisibility()== View.GONE)
+                mToastTextView.animate().alpha(1)
+                        .withStartAction(() -> {
+                            mToastTextView.setText(s);
+                            mToastTextView.setVisibility(View.VISIBLE);
+                        }).setDuration(350).start();
+            else
+                mToastTextView.setText(s);
+        });
+    }
+
     public void toast(final String text) {
         mHandler.post(() -> {
-    if(!mIsToastVisible)
-        mToastTextView
-                .animate()
-                .alpha(1)
-                .withStartAction(() -> {
-                    mToastTextView.setText(text);
-                    mToastTextView.setVisibility(View.VISIBLE);
-                })
-        .setStartDelay(350)
-        .setDuration(350)
-        .start();
+            if(mToastTextView.getVisibility()== View.GONE)
+                mToastTextView.animate().alpha(1)
+                        .withStartAction(() -> {
+                            mToastTextView.setText(text);
+                            mToastTextView.setVisibility(View.VISIBLE);
+                        }).setDuration(350).start();
+            else
+                mToastTextView.setText(text);
         });
     }
 

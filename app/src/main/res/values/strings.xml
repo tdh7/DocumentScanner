@@ -33,6 +33,12 @@
     <string name="hello_gallery_second">Hello HomeSecondFragment. Arg: %1$s</string>
     <string name="hello_slideshow_second">Hello HomeSecondFragment. Arg: %1$s</string>
     <string name="allow_access">Allow Access</string>
-    <string name="looking_for_document">Looking for document</string>
+    <string name="looking_for_document">Looking for document…</string>
+    <string name="hold_still">Hold still…</string>
+    <string name="capturing">Capturing…</string>
+    <string name="retake">Retake</string>
+    <string name="take_more">Take more</string>
+    <string name="keep_scan">Keep Scan</string>
+    <string name="continue_">Continue</string>
 
 </resources>

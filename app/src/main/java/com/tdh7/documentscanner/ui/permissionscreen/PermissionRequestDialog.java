@@ -63,7 +63,7 @@ public class PermissionRequestDialog extends DialogFragment implements View.OnCl
 
     private void bind(View root) {
      View closeButton = root.findViewById(R.id.close);
-     View okButton = root.findViewById(R.id.button);
+     View okButton = root.findViewById(R.id.button_two);
      mPermissionImage = root.findViewById(R.id.permission_image);
      mPermissionTitle = root.findViewById(R.id.permission_title);
      mPermissionDescription = root.findViewById(R.id.permission_description);
@@ -118,7 +118,7 @@ public class PermissionRequestDialog extends DialogFragment implements View.OnCl
                 mResult = false;
                 dismiss();
                 break;
-            case R.id.button:
+            case R.id.button_two:
                 mResult = true;
                 dismiss();
                 break;

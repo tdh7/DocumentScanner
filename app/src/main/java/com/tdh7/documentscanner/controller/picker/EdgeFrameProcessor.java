@@ -1,4 +1,4 @@
-package com.tdh7.documentscanner.controller.session.picker;
+package com.tdh7.documentscanner.controller.picker;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,10 +26,35 @@ public class EdgeFrameProcessor implements FrameProcessor {
     private static final String TAG = "EdgeFrameProcessor";
 
     private final WeakReference<CameraPickerFragment> mWeakFragment;
+
+    public int getRotateDegree() {
+        return mRotateDegree;
+    }
+
+    public void setRotateDegree(int rotateDegree) {
+        mRotateDegree = rotateDegree;
+    }
+
+    private int mRotateDegree= 0;
     private RenderScript mRenderScript;
     public ScanComponent getScanComponent() {
         return mScanComponent;
     }
+
+    public boolean isActiveProcessor() {
+        return mActiveProcessor;
+    }
+
+    public void setActiveProcessor(boolean activeProcessor) {
+        mActiveProcessor = activeProcessor;
+    }
+
+    public boolean mActiveProcessor = true;
+
+    public AutoCapturer getAutoCapturer() {
+        return mAutoCapturer;
+    }
+
     private AutoCapturer mAutoCapturer;
 
     private ScanComponent mScanComponent = new ScanComponent();
@@ -45,8 +70,8 @@ public class EdgeFrameProcessor implements FrameProcessor {
         if(mAutoCapturer!=null) mAutoCapturer.activeAutoCapture();
     }
 
-    public void deactiveAutoCapture() {
-        if(mAutoCapturer!=null) mAutoCapturer.deactiveAutoCapture();
+    public void disableAutoCapturer() {
+        if(mAutoCapturer!=null) mAutoCapturer.disable();
     }
 
     public EdgeFrameProcessor(@NonNull Context context, @NonNull CameraPickerFragment fragment) {
@@ -68,7 +93,7 @@ public class EdgeFrameProcessor implements FrameProcessor {
             outlinePoints.put(3, new PointF(width, height));
             return outlinePoints;
         }
-        PointF rotatePoint(float cx,float cy,float angleInRad, PointF p) {
+        private PointF rotatePoint(float cx, float cy, float angleInRad, PointF p) {
             float s = (float) Math.sin(angleInRad);
             float c = (float) Math.cos(angleInRad);
 
@@ -116,12 +141,13 @@ public class EdgeFrameProcessor implements FrameProcessor {
 
         @Override
         public void process(@NonNull Frame frame) {
+            if(!isActiveProcessor()) return;
             CameraPickerFragment cpf = mWeakFragment.get();
             if(cpf!=null) {
                 long start = System.currentTimeMillis();
                 byte[] byteArray = frame.getImage();
                Resolution resolution = frame.getSize();
-                int rotate = frame.getRotation();
+                mRotateDegree = frame.getRotation();
                 long tick1 = System.currentTimeMillis();
                 Bitmap frameBitmap = RenderScriptHelper.convertYuvToRgbIntrinsic(mRenderScript,byteArray,resolution.width,resolution.height);
                 Bitmap resizedBitmap;
@@ -132,8 +158,8 @@ public class EdgeFrameProcessor implements FrameProcessor {
                 else resizedBitmap = frameBitmap;
 
                 Bitmap rotatedBitmap;
-                if(rotate!=0) {
-                    rotatedBitmap = Util.rotateBitmap(resizedBitmap, -rotate);
+                if(mRotateDegree!=0) {
+                    rotatedBitmap = Util.rotateBitmap(resizedBitmap, - mRotateDegree);
                     resizedBitmap.recycle();
                 } else rotatedBitmap = resizedBitmap;
                 Bitmap croppedBitmap = Util.centerCropBitmap(rotatedBitmap,cpf.getViewPort());
@@ -142,7 +168,10 @@ public class EdgeFrameProcessor implements FrameProcessor {
                 cpf.setPreview(croppedBitmap, frame.getRotation());
 
                 Log.d(TAG, "process: image size = "+ frame.getSize().width+"x"+frame.getSize().height+", rotation = "+frame.getRotation());
-                float[] points = getScanComponent().getPoints(croppedBitmap);
+
+                if(mScanComponent==null) return;
+                float[] points = mScanComponent.getPoints(croppedBitmap);
+                if(points==null) return;
                 convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
                 mAutoCapturer.onProcess(points);
                 cpf.setPoints(points);

@@ -38,13 +38,12 @@
                 android:id="@+id/focusView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+            <com.tdh7.documentscanner.ui.widget.MarkerView
+                android:id="@+id/markerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:background="@color/flatTealBlue"/>
         </io.fotoapparat.view.CameraView>
-        <com.tdh7.documentscanner.ui.widget.MarkerView
-            android:id="@+id/markerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-            tools:background="@color/flatTealBlue"/>
     </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/preview"

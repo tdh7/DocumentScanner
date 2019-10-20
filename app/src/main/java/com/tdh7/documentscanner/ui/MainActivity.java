@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import com.tdh7.documentscanner.R;
@@ -26,10 +27,11 @@ public class MainActivity extends PermissionActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR );
         mMainFragment = MainFragment.newInstance();
         initNavigation(savedInstanceState,R.id.container,mMainFragment);
-       // new Handler().post(this::openCamera);
+
+        new Handler().post(this::openCamera);
     }
     public void openCamera() {
-        presentFragment(new CameraPickerFragment());
+        presentFragment(CameraPickerFragment.newInstance());
     }
 
     public void closeDrawerIfOpened() {

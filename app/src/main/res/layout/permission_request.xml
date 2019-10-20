@@ -89,7 +89,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"/>
         <TextView
-            android:id="@+id/button"
+            android:id="@+id/button_two"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
