@@ -420,8 +420,13 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
             }
         });
     }
+    public float[] mAverages = new float[] {0,1,0,1,0,0,1,1};;
+    public float[] mLates = new float[] {0,1,0,1,0,0,1,1};;
 
-    public void fireCaptureByAutoCapturer(float[] mAverages, float[] mLatest) {
+    public void fireCaptureByAutoCapturer(float[] averages, float[] latest) {
+        System.arraycopy(averages, 0, mAverages, 0, 8);
+        System.arraycopy(latest, 0, mLates, 0, 8);
+
         mHandler.post(mCaptureIcon::fireCaptureByAutoCapturer);
     }
 

@@ -74,12 +74,17 @@ public class CropEdgeQuickView {
                 ((QuickViewCanvasFilter) canvasFilter).setRotateValue(rotationDegrees);
             mFilterImageView.setBitmap(bitmap);
             mLayout.setBackgroundColor(Color.BLACK);
-            mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
+         //   mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
 
             AutoCapturer capturer = mFragment.getEdgeFrameProcessor().getAutoCapturer();
             if(capturer!=null) {
-                float[] points = capturer.getAverageEdges();
+                float[] points = mFragment.mLates;
                 mMarkerView.setPoints(points);
+                Log.d(TAG, "setPoints: " +
+                        "p[0] = ("+points[0]+"; "+points[4]+"), " +
+                        "p[1] = ("+points[1]+"; "+points[5]+"), "+
+                        "p[2] = ("+points[2]+"; "+points[6]+"), "+
+                        "p[3] = ("+points[3]+"; "+points[7]+")");
             }
 
             mFragment.onQuickViewAttach();

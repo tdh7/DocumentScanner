@@ -104,11 +104,11 @@ public class MarkerView extends View {
             mPointFs[1].y = points[5];
             mPointFs[2].y = points[6];
             mPointFs[3].y = points[7];
-            Log.d(TAG, "setPoints: " +
-                    "p[0] = ("+mPointFs[0].x+"; "+mPointFs[1].y+"), " +
+            Log.d(TAG, "current marker: " +
+                    "p[0] = ("+mPointFs[0].x+"; "+mPointFs[0].y+"), " +
                     "p[1] = ("+mPointFs[1].x+"; "+mPointFs[1].y+"), "+
-                    "p[2] = ("+mPointFs[1].x+"; "+mPointFs[1].y+"), "+
-                    "p[3] = ("+mPointFs[1].x+"; "+mPointFs[1].y+")");
+                    "p[2] = ("+mPointFs[2].x+"; "+mPointFs[2].y+"), "+
+                    "p[3] = ("+mPointFs[3].x+"; "+mPointFs[3].y+")");
             invalidate();
 
         }

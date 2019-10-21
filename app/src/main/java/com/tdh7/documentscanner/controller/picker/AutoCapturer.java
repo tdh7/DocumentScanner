@@ -77,10 +77,15 @@ public class AutoCapturer {
         return mTolerance;
     }
 
-    private void fireCapture() {
+    private synchronized void fireCapture() {
         CameraPickerFragment fragment = mRef.get();
         if(fragment!=null) {
-            fragment.fireCaptureByAutoCapturer();
+            Log.d(TAG, "fire: " +
+                    "p[0] = ("+mAverageEdges[0]+"; " + mAverageEdges[4]+"), " +
+                    "p[1] = ("+mAverageEdges[1]+"; " + mAverageEdges[5]+"), "+
+                    "p[2] = ("+mAverageEdges[2]+"; " + mAverageEdges[6]+"), "+
+                    "p[3] = ("+mAverageEdges[3]+"; " + mAverageEdges[7]+")");
+            fragment.fireCaptureByAutoCapturer(mAverageEdges, mLatestEdges);
         }
     }
 
@@ -111,7 +116,8 @@ public class AutoCapturer {
     }
 
     private void calculateAverage() {
-        if(mTotalRecords==1) arrayCopy(mLatestEdges,mAverageEdges);
+        if(mTotalRecords==1)
+            System.arraycopy(mLatestEdges, 0, mAverageEdges, 0, 8);
         else {
             for (int i = 0; i < 4; i++) {
                 setX(mAverageEdges,i,
@@ -162,34 +168,10 @@ public class AutoCapturer {
                         // this will go straight to capturing case
                 } else break;
             case STATE_CAPTURING:
-                fireCapture();
                 setState(STATE_DISABLING);
+                fireCapture();
                 break;
         }
-
-  /*      if(!isLatestEdgesValid()) {
-
-            if(mTotalRecords!=0) resetTime();
-            return;
-        }
-
-        // ở đây nghĩa là các điểm đã hợp lệ
-        mTotalRecords++;
-        mDeltaTime = System.currentTimeMillis() - mStartTime;
-
-        if(mDeltaTime>=mStableDuration&&mTotalRecords>=7) {
-            // Capturing...
-            toast("Capturing…, total record "+ mTotalRecords);
-            fireCaptureByAutoCapturer();
-
-        } else if(mDeltaTime>=mStableDuration/2&&mTotalRecords>=4) {
-            // hold still...
-            toast("Hold still…");
-        } else {
-            // do nothing
-        }
-
-        */
     }
 
     private int mWrongCount = 0;
@@ -197,6 +179,16 @@ public class AutoCapturer {
         mTotalRecords++;
         mDeltaTime = System.currentTimeMillis() - mStartTime;
         calculateAverage();
+        Log.d(TAG, "current average: " +
+                "p[0] = ("+mAverageEdges[0]+"; " + mAverageEdges[4]+"), " +
+                "p[1] = ("+mAverageEdges[1]+"; " + mAverageEdges[5]+"), "+
+                "p[2] = ("+mAverageEdges[2]+"; " + mAverageEdges[6]+"), "+
+                "p[3] = ("+mAverageEdges[3]+"; " + mAverageEdges[7]+")");
+        Log.d(TAG, "current latest: " +
+                "p[0] = ("+mLatestEdges[0]+"; " + mLatestEdges[4]+"), " +
+                "p[1] = ("+mLatestEdges[1]+"; " + mLatestEdges[5]+"), "+
+                "p[2] = ("+mLatestEdges[2]+"; " + mLatestEdges[6]+"), "+
+                "p[3] = ("+mLatestEdges[3]+"; " + mLatestEdges[7]+")");
     }
 
     private void backToBeginning() {
@@ -320,9 +312,7 @@ public class AutoCapturer {
     public synchronized void onProcess(float[] points) {
         if(isLockCaptured()) return;
         if(points.length!=8) return;
-        for (int i = 0; i < 8; i++) {
-            mLatestEdges[0] = points[0];
-        }
+        System.arraycopy(points, 0, mLatestEdges, 0, 8);
         shouldCapture();
     }
 
