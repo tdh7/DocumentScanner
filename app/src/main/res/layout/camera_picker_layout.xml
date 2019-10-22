@@ -38,12 +38,11 @@
                 android:id="@+id/focusView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-            <com.tdh7.documentscanner.ui.widget.MarkerView
-                android:id="@+id/markerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:background="@color/flatTealBlue"/>
         </io.fotoapparat.view.CameraView>
+        <com.tdh7.documentscanner.ui.widget.MarkerView
+            android:id="@+id/markerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/preview"
@@ -182,7 +181,7 @@
         android:id="@+id/auto_focus"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:text="Auto Focus"
+        android:text="Save (1)"
         android:textSize="14sp"
         android:textColor="@color/flatOrange"
         app:layout_constraintTop_toTopOf="@id/back_button"
@@ -195,6 +194,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:textStyle="bold"
+        android:elevation="4dp"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

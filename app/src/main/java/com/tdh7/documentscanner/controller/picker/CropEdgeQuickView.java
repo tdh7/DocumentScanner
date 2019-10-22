@@ -22,8 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.fotoapparat.parameter.Flash;
-import io.fotoapparat.result.BitmapPhoto;
 
 public class CropEdgeQuickView {
     private static final String TAG = "CropEdgeQuickView";
@@ -74,11 +72,12 @@ public class CropEdgeQuickView {
                 ((QuickViewCanvasFilter) canvasFilter).setRotateValue(rotationDegrees);
             mFilterImageView.setBitmap(bitmap);
             mLayout.setBackgroundColor(Color.BLACK);
-         //   mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
+            mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
 
             AutoCapturer capturer = mFragment.getEdgeFrameProcessor().getAutoCapturer();
             if(capturer!=null) {
-                float[] points = mFragment.mLates;
+                float[] points;// = new float[8];
+               points = mFragment.mAverages;
                 mMarkerView.setPoints(points);
                 Log.d(TAG, "setPoints: " +
                         "p[0] = ("+points[0]+"; "+points[4]+"), " +

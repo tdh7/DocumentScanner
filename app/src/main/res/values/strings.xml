@@ -40,5 +40,6 @@
     <string name="take_more">Take more</string>
     <string name="keep_scan">Keep Scan</string>
     <string name="continue_">Continue</string>
+    <string name="cropper">Cropper</string>
 
 </resources>

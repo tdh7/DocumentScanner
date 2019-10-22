@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.util.Util;
 
 import java.util.List;
 public class MarkerView extends View {
@@ -87,13 +88,9 @@ public class MarkerView extends View {
     }
     private boolean mShouldDrawMarker = false;
 
+
     public synchronized void setPoints(float[] points) {
-        if(points==null || points.length!=8) {
-            if(mShouldDrawMarker) {
-                mShouldDrawMarker = false;
-                invalidate();
-            }
-        } else {
+        if(Util.isEdgeValid(points)) {
             mShouldDrawMarker = true;
             mPointFs[0].x = points[0];
             mPointFs[1].x = points[1];
@@ -109,8 +106,12 @@ public class MarkerView extends View {
                     "p[1] = ("+mPointFs[1].x+"; "+mPointFs[1].y+"), "+
                     "p[2] = ("+mPointFs[2].x+"; "+mPointFs[2].y+"), "+
                     "p[3] = ("+mPointFs[3].x+"; "+mPointFs[3].y+")");
-            invalidate();
+            postInvalidate();
 
+        } else if (mShouldDrawMarker) {
+                Util.reverseToDefaultValue(mPointFs);
+            mShouldDrawMarker = false;
+            postInvalidate();
         }
     }
 
@@ -131,19 +132,58 @@ public class MarkerView extends View {
         mCanvas.drawPath(path, paint);
         mCanvas.restore();
     }
+    Path path;
+    private void drawEdges(Canvas canvas) {
+        canvas.save();
 
+        if(path==null) path = new Path();
+        else path.rewind();
+        path.moveTo(mPointFs[0].x*w,mPointFs[0].y*h);
+        for(int i = 1;i<4;i++) {
+            path.lineTo(mPointFs[i].x*w,mPointFs[i].y*h);
+        }
+        path.close();
+        paint.setColor(0xFFFF9500);
+        paint.setAlpha(80);
+        paint.setStrokeWidth(oneDp*2);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPath(path,paint);
+        paint.setAlpha(225);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawPath(path,paint);
+        canvas.restore();
+    }
+
+    private void drawPoints(Canvas canvas) {
+        for (int i = 0, mPointFsLength = mPointFs.length; i < mPointFsLength; i++) {
+            PointF p = mPointFs[i];
+            paint.setColor(color[i]);
+
+            paint.setStrokeWidth(oneDp * 2);
+            canvas.drawCircle(p.x * w, p.y * h, 4*oneDp, paint);
+            // paint.setColor(0xFFFFFFFF);
+            //   paint.setStrokeWidth(oneDp);
+            //      canvas.drawCircle(p.x * w, p.y * h, oneDp * 30, paint);
+        }
+    }
     @Override
     protected void onDraw(Canvas canvas) {
         if(mPointFs!=null&&mShouldDrawMarker) {
-            for (int i = 0, mPointFsLength = mPointFs.length; i < mPointFsLength; i++) {
-                PointF p = mPointFs[i];
-                paint.setColor(color[i]);
-                paint.setStrokeWidth(oneDp * 2);
-                canvas.drawCircle(p.x * w, p.y * h, oneDp * 4, paint);
-                // paint.setColor(0xFFFFFFFF);
-                //   paint.setStrokeWidth(oneDp);
-                //      canvas.drawCircle(p.x * w, p.y * h, oneDp * 30, paint);
-            }
+            drawEdges(canvas);
         }
+    }
+
+    public void getPoints(float[] point) {
+        if(point.length!=8) return;
+        point[0] = mPointFs[0].x;
+        point[1] = mPointFs[1].x;
+        point[2] = mPointFs[2].x;
+        point[3] = mPointFs[3].x;
+
+        point[4] = mPointFs[0].y;
+        point[5] = mPointFs[1].y;
+        point[6] = mPointFs[2].y;
+        point[7] = mPointFs[3].y;
+
     }
 }

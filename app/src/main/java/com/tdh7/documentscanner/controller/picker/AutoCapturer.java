@@ -6,6 +6,7 @@ import androidx.annotation.StringRes;
 
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
+import com.tdh7.documentscanner.util.Util;
 
 import java.lang.ref.WeakReference;
 
@@ -222,10 +223,7 @@ public class AutoCapturer {
     private final int[] mFoundPosInLatest = new int[]{0,1,2,3};
 
     private boolean areLatestEdgesNotDefaultValue() {
-        for (int i = 0; i < 8; i++) {
-            if(mInvalidEdges[i]!=mLatestEdges[i]) return true;
-        }
-        return false;
+        return Util.isNotDefaultValue(mLatestEdges);
     }
 
     private float getX(final float[] points,final int i) {

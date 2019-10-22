@@ -3,6 +3,7 @@ package com.tdh7.documentscanner.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -96,5 +97,35 @@ public final class Util {
             result = Bitmap.createBitmap(bitmap,(int)(wOrg/2 - wDest/2),0,(int)wDest,(int)hOrg);
         }
         return result;
+    }
+
+    private final static float[] mInvalidEdges = new float[]{0,1,0,1,0,0,1,1};
+
+    public static void getDefaultValue(float[] points) {
+        if(points.length>7)
+        System.arraycopy(points, 0, mInvalidEdges, 0, 8);
+    }
+
+    public static boolean isNotDefaultValue(float[] points) {
+        for (int i = 0; i < 8; i++) {
+            if(mInvalidEdges[i]!=points[i]) return true;
+        }
+        return false;
+    }
+
+    public static boolean isEdgeValid(float[] points) {
+        return points!=null && points.length==8 && isNotDefaultValue(points);
+    }
+
+    public static void reverseToDefaultValue(PointF[] pointFS) {
+        pointFS[0].x = mInvalidEdges[0];
+        pointFS[1].x = mInvalidEdges[1];
+        pointFS[2].x = mInvalidEdges[2];
+        pointFS[3].x = mInvalidEdges[3];
+
+        pointFS[0].y = mInvalidEdges[4];
+        pointFS[1].y = mInvalidEdges[5];
+        pointFS[2].y = mInvalidEdges[6];
+        pointFS[3].y = mInvalidEdges[7];
     }
 }
