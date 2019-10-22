@@ -1,4 +1,4 @@
-package com.tdh7.documentscanner.ui.widget;
+3package com.tdh7.documentscanner.ui.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,7 +16,9 @@ import com.tdh7.documentscanner.R;
 
 import java.util.List;
 public class MarkerView extends View {
-    private static final String TAG = "MarkerView";
+    private static final String TAG = "MarkerView";   
+    public static final int STATE_PREVIEW = 0;
+    
     public MarkerView(Context context) {
         super(context);
         init(null);
