@@ -1,5 +1,7 @@
 package com.tdh7.documentscanner.controller.picker;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
@@ -7,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 
 import androidx.cardview.widget.CardView;
 
@@ -29,11 +32,15 @@ public class CropEdgeQuickView {
     private ViewGroup mParentLayout;
     private View mLayout;
 
+    public boolean isAttached() {
+        return mLayout!=null;
+    }
+
     @BindView(R.id.filter_image_view)
     FilterImageView mFilterImageView;
 
     @BindView(R.id.card_view)
-    CardView mCardView;
+    FrameLayout mCardView;
 
     @BindDimen(R.dimen.dp_unit)
     float mDpUnit = 1;
@@ -73,6 +80,7 @@ public class CropEdgeQuickView {
             mFilterImageView.setBitmap(bitmap);
             mLayout.setBackgroundColor(Color.BLACK);
             mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
+            mMarkerView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
 
             AutoCapturer capturer = mFragment.getEdgeFrameProcessor().getAutoCapturer();
             if(capturer!=null) {
@@ -88,7 +96,10 @@ public class CropEdgeQuickView {
 
             mFragment.onQuickViewAttach();
           // mLayout.setAlpha(0);
-         //   mLayout.animate().alpha(0.85f).setDuration(350).start();
+          //  mLayout.animate().alpha(1f).setDuration(250).start();
+           /* ObjectAnimator.ofObject(mLayout,"backgroundColor",new ArgbEvaluator(),0,Color.BLACK)
+                    .setDuration(350)
+                    .start();*/
         }
     }
 
@@ -104,6 +115,7 @@ public class CropEdgeQuickView {
 
     public void detach() {
         if(mLayout!=null) {
+            mMarkerView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).start();
             mCardView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).start();
             mLayout.animate().alpha(0).setDuration(350).withEndAction(new Runnable() {
                 @Override

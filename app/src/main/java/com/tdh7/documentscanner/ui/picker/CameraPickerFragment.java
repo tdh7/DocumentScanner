@@ -361,7 +361,8 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
    @OnClick(R.id.back_button)
    void backClick() {
-        dismiss();
+        if(getActivity()!=null)
+        getActivity().onBackPressed();
    }
 
     @Override
@@ -393,6 +394,14 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         super.onPause();
         if(getActivity() instanceof MainActivity)
             ((MainActivity) getActivity()).setTheme(true);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if(mCropEdgeQuickView.isAttached()) {
+            mCropEdgeQuickView.detach();
+            return false;
+        } else return true;
     }
 
     @BindView(R.id.preview)

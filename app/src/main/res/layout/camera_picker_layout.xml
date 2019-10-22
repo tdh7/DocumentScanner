@@ -42,7 +42,8 @@
         <com.tdh7.documentscanner.ui.widget.MarkerView
             android:id="@+id/markerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:mode="preview"/>
     </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/preview"

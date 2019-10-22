@@ -100,6 +100,13 @@ public final class Util {
     }
 
     private final static float[] mInvalidEdges = new float[]{0,1,0,1,0,0,1,1};
+    private final static float[] mTrueInvalidEdges = new float[]{0,0,1,1,1,0,0,1};
+    /*
+    0,1
+    0,0
+    1,0
+    1,1
+     */
 
     public static void getDefaultValue(float[] points) {
         if(points.length>7)
@@ -115,6 +122,18 @@ public final class Util {
 
     public static boolean isEdgeValid(float[] points) {
         return points!=null && points.length==8 && isNotDefaultValue(points);
+    }
+
+    public static void reverseToTrueDefaultValue(PointF[] pointFS) {
+        pointFS[0].x = mTrueInvalidEdges[0];
+        pointFS[1].x = mTrueInvalidEdges[1];
+        pointFS[2].x = mTrueInvalidEdges[2];
+        pointFS[3].x = mTrueInvalidEdges[3];
+
+        pointFS[0].y = mTrueInvalidEdges[4];
+        pointFS[1].y = mTrueInvalidEdges[5];
+        pointFS[2].y = mTrueInvalidEdges[6];
+        pointFS[3].y = mTrueInvalidEdges[7];
     }
 
     public static void reverseToDefaultValue(PointF[] pointFS) {

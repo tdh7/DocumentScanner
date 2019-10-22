@@ -2,6 +2,10 @@
 <resources>
     <declare-styleable name="MarkerView">
         <attr name="showIfNoDetect" format="boolean"/>
+        <attr name="mode" format="enum">
+            <enum name="preview" value="0"/>
+            <enum name="cropper" value="1"/>
+        </attr>
     </declare-styleable>
     <declare-styleable name="CaptureIconView">
         <attr name="captureMode" format="enum">
