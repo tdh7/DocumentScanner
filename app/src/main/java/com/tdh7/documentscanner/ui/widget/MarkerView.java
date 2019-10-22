@@ -18,6 +18,19 @@ import com.tdh7.documentscanner.util.Util;
 import java.util.List;
 public class MarkerView extends View {
     private static final String TAG = "MarkerView";
+    public static final int STATE_PREVIEW = 0;
+    public static final int STATE_CROPPER = 1;
+    public static final int STATE_MOTION_TO_CROPPER = 2;
+    public static final int STATE_MOTION_TO_PREVIEW = 3;
+
+    public synchronized void motionTo(int nextState) {
+    	switch(nextState) {
+    	case STATE_MOTION_TO_CROPPER:
+    break;
+
+    	}
+}
+
     public MarkerView(Context context) {
         super(context);
         init(null);
