@@ -26,12 +26,16 @@ import com.tdh7.documentscanner.util.Util;
 
 public class MarkerView extends View implements ValueAnimator.AnimatorUpdateListener {
     private static final String TAG = "MarkerView";
-    public static final int STATE_JUST_CREATE = 0;
-    public static final int STATE_MOTION_APPEAR = 1;
-    public static final int STATE_PREVIEW = 2;
-    public static final int STATE_MOTION_TO_CROPPER = 3;
-    public static final int STATE_CROPPER = 4;
-    public static final int STATE_MOTION_CROPPER_TO_PREVIEW = 5;
+    public static final int STATE_HIDDEN = 0;
+    private static final int STATE_MOTION_HIDDEN_TO_PREVIEW = 1;
+    private static final int STATE_MOTION_HIDDEN_TO_CROPPER = 2;
+    
+    public static final int STATE_PREVIEW = 3;
+    private static final int STATE_MOTION_PREVIEW_TO_CROPPER = 4;
+    public static final int STATE_CROPPER = 5;
+    private static final int STATE_MOTION_CROPPER_TO_PREVIEW = 6;
+    private static final int STATE_MOTION_CROPPER_TO_HIDDEN = 7;
+    private static final int STATE_MOTION_PREVIEW_TO_HIDDEN = 8;
 
     private static final int DURATION_MOTION_TO_CROPPER = 450;
     private static final int DURATION_MOTION_TO_PREVIEW = 450;
@@ -42,6 +46,17 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     private boolean mIsBusy = false;
     private float mCurrentFractionValue = 1f;
     private float mCurrentAnimatedValue = 1f;
+    
+    public boolean switchState(int state) {
+    	// state is STATE_PREVIEW, or STATE_CROPPER
+       if(isBusy()) return false;
+       switch(state) {
+       	case 
+       	} 
+    	} 
+    private boolean switchState(int fromState, int toState) {
+    	
+    	} 
 
     // runMotion(STATE_JUST_CREATE, STATE_PREVIEW);
     public synchronized boolean runMotion(int from, int endState) {
@@ -96,6 +111,10 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
 
     private Interpolator mInterpolator = new OvershootInterpolator();
     private ValueAnimator mValueAnimator;
+    
+    public boolean isBusy() {
+    	return mValueAnimator.isRunning();
+    }
 
     public MarkerView(Context context) {
         super(context);
