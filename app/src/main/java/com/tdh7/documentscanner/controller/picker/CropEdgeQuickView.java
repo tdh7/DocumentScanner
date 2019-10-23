@@ -84,14 +84,7 @@ public class CropEdgeQuickView {
 
             AutoCapturer capturer = mFragment.getEdgeFrameProcessor().getAutoCapturer();
             if(capturer!=null) {
-                float[] points;// = new float[8];
-               points = mFragment.mAverages;
-                mMarkerView.setPoints(points);
-                Log.d(TAG, "setPoints: " +
-                        "p[0] = ("+points[0]+"; "+points[4]+"), " +
-                        "p[1] = ("+points[1]+"; "+points[5]+"), "+
-                        "p[2] = ("+points[2]+"; "+points[6]+"), "+
-                        "p[3] = ("+points[3]+"; "+points[7]+")");
+                mMarkerView.setPoints(capturer.getLatestEdges());
             }
 
             mFragment.onQuickViewAttach();
@@ -115,6 +108,7 @@ public class CropEdgeQuickView {
 
     public void detach() {
         if(mLayout!=null) {
+           // mMarkerView.setState(MarkerView.STATE_HIDDEN);
             mMarkerView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).start();
             mCardView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).start();
             mLayout.animate().alpha(0).setDuration(350).withEndAction(new Runnable() {

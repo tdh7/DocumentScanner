@@ -54,7 +54,10 @@
         app:showIfNoDetect="true"
         tools:scaleX="0.8"
         tools:scaleY="0.8"
-        tools:translationY="0dp"/>
+        tools:translationY="0dp"
+        app:cropperColor="@color/scanner_theme_color"
+        app:startMode="preview"
+        />
     <TextView
         android:id="@+id/button_one"
         android:layout_width="0dp"

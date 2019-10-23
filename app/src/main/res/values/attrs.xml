@@ -7,6 +7,13 @@
             <enum name="preview" value="1"/>
             <enum name="cropper" value="2"/>
         </attr>
+        <attr name="previewColor" format="color"/>
+        <attr name="cropperColor" format="color"/>
+        <attr name="startMode" format="enum">
+            <enum name="hidden" value="0"/>
+            <enum name="preview" value="1"/>
+            <enum name="cropper" value="2"/>
+        </attr>
     </declare-styleable>
     <declare-styleable name="CaptureIconView">
         <attr name="captureMode" format="enum">
@@ -18,7 +25,7 @@
         <attr name="insideActiveColor" format="color"/>
         <attr name="outlineColor" format="color"/>
         <attr name="autolineColor" format="color"/>
-        
+
         <attr name="strokeOutlinePercent" format="float"/>
         <attr name="distancePercent" format="float" />
         <attr name="distanceActivePercent" format="float"/>

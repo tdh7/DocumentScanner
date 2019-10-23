@@ -139,6 +139,8 @@ public class EdgeFrameProcessor implements FrameProcessor {
             return pointFs;
         }
 
+        private float[] mPoints = new float[]{0,1,0,1,0,0,1,1};
+
         @Override
         public void process(@NonNull Frame frame) {
             if(!isActiveProcessor()) return;
@@ -174,6 +176,7 @@ public class EdgeFrameProcessor implements FrameProcessor {
                 if(points==null) return;
                 convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
                 mAutoCapturer.onProcess(points);
+                System.arraycopy(points,0,mPoints,0,8);
                 cpf.setPoints(points);
                 /*if(points!=null) {
                     StringBuilder pbuilder = new StringBuilder("Points detected : ");

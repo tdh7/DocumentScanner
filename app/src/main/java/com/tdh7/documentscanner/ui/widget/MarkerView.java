@@ -1,6 +1,7 @@
 package com.tdh7.documentscanner.ui.widget;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -9,10 +10,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.Region;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
@@ -36,8 +37,8 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     private static final int STATE_MOTION_CROPPER_TO_HIDDEN = 7;
     private static final int STATE_MOTION_PREVIEW_TO_HIDDEN = 8;
 
-    private static final int DURATION_MOTION_TO_CROPPER = 1000;
-    private static final int DURATION_MOTION_TO_PREVIEW = 5000;
+    private static final int DURATION_MOTION_TO_CROPPER = 650;
+    private static final int DURATION_MOTION_TO_PREVIEW = 650;
 
     private int mState = STATE_HIDDEN;
     private int mNextState = STATE_PREVIEW;
@@ -45,7 +46,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     private float mCurrentFractionValue = 1f;
     private float mCurrentAnimatedValue = 1f;
     
-    public boolean switchState(int nextState) {
+    public boolean setState(int nextState) {
         // state is STATE_PREVIEW, STATE_CROPPER, or STATE_HIDDEN
         if (isBusy()) return false;
         mNextState = nextState;
@@ -56,7 +57,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
                         runMotionThenSwitchState(STATE_MOTION_HIDDEN_TO_PREVIEW);
                         break;
                     case STATE_CROPPER:
-                        runMotionThenSwitchState(STATE_MOTION_HIDDEN_TO_CROPPER,650,1250,mInterpolator);
+                        runMotionThenSwitchState(STATE_MOTION_HIDDEN_TO_CROPPER,650,650,mInterpolator);
                         break;
                 }
                 break;
@@ -66,7 +67,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
                         runMotionThenSwitchState(STATE_MOTION_PREVIEW_TO_HIDDEN);
                         break;
                     case STATE_CROPPER:
-                        runMotionThenSwitchState(STATE_MOTION_PREVIEW_TO_CROPPER,650,1250,mInterpolator);
+                        runMotionThenSwitchState(STATE_MOTION_PREVIEW_TO_CROPPER,650,650,mInterpolator);
                         break;
                 }
             case STATE_CROPPER:
@@ -141,11 +142,13 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
                 drawCropper(canvas,mCurrentAnimatedValue);
                 return;
             case STATE_MOTION_PREVIEW_TO_CROPPER:
+                if(mShouldDrawMarker)
                 drawPreviewPath(canvas,1-mCurrentFractionValue);
                 drawCropper(canvas,mCurrentAnimatedValue);
                 return;
             case STATE_MOTION_CROPPER_TO_PREVIEW:
-                drawPreviewPath(canvas,mCurrentAnimatedValue);
+                if(mShouldDrawMarker)
+                    drawPreviewPath(canvas,mCurrentAnimatedValue);
                 drawCropper(canvas,1-mCurrentFractionValue);
                 return;
             case STATE_MOTION_CROPPER_TO_HIDDEN:
@@ -176,6 +179,9 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         mState = mNextState;
     }
 
+    private int mPreviewColor = 0xffff9500;
+    private int mCropperColor = 0xffFF9500;
+
     private Interpolator mInterpolator = new OvershootInterpolator();
     private ValueAnimator mValueAnimator;
     
@@ -204,6 +210,9 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     private void init(AttributeSet attrs) {
 
         oneDp = getContext().getResources().getDimension(R.dimen.dp_unit);
+        _8dp = oneDp*8;
+        _12dp = oneDp*12;
+        _25dp = oneDp*25;
         mPointFs = new PointF[] {
                 new PointF(0,1),
                 new PointF(0,0),
@@ -227,14 +236,16 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
 
         if(attrs!=null) {
             TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.MarkerView);
+            mPreviewColor = t.getColor(R.styleable.MarkerView_previewColor,0xFFFF9500);
+            mCropperColor = t.getColor(R.styleable.MarkerView_cropperColor,0xFFFF9500);
             mStillShowInvalid = t.getBoolean(R.styleable.MarkerView_showIfNoDetect,false);
-            switchState(t.getInt(R.styleable.MarkerView_mode,STATE_HIDDEN));
+            int state = t.getInt(R.styleable.MarkerView_mode,STATE_HIDDEN);
+            mState= t.getInt(R.styleable.MarkerView_startMode,STATE_HIDDEN);
+            if(state!=STATE_HIDDEN)
+            setState(state);
             t.recycle();
         }
-
-
     }
-
 
     private float w = 0;
     private float h = 0;
@@ -306,21 +317,67 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         mCoordPointFs[1].y = mPointFs[1].y*h;
         mCoordPointFs[2].y = mPointFs[2].y*h;
         mCoordPointFs[3].y = mPointFs[3].y*h;
-        getEdgesPath();
+        recalculateValue();
     }
 
+    public void updatePointsByCoordPoints() {
+        for (int i = 0; i <4; i++) {
+            if(mCoordPointFs[i].x<0) mCoordPointFs[i].x = 0;
+            else if(mCoordPointFs[i].x> w) mCoordPointFs[i].x = w;
+
+            if(mCoordPointFs[i].y<0) mCoordPointFs[i].y = 0;
+            else if(mCoordPointFs[i].y >h) mCoordPointFs[i].y = h;
+        }
+        mPointFs[0].x = mCoordPointFs[0].x/w;
+        mPointFs[1].x = mCoordPointFs[1].x/w;
+        mPointFs[2].x = mCoordPointFs[2].x/w;
+        mPointFs[3].x = mCoordPointFs[3].x/w;
+
+        mPointFs[0].y = mCoordPointFs[0].y/h;
+        mPointFs[1].y = mCoordPointFs[1].y/h;
+        mPointFs[2].y = mCoordPointFs[2].y/h;
+        mPointFs[3].y = mCoordPointFs[3].y/h;
+        recalculateValue();
+    }
+    public void recalculateValue() {
+        getEdgesPath();
+        for (int i = 0; i < 4; i++) {
+            PointF p = mCoordPointFs[i];
+            PointF pNext = (i==3) ? mCoordPointFs[0] : mCoordPointFs[i+1];
+           mCenterAngles[i] = (float) (Math.atan2(pNext.y-p.y, pNext.x - p.x) * 180 / Math.PI);
+            mEdgeCenters[i].x = (pNext.x+p.x)/2f;
+            mEdgeCenters[i].y = (pNext.y + p.y)/2f;
+
+            mDs[i] = (float) (Math.sqrt((pNext.x - p.x)*(pNext.x - p.x) +(pNext.y-p.y)*(pNext.y - p.y))/2f);
+        }
+    }
+
+    private PointF[] mEdgeCenters = new PointF[] {
+            new PointF(0,0),
+            new PointF(0,0),
+            new PointF(0,0),
+            new PointF(0,0)
+    };
+
+    private float[] mCenterAngles = new float[4];
+    private float[] mDs = new float[4];
+
+    float _25dp;
+    float _8dp;
+    float _12dp;
     Path edgePath;
     private void drawPreviewPath(Canvas canvas, float animatedValue) {
         canvas.save();
         Path path = getEdgesPath();
-        paint.setColor(0xFFFF9500);
-        paint.setAlpha((int)(80*animatedValue));
+        paint.setColor(mPreviewColor);
+        float animatedAlpha = (animatedValue>1) ? 1 : ((animatedValue>0) ? animatedValue : 0);
+        paint.setAlpha((int)(80*animatedAlpha));
         paint.setStyle(Paint.Style.FILL);
         edgePath.setFillType(Path.FillType.EVEN_ODD);
         canvas.drawPath(path,paint);
-        paint.setAlpha((int)(225*animatedValue));
+        paint.setAlpha((int)(225*animatedAlpha));
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(oneDp*2f*animatedValue);
+        paint.setStrokeWidth(oneDp*2f*animatedAlpha);
         canvas.drawPath(path,paint);
         canvas.restore();
     }
@@ -337,10 +394,12 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         return edgePath;
     }
 
+    float startCenterX, startCenterY,endCenterX, endCenterY;
     private void drawCropper(Canvas canvas, float animatedValue) {
         edgePath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
         paint.setColor(Color.BLACK);
-        paint.setAlpha((int)(0x36*animatedValue));
+        float animatedAlpha = (animatedValue>1) ? 1 : ((animatedValue>0) ? animatedValue : 0);
+        paint.setAlpha((int)(0x36*animatedAlpha));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPath(edgePath,paint);
 
@@ -350,43 +409,41 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         paint.setStrokeWidth(oneDp*2.5f);
         canvas.drawPath(edgePath,paint);*/
 
-        paint.setColor(0xFFFF9500);
+        paint.setColor(mCropperColor);
+        paint.setAlpha((int)(255*animatedAlpha));
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(oneDp*2.5f*animatedValue);
+        paint.setStrokeWidth(oneDp*2.5f);
         paint.setStrokeCap(Paint.Cap.ROUND);
-
         for (int i = 0; i < 4; i++) {
             PointF p = mCoordPointFs[i];
             PointF pNext = (i==3) ? mCoordPointFs[0] : mCoordPointFs[i+1];
 
+            canvas.drawCircle(p.x,p.y,_8dp*animatedValue,paint);
 
-            float _8dp = 8*oneDp;
-            float _12dp = 12*oneDp;
-            canvas.drawCircle(p.x,p.y,_8dp,paint);
-            float angle = (float) (Math.atan2(pNext.y-p.y, pNext.x - p.x) * 180 / Math.PI);
-            float centerX = (pNext.x+p.x)/2f;
-            float centerY = (pNext.y + p.y)/2f;
+            startCenterX = mEdgeCenters[i].x + (_12dp/mDs[i])*(p.x-mEdgeCenters[i].x);
+            startCenterY = mEdgeCenters[i].y + (_12dp/mDs[i])*(p.y - mEdgeCenters[i].y);
 
-            float D = (float) (Math.sqrt((pNext.x - p.x)*(pNext.x - p.x) +(pNext.y-p.y)*(pNext.y - p.y))/2f);
-            float startCenterX = centerX + (_12dp/D)*(p.x-centerX);
-            float startCenterY = centerY + (_12dp/D)*(p.y - centerY);
-
-            float endCenterX = centerX + (_12dp/D)*(pNext.x-centerX);
-            float endCenterY = centerY + (_12dp/D)*(pNext.y - centerY);
+            endCenterX = mEdgeCenters[i].x + (_12dp/mDs[i])*(pNext.x-mEdgeCenters[i].x);
+            endCenterY = mEdgeCenters[i].y + (_12dp/mDs[i])*(pNext.y - mEdgeCenters[i].y);
 
             canvas.drawLine(p.x,p.y,startCenterX,startCenterY,paint);
             canvas.drawLine(pNext.x,pNext.y,endCenterX,endCenterY,paint);
 
             canvas.save();
-            canvas.rotate(angle,centerX,centerY);
+            canvas.rotate(mCenterAngles[i],mEdgeCenters[i].x,mEdgeCenters[i].y);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                canvas.drawRoundRect(centerX-oneDp*12,centerY-5*oneDp,centerX+oneDp*12,centerY+5*oneDp,oneDp*2.5f,oneDp*2.5f,paint);
-            } else canvas.drawRect(centerX-oneDp*12,centerY-5*oneDp,centerX+oneDp*12,centerY+5*oneDp,paint);
+                canvas.drawRoundRect(mEdgeCenters[i].x-oneDp*12,mEdgeCenters[i].y-5*oneDp*animatedValue,mEdgeCenters[i].x+oneDp*12,mEdgeCenters[i].y+5*oneDp*animatedValue,oneDp*2.5f,oneDp*2.5f,paint);
+            } else canvas.drawRect(mEdgeCenters[i].x-oneDp*12,mEdgeCenters[i].y-5*oneDp,mEdgeCenters[i].x+oneDp*12,mEdgeCenters[i].y+5*oneDp,paint);
             canvas.restore();
         }
-        canvas.getClipBounds(mClipRect);
-        mClipRect.inset((int)(-12*oneDp),(int)(-12*oneDp));
-        canvas.clipRect(mClipRect, Region.Op.INTERSECT);
+
+        // Draw touch zone
+    /*    paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(oneDp);
+        for (int i = 0; i < 4; i++) {
+            canvas.drawCircle(mCoordPointFs[i].x,mCoordPointFs[i].y,_25dp,paint);
+            canvas.drawCircle(mEdgeCenters[i].x,mEdgeCenters[i].y,_25dp,paint);
+        }*/
     }
 
     private boolean mStillShowInvalid = false;
@@ -413,5 +470,111 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         point[6] = mPointFs[2].y;
         point[7] = mPointFs[3].y;
 
+    }
+
+    private int whichPoint(float x, float y) {
+        float d2;
+        final float radius2 = _25dp*_25dp;
+        float minD2 = radius2;
+        int minPos = -1;
+        for (int i = 0; i < 4; i++) {
+            d2 = (mCoordPointFs[i].x - x)*(mCoordPointFs[i].x - x) +(mCoordPointFs[i].y-y)*(mCoordPointFs[i].y - y);
+                if(d2<minD2) {
+                    minPos = i;
+                    minD2 = d2;
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            d2 = (mEdgeCenters[i].x - x)*(mEdgeCenters[i].x - x) + (mEdgeCenters[i].y - y)*(mEdgeCenters[i].y - y);
+            if(d2<minD2) {
+                minPos = i+4;
+                minD2 = d2;
+            }
+        }
+        return minPos;
+    }
+
+    private boolean mIsTouchDown = false;
+    private float mTouchDownX, mTouchDownY;
+    private int mWhichEditingPoint = -1;
+
+    private void touchDown(float x, float y) {
+        mIsTouchDown = true;
+        mTouchDownX = x;
+        mTouchDownY = y;
+        mWhichEditingPoint = whichPoint(x, y);
+
+        int which = mWhichEditingPoint;
+        if(which>3) {
+            which -=4;
+            oldWhichX = mCoordPointFs[which].x;
+            oldWhichY = mCoordPointFs[which].y;
+            int whichPlus = (which==3) ? 0 : which+1;
+            oldWhichX2 = mCoordPointFs[whichPlus].x;
+            oldWhichY2 = mCoordPointFs[whichPlus].y;
+        } else if (which>-1){
+            oldWhichX = mCoordPointFs[which].x;
+            oldWhichY = mCoordPointFs[which].y;
+        }
+        invalidate();
+    }
+
+    float oldWhichX, oldWhichY;
+    float oldWhichX2, oldWhichY2;
+
+    private void touchAssign(float x, float y) {
+        int which= mWhichEditingPoint;
+        float deltaX =  x - mTouchDownX;
+        float deltaY = y - mTouchDownY;
+        if(which>3) {
+            which-=4;
+            mCoordPointFs[which].x = oldWhichX + deltaX;
+            mCoordPointFs[which].y = oldWhichY + deltaY;
+
+            int whichPlus = (which==3) ? 0 : which + 1;
+            mCoordPointFs[whichPlus].x = oldWhichX2 + deltaX;
+            mCoordPointFs[whichPlus].y = oldWhichY2 + deltaY;
+            // center edge
+        } else if(which>-1) {
+            mCoordPointFs[which].x = oldWhichX +deltaX;
+            mCoordPointFs[which].y = oldWhichY + deltaY;
+            // vertice
+        }
+        updatePointsByCoordPoints();
+        invalidate();
+    }
+
+    private void touchMove(float x, float y) {
+        if(!mIsTouchDown) {
+            touchDown(x,y);
+            return;
+        }
+
+        touchAssign(x,y);
+    }
+
+    private void touchUp(float x, float y) {
+        mIsTouchDown = false;
+        touchAssign(x,y);
+        mWhichEditingPoint = -1;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(mState!=STATE_CROPPER) return false;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touchDown(event.getX(),event.getY());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                touchMove(event.getX(),event.getY());
+                break;
+            case MotionEvent.ACTION_UP:
+                touchUp(event.getX(),event.getY());
+                break;
+        }
+        return true;
     }
 }

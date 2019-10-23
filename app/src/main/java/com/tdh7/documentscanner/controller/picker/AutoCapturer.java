@@ -86,7 +86,7 @@ public class AutoCapturer {
                     "p[1] = ("+mAverageEdges[1]+"; " + mAverageEdges[5]+"), "+
                     "p[2] = ("+mAverageEdges[2]+"; " + mAverageEdges[6]+"), "+
                     "p[3] = ("+mAverageEdges[3]+"; " + mAverageEdges[7]+")");
-            fragment.fireCaptureByAutoCapturer(mAverageEdges, mLatestEdges);
+            fragment.fireCaptureByAutoCapturer();
         }
     }
 
@@ -197,6 +197,8 @@ public class AutoCapturer {
         mDeltaTime = 0;
         mWrongCount = 0;
         mTotalRecords = 0;
+        Util.getDefaultValue(mAverageEdges);
+        Util.getDefaultValue(mLatestEdges);
     }
 
     /**

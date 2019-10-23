@@ -424,17 +424,12 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     public void setPoints(float[] points) {
         mMarkerView.setPoints(points);
     }
-    public float[] mAverages = new float[] {0,1,0,1,0,0,1,1};;
-    public float[] mLates = new float[] {0,1,0,1,0,0,1,1};;
 
     public void getPoints(float[] p) {
         mMarkerView.getPoints(p);
     }
 
-    public void fireCaptureByAutoCapturer(float[] averages, float[] latest) {
-        System.arraycopy(averages, 0, mAverages, 0, 8);
-        System.arraycopy(latest, 0, mLates, 0, 8);
-
+    public void fireCaptureByAutoCapturer() {
         mHandler.post(mCaptureIcon::fireCaptureByAutoCapturer);
     }
 
@@ -454,6 +449,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     public void onQuickViewDetach() {
         mEdgeFrameProcessor.setActiveProcessor(true);
+        if(mCaptureMode==CaptureIconView.MODE_AUTO_CAPTURE)
         mEdgeFrameProcessor.activeAutoCapture();
         mCaptureIcon.unlockCapture();
     }

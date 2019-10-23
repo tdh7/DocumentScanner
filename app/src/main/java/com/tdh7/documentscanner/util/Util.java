@@ -114,10 +114,16 @@ public final class Util {
     }
 
     public static boolean isNotDefaultValue(float[] points) {
-        for (int i = 0; i < 8; i++) {
-            if(mInvalidEdges[i]!=points[i]) return true;
+        int same = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if(mInvalidEdges[i]==points[j]&&mInvalidEdges[i+4]==points[j+4]) {
+                    same++;
+                    break;
+                }
+            }
         }
-        return false;
+        return same<4;
     }
 
     public static boolean isEdgeValid(float[] points) {
