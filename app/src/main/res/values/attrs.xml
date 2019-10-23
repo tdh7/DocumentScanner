@@ -3,8 +3,9 @@
     <declare-styleable name="MarkerView">
         <attr name="showIfNoDetect" format="boolean"/>
         <attr name="mode" format="enum">
-            <enum name="preview" value="0"/>
-            <enum name="cropper" value="1"/>
+            <enum name="hidden" value="0"/>
+            <enum name="preview" value="1"/>
+            <enum name="cropper" value="2"/>
         </attr>
     </declare-styleable>
     <declare-styleable name="CaptureIconView">

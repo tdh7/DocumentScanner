@@ -9,12 +9,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
@@ -27,86 +25,155 @@ import com.tdh7.documentscanner.util.Util;
 public class MarkerView extends View implements ValueAnimator.AnimatorUpdateListener {
     private static final String TAG = "MarkerView";
     public static final int STATE_HIDDEN = 0;
-    private static final int STATE_MOTION_HIDDEN_TO_PREVIEW = 1;
-    private static final int STATE_MOTION_HIDDEN_TO_CROPPER = 2;
+    public static final int STATE_PREVIEW = 1;
+    public static final int STATE_CROPPER = 2;
+
+    private static final int STATE_MOTION_HIDDEN_TO_PREVIEW = 3;
+    private static final int STATE_MOTION_HIDDEN_TO_CROPPER = 4;
     
-    public static final int STATE_PREVIEW = 3;
-    private static final int STATE_MOTION_PREVIEW_TO_CROPPER = 4;
-    public static final int STATE_CROPPER = 5;
+    private static final int STATE_MOTION_PREVIEW_TO_CROPPER = 5;
     private static final int STATE_MOTION_CROPPER_TO_PREVIEW = 6;
     private static final int STATE_MOTION_CROPPER_TO_HIDDEN = 7;
     private static final int STATE_MOTION_PREVIEW_TO_HIDDEN = 8;
 
-    private static final int DURATION_MOTION_TO_CROPPER = 450;
-    private static final int DURATION_MOTION_TO_PREVIEW = 450;
+    private static final int DURATION_MOTION_TO_CROPPER = 1000;
+    private static final int DURATION_MOTION_TO_PREVIEW = 5000;
 
-    private int mState = STATE_JUST_CREATE;
-    private int mNextState = STATE_MOTION_APPEAR;
+    private int mState = STATE_HIDDEN;
+    private int mNextState = STATE_PREVIEW;
 
-    private boolean mIsBusy = false;
     private float mCurrentFractionValue = 1f;
     private float mCurrentAnimatedValue = 1f;
     
-    public boolean switchState(int state) {
-    	// state is STATE_PREVIEW, or STATE_CROPPER
-       if(isBusy()) return false;
-       switch(state) {
-       	case 
-       	} 
-    	} 
-    private boolean switchState(int fromState, int toState) {
-    	
-    	} 
+    public boolean switchState(int nextState) {
+        // state is STATE_PREVIEW, STATE_CROPPER, or STATE_HIDDEN
+        if (isBusy()) return false;
+        mNextState = nextState;
+        switch (mState) {
+            case STATE_HIDDEN:
+                switch (nextState) {
+                    case STATE_PREVIEW:
+                        runMotionThenSwitchState(STATE_MOTION_HIDDEN_TO_PREVIEW);
+                        break;
+                    case STATE_CROPPER:
+                        runMotionThenSwitchState(STATE_MOTION_HIDDEN_TO_CROPPER,650,1250,mInterpolator);
+                        break;
+                }
+                break;
+            case STATE_PREVIEW:
+                switch (nextState) {
+                    case STATE_HIDDEN:
+                        runMotionThenSwitchState(STATE_MOTION_PREVIEW_TO_HIDDEN);
+                        break;
+                    case STATE_CROPPER:
+                        runMotionThenSwitchState(STATE_MOTION_PREVIEW_TO_CROPPER,650,1250,mInterpolator);
+                        break;
+                }
+            case STATE_CROPPER:
+                switch (nextState) {
+                    case STATE_HIDDEN:
+                        runMotionThenSwitchState(STATE_MOTION_CROPPER_TO_HIDDEN);
+                        break;
+                    case STATE_PREVIEW:
+                        runMotionThenSwitchState(STATE_MOTION_CROPPER_TO_PREVIEW);
+                        break;
+                }
 
-    // runMotion(STATE_JUST_CREATE, STATE_PREVIEW);
-    public synchronized boolean runMotion(int from, int endState) {
-        if(!mIsBusy&&!mValueAnimator.isRunning()) {
-            mState = from;
-            this.mNextState = endState;
-            mIsBusy = true;
-            update(0,0);
-            return true;
+        }
+        return true;
+    }
+
+    private void runMotionThenSwitchState(int motionState) {
+        runMotionThenSwitchState(motionState,DURATION_MOTION_TO_PREVIEW,0,mInterpolator);
+    }
+    private void runMotionThenSwitchState(int motionState, int duration, int delay, Interpolator interpolator) {
+        if(isBusy()) mValueAnimator.end();
+        mState = motionState;
+        mValueAnimator.setDuration(duration);
+        mValueAnimator.setInterpolator(interpolator);
+        mValueAnimator.setStartDelay(delay);
+        mCurrentFractionValue = 0;
+        mCurrentAnimatedValue = 0;
+        mValueAnimator.start();
+    }
+
+    private boolean update() {
+        switch (mState) {
+            case STATE_HIDDEN:
+                // Do nothing
+                return false;
+            case STATE_PREVIEW:
+                return true;
+            case STATE_CROPPER:
+                return true;
+            case STATE_MOTION_HIDDEN_TO_PREVIEW:
+                return true;
+            case STATE_MOTION_HIDDEN_TO_CROPPER:
+                return true;
+            case STATE_MOTION_PREVIEW_TO_CROPPER:
+                return true;
+            case STATE_MOTION_CROPPER_TO_PREVIEW:
+                return true;
+            case STATE_MOTION_CROPPER_TO_HIDDEN:
+                return true;
+            case STATE_MOTION_PREVIEW_TO_HIDDEN:
+                return true;
+
         }
         return false;
     }
 
-    private void update(float fraction, float animatedValue) {
+    public void doDraw(Canvas canvas) {
         switch (mState) {
-            case STATE_JUST_CREATE:
-                endMotion();
-                runMotion(STATE_MOTION_APPEAR, STATE_PREVIEW);
-                break;
-                case STATE_MOTION_APPEAR:
-                    postInvalidate();
-                    if(fraction==1) endMotion();
-                    break;
+            case STATE_HIDDEN:
+                // Do nothing
+                return;
             case STATE_PREVIEW:
-                // do nothing
-                break;
-            case STATE_MOTION_TO_CROPPER:
-                postInvalidate();
-                break;
+                drawPreviewPath(canvas,1);
+                return;
             case STATE_CROPPER:
-                // do nothing
-                break;
+                drawCropper(canvas,1);
+                return;
+            case STATE_MOTION_HIDDEN_TO_PREVIEW:
+                drawPreviewPath(canvas,mCurrentAnimatedValue);
+                return;
+            case STATE_MOTION_HIDDEN_TO_CROPPER:
+                drawCropper(canvas,mCurrentAnimatedValue);
+                return;
+            case STATE_MOTION_PREVIEW_TO_CROPPER:
+                drawPreviewPath(canvas,1-mCurrentFractionValue);
+                drawCropper(canvas,mCurrentAnimatedValue);
+                return;
             case STATE_MOTION_CROPPER_TO_PREVIEW:
-                postInvalidate();
-                break;
+                drawPreviewPath(canvas,mCurrentAnimatedValue);
+                drawCropper(canvas,1-mCurrentFractionValue);
+                return;
+            case STATE_MOTION_CROPPER_TO_HIDDEN:
+                drawCropper(canvas,1 - mCurrentFractionValue);
+                return;
+            case STATE_MOTION_PREVIEW_TO_HIDDEN:
+                drawPreviewPath(canvas,1-mCurrentFractionValue);
+
         }
     }
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
-        update(animation.getAnimatedFraction(),(Float) animation.getAnimatedValue());
+        mCurrentFractionValue = animation.getAnimatedFraction();
+        mCurrentAnimatedValue = (float) animation.getAnimatedValue();
+        if(update())
+            invalidate();
+        if(mCurrentFractionValue==1) resetValue();
     }
 
     public boolean isPreviewMode() {
-        return mState!=STATE_CROPPER&&mState!=STATE_MOTION_TO_CROPPER;
+        return mState==STATE_PREVIEW||mNextState==STATE_PREVIEW;
     }
 
-    private synchronized void endMotion() {
+    private synchronized void resetValue() {
+        mCurrentAnimatedValue = 1;
+        mCurrentFractionValue = 1;
         mState = mNextState;
-        mIsBusy = false;
     }
 
     private Interpolator mInterpolator = new OvershootInterpolator();
@@ -133,7 +200,9 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     private Paint paint;
     private int[] color;
 
+
     private void init(AttributeSet attrs) {
+
         oneDp = getContext().getResources().getDimension(R.dimen.dp_unit);
         mPointFs = new PointF[] {
                 new PointF(0,1),
@@ -151,21 +220,19 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
 
         initPaint();
         setWillNotDraw(false);
-
-        if(attrs!=null) {
-            TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.MarkerView);
-            mStillShowInvalid = t.getBoolean(R.styleable.MarkerView_showIfNoDetect,false);
-            if(t.getInt(R.styleable.MarkerView_mode,0)==0)
-                mState = STATE_PREVIEW;
-            else mState = STATE_CROPPER;
-            t.recycle();
-        }
-
         mValueAnimator = ValueAnimator.ofFloat(0,1);
         mValueAnimator.setDuration(DURATION_MOTION_TO_PREVIEW);
         mValueAnimator.setInterpolator(mInterpolator);
         mValueAnimator.addUpdateListener(this);
-        mValueAnimator.start();
+
+        if(attrs!=null) {
+            TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.MarkerView);
+            mStillShowInvalid = t.getBoolean(R.styleable.MarkerView_showIfNoDetect,false);
+            switchState(t.getInt(R.styleable.MarkerView_mode,STATE_HIDDEN));
+            t.recycle();
+        }
+
+
     }
 
 
@@ -243,17 +310,17 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     }
 
     Path edgePath;
-    private void drawEdges(Canvas canvas) {
+    private void drawPreviewPath(Canvas canvas, float animatedValue) {
         canvas.save();
         Path path = getEdgesPath();
         paint.setColor(0xFFFF9500);
-        paint.setAlpha(80);
-        paint.setStrokeWidth(oneDp*2);
+        paint.setAlpha((int)(80*animatedValue));
         paint.setStyle(Paint.Style.FILL);
         edgePath.setFillType(Path.FillType.EVEN_ODD);
         canvas.drawPath(path,paint);
-        paint.setAlpha(225);
+        paint.setAlpha((int)(225*animatedValue));
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(oneDp*2f*animatedValue);
         canvas.drawPath(path,paint);
         canvas.restore();
     }
@@ -270,9 +337,10 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         return edgePath;
     }
 
-    private void drawCropper(Canvas canvas) {
+    private void drawCropper(Canvas canvas, float animatedValue) {
         edgePath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
-        paint.setColor(0x36000000);
+        paint.setColor(Color.BLACK);
+        paint.setAlpha((int)(0x36*animatedValue));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPath(edgePath,paint);
 
@@ -284,7 +352,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
 
         paint.setColor(0xFFFF9500);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(oneDp*2.5f);
+        paint.setStrokeWidth(oneDp*2.5f*animatedValue);
         paint.setStrokeCap(Paint.Cap.ROUND);
 
         for (int i = 0; i < 4; i++) {
@@ -326,11 +394,8 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     @Override
     protected void onDraw(Canvas canvas) {
 
-
         if(mCoordPointFs!=null&&(mStillShowInvalid || mShouldDrawMarker)) {
-            if(isPreviewMode())
-            drawEdges(canvas);
-            else drawCropper(canvas);
+            doDraw(canvas);
         }
     }
 
