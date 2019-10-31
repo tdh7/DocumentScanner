@@ -20,11 +20,13 @@ import androidx.annotation.Nullable;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.util.Util;
 
+import static com.tdh7.documentscanner.ui.picker.CameraPickerFragment.CAPTURE_MODE_AUTO_CAPTURE;
+import static com.tdh7.documentscanner.ui.picker.CameraPickerFragment.CAPTURE_MODE_MANUAL_CAPTURE;
+
 public class CaptureIconView extends View {
     private static final String TAG = "CaptureView";
 
-    public static final int MODE_AUTO_CAPTURE = 0;
-    public static final int MODE_MANUAL_CAPTURE = 1;
+
 
     public int getCaptureMode() {
         return mCaptureMode;
@@ -33,10 +35,10 @@ public class CaptureIconView extends View {
     public void setCaptureMode(int captureMode) {
         mCaptureMode = captureMode;
 
-        if(mCaptureMode==MODE_AUTO_CAPTURE && !mAutoAnimator.isRunning()) {
+        if(mCaptureMode== CAPTURE_MODE_AUTO_CAPTURE && !mAutoAnimator.isRunning()) {
             mCurrentActiveValue = 0;
             mAutoAnimator.start();
-        } else if(mCaptureMode!=MODE_AUTO_CAPTURE && mAutoAnimator.isRunning()) {
+        } else if(mCaptureMode!= CAPTURE_MODE_AUTO_CAPTURE && mAutoAnimator.isRunning()) {
             mCurrentActiveValue = 0;
             mAutoAnimator.end();
         }
@@ -49,7 +51,7 @@ public class CaptureIconView extends View {
         mActiveAnimator.start();
     }
 
-    private int mCaptureMode = MODE_AUTO_CAPTURE;
+    private int mCaptureMode = CAPTURE_MODE_AUTO_CAPTURE;
 
     Paint mPaint;
     private float mDpUnit = 1;
@@ -160,7 +162,7 @@ public class CaptureIconView extends View {
             mDistanceActivePercent = t.getFloat(R.styleable.CaptureIconView_distanceActivePercent,5f/60);
             setAnimateSwitchDuration(t.getInteger(R.styleable.CaptureIconView_animateSwitchDuration,350));
             setAutoDurationPerRound(t.getInteger(R.styleable.CaptureIconView_autoDurationPerRound,600));
-            setCaptureMode(t.getInt(R.styleable.CaptureIconView_captureMode,MODE_AUTO_CAPTURE));
+            setCaptureMode(t.getInt(R.styleable.CaptureIconView_captureMode, CAPTURE_MODE_AUTO_CAPTURE));
             t.recycle();
         }
 
@@ -331,7 +333,7 @@ public class CaptureIconView extends View {
         float percent = 1;
         percent -= mStrokeOutlinePercent;
 
-        if(mCaptureMode==MODE_MANUAL_CAPTURE) {
+        if(mCaptureMode== CAPTURE_MODE_MANUAL_CAPTURE) {
             mPaint.setColor(mOutsideColor);
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setStrokeWidth(mStrokeOutlinePercent*mRadius);
@@ -351,7 +353,7 @@ public class CaptureIconView extends View {
     private RectF mRectF;
 
     private void drawAutoCapture(Canvas canvas){
-        if(mCaptureMode==MODE_AUTO_CAPTURE) {
+        if(mCaptureMode== CAPTURE_MODE_AUTO_CAPTURE) {
             mPaint.setColor(mAutolineColor);
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setStrokeWidth(mStrokeOutlinePercent*mRadius);

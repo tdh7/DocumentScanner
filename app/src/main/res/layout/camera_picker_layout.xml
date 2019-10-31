@@ -43,7 +43,8 @@
             android:id="@+id/markerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:mode="preview"/>
+            app:mode="preview"
+            tools:visibility="invisible"/>
     </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/preview"
@@ -71,8 +72,8 @@
         android:id="@+id/auto_capture_text"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:text="Auto Capture"
-        android:textColor="@color/flatWhite"
+        android:text="@string/auto_capture"
+        android:textColor="#99F5F5F5"
         app:layout_constraintTop_toTopOf="@id/bottom_control_view"
         app:layout_constraintBottom_toBottomOf="@id/bottom_control_view"
         app:layout_constraintEnd_toStartOf="@id/guide_line"
@@ -83,6 +84,46 @@
         android:paddingEnd="12dp"
         android:translationX="24dp"
       />
+    <TextView
+        android:id="@+id/manual_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="@string/manual"
+        android:textColor="@color/flatOrange"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@id/bottom_control_view"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_control_view"
+        app:layout_constraintStart_toEndOf="@id/guide_line"
+        android:layout_marginStart="32dp"
+        android:textStyle="bold"
+        android:translationX="-24dp"
+        />
+    <ImageView
+        android:id="@+id/mode_mark_view_2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/manual_text"
+        app:layout_constraintStart_toStartOf="@id/manual_text"
+        app:layout_constraintEnd_toEndOf="@id/manual_text"
+        app:srcCompat="@drawable/active_triangle"
+        android:translationX="-24dp"
+        android:translationY="4dp"
+        android:alpha="0"
+        tools:alpha="1"
+        />
+    <ImageView
+        android:id="@+id/mode_mark_view"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/auto_capture_text"
+        app:layout_constraintStart_toStartOf="@id/auto_capture_text"
+        app:layout_constraintEnd_toEndOf="@id/auto_capture_text"
+        app:srcCompat="@drawable/active_triangle"
+        android:translationY="4dp"
+        android:alpha="0"
+        />
     <com.tdh7.documentscanner.ui.widget.CaptureIconView
         android:id="@+id/capture_icon"
         android:layout_width="60dp"
@@ -105,22 +146,7 @@
         app:autoDurationPerRound="1600"
         app:captureMode="manualCapture"
         app:autolineColor="@color/flatWhite"/>
-    <TextView
-        android:id="@+id/manual_text"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:text="Manual"
-        android:textColor="@color/flatOrange"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="@id/bottom_control_view"
-        app:layout_constraintBottom_toBottomOf="@id/bottom_control_view"
-        app:layout_constraintStart_toEndOf="@id/guide_line"
-        android:layout_marginStart="32dp"
-        android:textStyle="bold"
-        android:translationX="-24dp"
-        />
+
     <View
         android:id="@+id/top_control_view"
         android:layout_width="0dp"
@@ -173,16 +199,16 @@
         android:gravity="center"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@id/antibanding"
-        app:layout_constraintEnd_toStartOf="@id/auto_focus"
+        app:layout_constraintEnd_toStartOf="@id/action_button"
         android:textStyle="bold"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         />
     <TextView
-        android:id="@+id/auto_focus"
+        android:id="@+id/action_button"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:text="Import (1)"
+        tools:text="Import (1)"
         android:textSize="14sp"
         android:textColor="@color/flatOrange"
         app:layout_constraintTop_toTopOf="@id/back_button"

@@ -41,5 +41,8 @@
     <string name="keep_scan">Keep Scan</string>
     <string name="continue_">Continue</string>
     <string name="cropper">Cropper</string>
-    <string name="import_x">Import (%d)</string>
+    <string name="import_x">Import (%1$d)</string>
+    <string name="manual">Manual Mode</string>
+    <string name="auto_capture">Auto Capture</string>
+    <string name="add_x">Add (%1$d)</string>
 </resources>
