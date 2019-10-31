@@ -41,5 +41,5 @@
     <string name="keep_scan">Keep Scan</string>
     <string name="continue_">Continue</string>
     <string name="cropper">Cropper</string>
-
+    <string name="import_x">Import (%d)</string>
 </resources>

@@ -182,7 +182,7 @@
         android:id="@+id/auto_focus"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:text="Save (1)"
+        android:text="Import (1)"
         android:textSize="14sp"
         android:textColor="@color/flatOrange"
         app:layout_constraintTop_toTopOf="@id/back_button"
