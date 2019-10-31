@@ -1,44 +1,62 @@
-# This file is a template, and might need editing before it works on your project.
-# Read more about this script on this blog post https://about.gitlab.com/2018/10/24/setting-up-gitlab-ci-for-android-projects/, by Jason Lenny
-# If you are interested in using Android with FastLane for publishing take a look at the Android-Fastlane template.
-
-image: openjdk:8-jdk
-
-variables:
-  ANDROID_COMPILE_SDK: "28"
-  ANDROID_BUILD_TOOLS: "28.0.2"
-  ANDROID_SDK_TOOLS: "4333796"
+image: jangrewe/gitlab-ci-android
 
 before_script:
-  - apt-get --quiet update --yes
-  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
-  - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-${ANDROID_SDK_TOOLS}.zip
-  - unzip -d android-sdk-linux android-sdk.zip
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}" >/dev/null
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "platform-tools" >/dev/null
-  - echo y | android-sdk-linux/tools/bin/sdkmanager "build-tools;${ANDROID_BUILD_TOOLS}" >/dev/null
-  - export ANDROID_HOME=$PWD/android-sdk-linux
-  - export PATH=$PATH:$PWD/android-sdk-linux/platform-tools/
-  - chmod +x ./gradlew
-  # temporarily disable checking for EPIPE error and use yes to accept all licenses
-  - set +o pipefail
-  - yes | android-sdk-linux/tools/bin/sdkmanager --licenses
-  - set -o pipefail
+- export GRADLE_USER_HOME=$(pwd)/.gradle
+- chmod +x ./gradlew
+
+cache:
+  key: ${CI_PROJECT_ID}
+  paths:
+  - .gradle/
+
+stages:
+- build
+- test
+- release
+- deploy
 
 lintDebug:
   stage: build
   script:
-    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+  - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
 
 assembleDebug:
   stage: build
   script:
-    - ./gradlew assembleDebug
-  artifacts:
-    paths:
-      - app/build/outputs/
+  - ./gradlew assembleDebug
 
-debugTests:
+testDebug:
   stage: test
   script:
-    - ./gradlew -Pci --console=plain :app:testDebug
+  - ./gradlew -Pci --console=plain :app:testDebug
+
+assembleRelease:
+  stage: release
+  script:
+  - echo $KEYSTORE_FILE | base64 -d > my.keystore
+  - ./gradlew assembleRelease
+    -Pandroid.injected.signing.store.file=$(pwd)/my.keystore
+    -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD
+    -Pandroid.injected.signing.key.alias=$KEY_ALIAS
+    -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+  artifacts:
+    paths:
+    - app/build/outputs/apk/release
+    - CHANGELOG
+
+deployRelease:
+  image: python:3.5.2
+  stage: deploy
+  script:
+  - pip install requests
+  - git clone https://github.com/mega-arbuz/apk-release-deploy.git
+  - python apk-release-deploy/deploy.py
+    --release.dir=app/build/outputs/apk/release
+    --app.name=BestAppEver
+    --dropbox.token=$DROPBOX_TOKEN
+    --dropbox.folder=release
+    --changelog.file=CHANGELOG
+    --template.file=TEMPLATE
+    --zapier.hook=$ZAPIER_EMAIL_HOOK
+    --email.to=$EMAIL_TARGET
+  cache: {}
