@@ -24,11 +24,14 @@ import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
+import com.tdh7.documentscanner.model.BitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 import com.tdh7.documentscanner.util.PreferenceUtil;
 import com.tdh7.documentscanner.util.Tool;
+
+import java.util.ArrayList;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -55,9 +58,41 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     private static final String TAG = "CameraPickerFragment";
     public static final int PERMISSION_CAMERA = 1;
 
+    public static final int MODE_NEW_SESSION = 0;
+    public static final int MODE_IMPORT = 1;
+
+    private int mMode = MODE_NEW_SESSION;
+
+
+    /*
+       CameraPicker chạy theo 2 mode :
+    +. Tạo mới Session (Sau khi thoát picker sẽ tạo mới session và hiển thị nó
+    +. Nhận vào một callback từ session, sau khi thoát picker sẽ trả kết quả cho session
+
+     */
+
     public static CameraPickerFragment newInstance() {
         CameraPickerFragment fragment = new CameraPickerFragment();
+        fragment.mMode = MODE_NEW_SESSION;
         return fragment;
+    }
+
+
+    public static CameraPickerFragment newInstance(CameraPickerResult result) {
+        if(result==null) return newInstance();
+        CameraPickerFragment fragment = new CameraPickerFragment();
+        fragment.mResult = result;
+        fragment.mMode = MODE_IMPORT;
+        return fragment;
+    }
+
+    private CameraPickerResult mResult;
+    public static final int RESULT_DISCARD = 0;
+    public static final int RESULT_OK = 1;
+    public static final int RESULT_FAILURE = 2;
+
+    public interface CameraPickerResult {
+        void onCameraPickerComplete(int status, ArrayList<BitmapDocument> result);
     }
 
     @Nullable
@@ -88,8 +123,9 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     }
 
     private void allowAccess(View ignored) {
-        requestPermissions(new String[] {
-                Manifest.permission.CAMERA},PERMISSION_CAMERA);
+        requestPermissions(
+                new String[] {Manifest.permission.CAMERA}
+                ,PERMISSION_CAMERA);
     }
 
 
