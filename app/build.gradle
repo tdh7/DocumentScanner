@@ -67,4 +67,7 @@ dependencies {
 
     // Fotoapparat Camera Library
     implementation 'io.fotoapparat:fotoapparat:2.7.0'
+
+    // Loader
+    implementation 'com.tuyenmonkey:mkloader:1.4.0'
 }

@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/black"
     android:orientation="vertical">
-
     <LinearLayout
         android:id="@+id/l02"
         android:layout_width="fill_parent"

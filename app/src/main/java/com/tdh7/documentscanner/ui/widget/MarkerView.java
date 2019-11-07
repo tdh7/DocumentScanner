@@ -213,6 +213,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         _8dp = oneDp*8;
         _12dp = oneDp*12;
         _25dp = oneDp*25;
+        _35dp = oneDp*35;
         mPointFs = new PointF[] {
                 new PointF(0,1),
                 new PointF(0,0),
@@ -362,6 +363,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
     private float[] mCenterAngles = new float[4];
     private float[] mDs = new float[4];
 
+    float _35dp;
     float _25dp;
     float _8dp;
     float _12dp;
@@ -399,7 +401,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
         edgePath.setFillType(Path.FillType.INVERSE_EVEN_ODD);
         paint.setColor(Color.BLACK);
         float animatedAlpha = (animatedValue>1) ? 1 : ((animatedValue>0) ? animatedValue : 0);
-        paint.setAlpha((int)(0x36*animatedAlpha));
+        paint.setAlpha((int)(0x66*animatedAlpha));
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPath(edgePath,paint);
 
@@ -418,7 +420,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
             PointF p = mCoordPointFs[i];
             PointF pNext = (i==3) ? mCoordPointFs[0] : mCoordPointFs[i+1];
 
-            canvas.drawCircle(p.x,p.y,_8dp*animatedValue,paint);
+            canvas.drawCircle(p.x,p.y,_12dp*animatedValue,paint);
 
             startCenterX = mEdgeCenters[i].x + (_12dp/mDs[i])*(p.x-mEdgeCenters[i].x);
             startCenterY = mEdgeCenters[i].y + (_12dp/mDs[i])*(p.y - mEdgeCenters[i].y);
@@ -474,7 +476,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
 
     private int whichPoint(float x, float y) {
         float d2;
-        final float radius2 = _25dp*_25dp;
+        final float radius2 = _35dp*_35dp;
         float minD2 = radius2;
         int minPos = -1;
         for (int i = 0; i < 4; i++) {

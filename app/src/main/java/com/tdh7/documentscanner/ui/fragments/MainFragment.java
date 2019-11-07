@@ -31,7 +31,10 @@ import com.scanlibrary.ScanConstants;
 import com.scanlibrary.ScannerActivity;
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.model.RawBitmapDocument;
+import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
+import com.tdh7.documentscanner.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,10 +45,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
+import static com.tdh7.documentscanner.ui.MainActivity.ACTION_OPEN_MEDIA_PICKER;
+import static com.tdh7.documentscanner.ui.MainActivity.ACTION_PERMISSION_START_UP;
+
 public class MainFragment extends NavigationFragment {
     public static final String TAG ="MainFragment";
 
-    private static final int REQUEST_CODE = 99;
+    private static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
+    public final static int REQUEST_CODE_PICK_FROM_GALLERY = 11;
+    public final static int REQUEST_CODE_PICK_FROM_DEVICE_CAMERA = 12;
 
     @BindDimen(R.dimen.dp_unit)
     float mOneDp;
@@ -57,7 +65,6 @@ public class MainFragment extends NavigationFragment {
     @BindView(R.id.app_icon) View mAppLogoIcon;
     @BindView(R.id.app_title) View mAppTitle;
 
-    private ListView list;
     private ArrayList<String> alist;
     private ArrayAdapter<String>adap;
 
@@ -112,44 +119,59 @@ public class MainFragment extends NavigationFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            //Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
-            //Bitmap bitmap = null;
-            try {
-                //bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                //getContentResolver().delete(uri, null, null);
-                //scannedImageView.setImageBitmap(bitmap);
-                String fstr = data.getStringExtra(ScanConstants.SCANNED_RESULT);
-                alist.add(fstr);
-                if (alist.size() == 1) {
-                    adap = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alist);
-                    list.setAdapter(adap);
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            File fo = new File(ScanConstants.PDF_PATH + "/" + (String) list.getItemAtPosition(position));
-                            if (fo.exists()) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                startActivity(intent);
-                            }
+        switch (requestCode) {
+            case REQUEST_CODE_START_SCAN_BY_LIBRARY:
+                if(resultCode==Activity.RESULT_OK) {
+                    //Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
+                    //Bitmap bitmap = null;
+                    try {
+                        //bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        //getContentResolver().delete(uri, null, null);
+                        //scannedImageView.setImageBitmap(bitmap);
+                        String fstr = data.getStringExtra(ScanConstants.SCANNED_RESULT);
+                        alist.add(fstr);
+                        if (alist.size() == 1) {
+                            adap = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alist);
+                            mListView.setAdapter(adap);
+                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    File fo = new File(ScanConstants.PDF_PATH + "/" + (String) mListView.getItemAtPosition(position));
+                                    if (fo.exists()) {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                        } else {
+                            adap.notifyDataSetChanged();
                         }
-                    });
-                } else {
-                    adap.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                break;
+            case REQUEST_CODE_PICK_FROM_GALLERY:
+                if(resultCode==Activity.RESULT_OK) {
+                    try {
+                        Bitmap bitmap = Util.getBitmap(getContext(), data.getData());
+
+                    } catch (Exception e) {
+                        Toasty.error(App.getInstance(),"Sorry, something went wrong. We're couldn't get the photo from system").show();
+                    }
+                }
+                break;
+
         }
     }
 
     @BindView(R.id.empty_list_view)
     View mEmptyView;
 
-    private void showSavedList() {
-        list.setEmptyView(mEmptyView);
+    public void showSavedList() {
+        mListView.setEmptyView(mEmptyView);
         File file = new File(ScanConstants.PDF_PATH);
         alist = new ArrayList<>();
         if (file.exists()) {
@@ -163,13 +185,13 @@ public class MainFragment extends NavigationFragment {
 
         if (alist.size() > 0) {
             adap = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alist);
-            list.setAdapter(adap);
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mListView.setAdapter(adap);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    File fo = new File(ScanConstants.PDF_PATH + "/" + (String) list.getItemAtPosition(position));
+                    File fo = new File(ScanConstants.PDF_PATH + "/" + (String) mListView.getItemAtPosition(position));
                     if (fo.exists()) {
-                        openFile(ScanConstants.PDF_PATH,(String) list.getItemAtPosition(position));
+                        openFile(ScanConstants.PDF_PATH,(String) mListView.getItemAtPosition(position));
 
                         /*Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
@@ -183,7 +205,7 @@ public class MainFragment extends NavigationFragment {
                 }
             });
         }
-        registerForContextMenu(list);
+        registerForContextMenu(mListView);
     }
 
     private void openFile(String directory, String file) {
@@ -255,7 +277,7 @@ public class MainFragment extends NavigationFragment {
                                 alist.remove(fidel);
                                 adap.notifyDataSetChanged();
                                 if (alist.size() <= 0) {
-                                    list.setAdapter(null);
+                                    mListView.setAdapter(null);
                                 }
                             }
                             fndel = null;
@@ -288,13 +310,10 @@ public class MainFragment extends NavigationFragment {
         mDrawerParent.openDrawer(GravityCompat.START);
     }
 
-    /*
-    @OnClick(R.id.fab)
-    */
     @OnClick(R.id.pick_photo_icon)
-    protected void startScan() {
+    protected void startScanByLibrary() {
         Intent intent = new Intent(getActivity(), ScannerActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
+        startActivityForResult(intent, REQUEST_CODE_START_SCAN_BY_LIBRARY);
     }
 
     @OnClick(R.id.search_hint)
@@ -302,14 +321,17 @@ public class MainFragment extends NavigationFragment {
         presentFragment(new SearchFragment());
     }
 
-    @OnClick(R.id.pick_photo_icon)
-    void addPhoto() {
 
+    void addPhotoFromGallery() {
+        requestOpenMediaGallery();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
+        }
     }
 
     @OnClick(R.id.pick_camera_icon)
@@ -317,4 +339,15 @@ public class MainFragment extends NavigationFragment {
         presentFragment(new CameraPickerFragment());
     }
 
+    public void requestOpenMediaGallery() {
+        if(getActivity() instanceof MainActivity)
+            ((MainActivity)getActivity()).executeWriteStorageAction(new Intent(ACTION_OPEN_MEDIA_PICKER));
+    }
+
+    public void openMediaGallery() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_PICK_FROM_GALLERY);
+    }
 }

@@ -37,7 +37,7 @@ public class ResultFragment extends Fragment {
 
     private View view;
     private ImageView scannedImageView;
-    private Button doneButton;
+    private View doneButton;
     private Bitmap original;
     private Button originalButton;
     private Button MagicColorButton;
@@ -73,10 +73,10 @@ public class ResultFragment extends Fragment {
         bwButton.setOnClickListener(new BWButtonClickListener());
         Bitmap bitmap = getBitmap();
         setScannedImage(bitmap);
-        doneButton = (Button) view.findViewById(R.id.doneButton);
+        doneButton = view.findViewById(R.id.doneButton);
         doneButton.setOnClickListener(new DoneButtonClickListener());
 
-        Button cancelButton = (Button) view.findViewById(R.id.cancelButton2);
+        View cancelButton = view.findViewById(R.id.cancelButton2);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

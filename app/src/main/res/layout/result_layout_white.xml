@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/flatWhite">
+    <View
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_24"/>
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@id/status_bar">
+
+        <Button
+            android:id="@+id/original"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_image"
+            android:singleLine="true"
+            android:text="Original"
+            android:drawableTint="@android:color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/magicColor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_enhamce_image"
+            android:singleLine="true"
+            android:text="Magic color"
+            android:drawableTint="@android:color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black"  />
+
+        <Button
+            android:id="@+id/grayMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_gray"
+            android:singleLine="true"
+            android:text="Gray Mode"
+            android:drawableTint="@android:color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black"  />
+
+        <Button
+            android:id="@+id/BWMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_black_and_white"
+            android:singleLine="true"
+            android:text="B and W"
+            android:drawableTint="@android:color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/botBar"
+        android:layout_above="@id/l01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
+
+        <Button
+            android:id="@+id/rotateLeftButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:singleLine="true"
+            android:drawableTop="@drawable/ic_left"
+            android:text="Xoay trái"
+            android:drawableTint="@android:color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black"  />
+
+        <Button
+            android:id="@+id/rotateRightButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:singleLine="true"
+            android:drawableTop="@drawable/ic_right"
+            android:text="Xoay phải"
+            android:drawableTint="@android:color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black"  />
+
+        <Button
+            android:id="@+id/rotate360Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:singleLine="true"
+            android:drawableTop="@drawable/ic_360"
+            android:text="Xoay 360"
+            android:drawableTint="@android:color/black"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/black"  />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/l01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:paddingTop="15dp"
+        android:paddingBottom="5dp">
+        <TextView
+            android:id="@+id/doneButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/bottom_bar_padding"
+            android:text="@string/done"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginEnd="5dp" />
+        <TextView
+            android:id="@+id/cancelButton2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/bottom_bar_padding"
+            android:text="@string/cancel"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginStart="5dp"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/botBar"
+        android:layout_below="@id/topBar"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/scanPadding">
+
+        <ImageView
+            android:id="@+id/scannedImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/scanPadding" />
+    </FrameLayout>
+
+
+</RelativeLayout>

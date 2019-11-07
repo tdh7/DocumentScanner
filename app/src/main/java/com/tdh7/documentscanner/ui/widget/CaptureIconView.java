@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -248,6 +250,21 @@ public class CaptureIconView extends View {
             }
         }
     }
+    MediaPlayer  _shootMP;
+
+    private void shootSoundV2() {
+        AudioManager meng = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        if(meng!=null) {
+            int volume = meng.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+            if (volume != 0) {
+                if (_shootMP == null)
+                    _shootMP = MediaPlayer.create(getContext(), Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
+                if (_shootMP != null)
+                    _shootMP.start();
+            }
+        }
+    }
 
     private void shootSound() {
         MediaActionSound sound = new MediaActionSound();
@@ -268,7 +285,7 @@ public class CaptureIconView extends View {
     private void tapConfirm() {
         if(mCaptureListener!=null&&mCaptureListener.onNewCapture()) {
             onCaptured();
-            shootSound();
+            shootSoundV2();
         }
     }
 

@@ -86,7 +86,7 @@ public class PolygonView extends FrameLayout {
 
     private void initPaint() {
         paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.blue));
+        paint.setColor(getResources().getColor(R.color.scanner_theme_color));
         paint.setStrokeWidth(2);
         paint.setAntiAlias(true);
     }
@@ -254,7 +254,7 @@ public class PolygonView extends FrameLayout {
                 case MotionEvent.ACTION_UP:
                     int color = 0;
                     if (isValidShape(getPoints())) {
-                        color = getResources().getColor(R.color.blue);
+                        color = getResources().getColor(R.color.scanner_theme_color);
                     } else {
                         color = getResources().getColor(R.color.orange);
                     }

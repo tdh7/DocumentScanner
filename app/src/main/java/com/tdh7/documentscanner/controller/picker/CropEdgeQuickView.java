@@ -17,6 +17,8 @@ import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.filter.FilterImageView;
 import com.tdh7.documentscanner.controller.filter.canvas.CanvasFilter;
 import com.tdh7.documentscanner.controller.filter.canvas.QuickViewCanvasFilter;
+import com.tdh7.documentscanner.model.RawBitmapDocument;
+import com.tdh7.documentscanner.ui.fragments.MainFragment;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 
@@ -31,6 +33,10 @@ public class CropEdgeQuickView {
     private CameraPickerFragment mFragment;
     private ViewGroup mParentLayout;
     private View mLayout;
+
+    private static final int MODE_INSIDE_MAIN_SCREEN = 0;
+    private static final int MODE_INSIDE_CAMERA_PICKER = 1;
+
 
     public boolean isAttached() {
         return mLayout!=null;
@@ -62,10 +68,18 @@ public class CropEdgeQuickView {
 
     private float mStatusHeight = 0;
 
+    public void getCurrentEdge(float[] point) {
+        mMarkerView.getPoints(point);
+    }
     private Unbinder mUnbinder;
-    public void attachThenPresent(Bitmap bitmap, int rotationDegrees) {
+    private RawBitmapDocument mBitmapDocument;
+    public void attachAndPresent(RawBitmapDocument document) {
         if(mFragment==null||mParentLayout==null)
             return;
+
+        int rotationDegrees = document.mRotateDegree;
+        Bitmap bitmap = document.mOriginalBitmap;
+
         if(mLayout==null) {
             mLayout = LayoutInflater.from(mFragment.getContext()).inflate(R.layout.crop_edge_quick_view, mParentLayout, false);
             mUnbinder = ButterKnife.bind(this,mLayout);
@@ -74,7 +88,7 @@ public class CropEdgeQuickView {
             ((ViewGroup.MarginLayoutParams)mCardView.getLayoutParams()).topMargin =    ((ViewGroup.MarginLayoutParams)mParentLayout.findViewById(R.id.camera_card_view).getLayoutParams()).topMargin;;
             mParentLayout.addView(mLayout);
             CanvasFilter canvasFilter = mFilterImageView.getFilter();
-            Log.d(TAG, "attachThenPresent: image was rotated by "+rotationDegrees);
+            Log.d(TAG, "attachAndPresent: image was rotated by "+rotationDegrees);
             if(canvasFilter instanceof QuickViewCanvasFilter)
                 ((QuickViewCanvasFilter) canvasFilter).setRotateValue(rotationDegrees);
             mFilterImageView.setBitmap(bitmap);
@@ -82,11 +96,7 @@ public class CropEdgeQuickView {
             mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
             mMarkerView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
 
-            AutoCapturer capturer = mFragment.getEdgeFrameProcessor().getAutoCapturer();
-            if(capturer!=null) {
-                mMarkerView.setPoints(capturer.getLatestEdges());
-            }
-
+            mMarkerView.setPoints(document.mEdgePoints);
             mFragment.onQuickViewAttach();
           // mLayout.setAlpha(0);
           //  mLayout.animate().alpha(1f).setDuration(250).start();

@@ -5,4 +5,6 @@
     <color name="bottom_background_color">#ffc4c2bc</color>
     <color name="polygonViewCircleStrokeColor">#ff59a9ff</color>
     <color name="polygonViewCircleBackground">#90e5f8ff</color>
+    <color name="scanner_theme_color">#AADE6501</color>
+    <color name="scanner_theme_color_alpha">#66DE6501</color>
 </resources>

@@ -23,8 +23,9 @@ import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
-import com.tdh7.documentscanner.model.BitmapDocument;
+import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
+import com.tdh7.documentscanner.ui.fragments.EditorFragment;
 import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 import com.tdh7.documentscanner.util.PreferenceUtil;
@@ -66,6 +67,40 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     public static final int CAPTURE_MODE_AUTO_CAPTURE = 0;
     public static final int CAPTURE_MODE_MANUAL_CAPTURE = 1;
 
+    ArrayList<RawBitmapDocument> mBitmapDocuments = new ArrayList<>();
+
+    private CameraPickerResult mResultCallback;
+    public static final int RESULT_DISCARD = 0;
+    public static final int RESULT_OK = 1;
+    public static final int RESULT_FAILURE = 2;
+
+    private EdgeFrameProcessor mEdgeFrameProcessor ;
+    private Fotoapparat mFotoapparat;
+
+    @BindDimen(R.dimen.dp_unit)
+    float mDpUnit;
+
+    @BindView(R.id.status_bar)
+    View mStatusView;
+
+
+    @BindView(R.id.camera_view)
+    public CameraView mCameraView;
+
+    @BindView(R.id.focusView)
+    FocusView mFocusView;
+
+    @BindView(R.id.root)
+    public
+    ViewGroup mRoot;
+
+    @BindView(R.id.camera_card_view)
+    View mCameraCardView;
+
+    @BindView(R.id.mode_mark_view) View mMark1;
+    @BindView(R.id.mode_mark_view_2) View mMark2;
+    @BindView(R.id.action_button) TextView mActionButton;
+
     /*
        CameraPicker chạy theo 2 mode :
     +. Tạo mới Session (Sau khi thoát picker sẽ tạo mới session và hiển thị nó
@@ -87,13 +122,9 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         return fragment;
     }
 
-    private CameraPickerResult mResultCallback;
-    public static final int RESULT_DISCARD = 0;
-    public static final int RESULT_OK = 1;
-    public static final int RESULT_FAILURE = 2;
 
     public interface CameraPickerResult {
-        void onCameraPickerComplete(int status, ArrayList<BitmapDocument> result);
+        void onCameraPickerComplete(int status, ArrayList<RawBitmapDocument> result);
     }
 
     @Nullable
@@ -244,41 +275,13 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         return mEdgeFrameProcessor;
     }
 
-    private EdgeFrameProcessor mEdgeFrameProcessor ;
-    private Fotoapparat mFotoapparat;
-
-    @BindDimen(R.dimen.dp_unit)
-    float mDpUnit;
-
-    @BindView(R.id.status_bar)
-    View mStatusView;
-
-
-    @BindView(R.id.camera_view)
-    public CameraView mCameraView;
-
-   @BindView(R.id.focusView)
-    FocusView mFocusView;
-
-   @BindView(R.id.root)
-   public
-   ViewGroup mRoot;
-
-   @BindView(R.id.camera_card_view)
-   View mCameraCardView;
-
-   @BindView(R.id.mode_mark_view) View mMark1;
-   @BindView(R.id.mode_mark_view_2) View mMark2;
-   @BindView(R.id.action_button) TextView mActionButton;
-   ArrayList<BitmapDocument> mResult = new ArrayList<>();
-
    private void updateActionButton() {
        if(mMode==MODE_NEW_SESSION) {
-           mActionButton.setText(getString(R.string.add_x,mResult.size()));
+           mActionButton.setText(getString(R.string.add_x, mBitmapDocuments.size()));
        } else {
-           mActionButton.setText(getString(R.string.import_x,mResult.size()));
+           mActionButton.setText(getString(R.string.import_x, mBitmapDocuments.size()));
        }
-       if(mResult.isEmpty()) {
+       if(mBitmapDocuments.isEmpty()) {
            mActionButton.setTextColor(0x99F5F5F5);
            mActionButton.setBackgroundResource(R.drawable.background_inactive);
        } else {
@@ -289,12 +292,18 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
    @OnClick(R.id.action_button)
    void clickAction() {
-       if(mResult.isEmpty()) return;
+       if(mBitmapDocuments.isEmpty()) return;
        if(mMode==MODE_NEW_SESSION) {
 
        } else {
 
        }
+       if(mCropEdgeQuickView!=null) {
+           mCropEdgeQuickView.getCurrentEdge(mBitmapDocuments.get(mBitmapDocuments.size()-1).mEdgePoints);
+       }
+       dismiss();
+       mCaptureIcon.post(() ->
+               presentFragment(EditorFragment.newInstance(mBitmapDocuments.get(mBitmapDocuments.size()-1))));
    }
 
    @BindView(R.id.capture_icon)
@@ -499,7 +508,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         mEdgeFrameProcessor.setActiveProcessor(false);
         mCaptureIcon.lockCapture();
         mFotoapparat.takePicture().toBitmap().whenDone(mBitmapPhotoResultListener);
-      //  mFotoapparat.stop();
 
         return true;
     }
@@ -517,26 +525,37 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     private CropEdgeQuickView mCropEdgeQuickView = new CropEdgeQuickView();
 
+    private void onCaptureBitmapAvailable(BitmapPhoto bitmapPhoto) {
+        if(bitmapPhoto!=null) {
+            // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
+            //  presentFragment(WorkingSessionFragment.newInstance(bitmapPhoto));
+            int previewRotate = (360 - mEdgeFrameProcessor.getRotateDegree()) % 360 ;
+            int captureRotate = (360 - bitmapPhoto.rotationDegrees) % 360;
+
+            // preview 270 => rotate 360 - 270 = 90
+            // capture 270 => rotate 360 - 270 = 90
+            // mean that preview is the same as capture
+            // => rotating 90 + 0 makes capture  shown as same as capture
+            // rotate 90 + (90 - 90) => a + (b-a)
+            // preview 270 => rotate 360 - 270 = 90
+            // capture 0 => rotate 0
+            // rotate 0 will make capture after the preview 90 degree
+            //  => rotate 0 + 90 == 0 + (9- 0)
+
+            RawBitmapDocument document =
+                    new RawBitmapDocument(bitmapPhoto.bitmap,previewRotate,
+                            getViewPort(),
+                            getEdgeFrameProcessor().getAutoCapturer().getLatestEdges());
+            mBitmapDocuments.add(document);
+            mCaptureIcon.post(this::updateActionButton);
+            mCaptureIcon.post(() -> mCropEdgeQuickView.attachAndPresent(document));
+        }
+    }
+
     private WhenDoneListener<BitmapPhoto> mBitmapPhotoResultListener = new WhenDoneListener<BitmapPhoto>() {
         @Override
         public void whenDone(@Nullable BitmapPhoto bitmapPhoto) {
-            if(bitmapPhoto!=null) {
-                // Toasty.warning(App.getInstance(),"Bitmap is rotated by "+bitmapPhoto.rotationDegrees).show();
-              //  presentFragment(WorkingSessionFragment.newInstance(bitmapPhoto));
-                int previewRotate = (360 - mEdgeFrameProcessor.getRotateDegree()) % 360 ;
-                int captureRotate = (360 - bitmapPhoto.rotationDegrees) % 360;
-
-                    // preview 270 => rotate 360 - 270 = 90
-                    // capture 270 => rotate 360 - 270 = 90
-                    // mean that preview is the same as capture
-                    // => rotating 90 + 0 makes capture  shown as same as capture
-                // rotate 90 + (90 - 90) => a + (b-a)
-                    // preview 270 => rotate 360 - 270 = 90
-                    // capture 0 => rotate 0
-                    // rotate 0 will make capture after the preview 90 degree
-                    //  => rotate 0 + 90 == 0 + (9- 0)
-                    mCropEdgeQuickView.attachThenPresent(bitmapPhoto.bitmap,previewRotate);
-            }
+          onCaptureBitmapAvailable(bitmapPhoto);
         }
     };
 

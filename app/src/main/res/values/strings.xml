@@ -40,7 +40,7 @@
     <string name="take_more">Take more</string>
     <string name="keep_scan">Keep Scan</string>
     <string name="continue_">Continue</string>
-    <string name="cropper">Cropper</string>
+    <string name="cropper">Crop Document</string>
     <string name="import_x">Import (%1$d)</string>
     <string name="manual">Manual Mode</string>
     <string name="auto_capture">Auto Capture</string>

@@ -2,9 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:orientation="vertical">
-
+    android:background="@android:color/black">
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -20,6 +18,7 @@
             android:drawableTop="@drawable/ic_image"
             android:singleLine="true"
             android:text="Original"
+            android:layout_marginTop="4dp"
             android:textColor="@android:color/white" />
 
         <Button
@@ -31,6 +30,7 @@
             android:drawableTop="@drawable/ic_enhamce_image"
             android:singleLine="true"
             android:text="Magic color"
+            android:layout_marginTop="4dp"
             android:textColor="@android:color/white" />
 
         <Button
@@ -42,6 +42,7 @@
             android:drawableTop="@drawable/ic_gray"
             android:singleLine="true"
             android:text="Gray Mode"
+            android:layout_marginTop="4dp"
             android:textColor="@android:color/white" />
 
         <Button
@@ -53,6 +54,7 @@
             android:drawableTop="@drawable/ic_black_and_white"
             android:singleLine="true"
             android:text="B and W"
+            android:layout_marginTop="4dp"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
@@ -105,24 +107,30 @@
         android:orientation="horizontal"
         android:paddingTop="15dp"
         android:paddingBottom="5dp">
-        <Button
+        <TextView
             android:id="@+id/doneButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/bottom_background_color"
             android:padding="@dimen/bottom_bar_padding"
             android:text="@string/done"
-            android:layout_marginRight="5dp" />
-        <Button
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginEnd="5dp" />
+        <TextView
             android:id="@+id/cancelButton2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/bottom_background_color"
             android:padding="@dimen/bottom_bar_padding"
             android:text="@string/cancel"
-            android:layout_marginLeft="5dp"/>
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginStart="5dp"/>
     </LinearLayout>
 
     <FrameLayout
@@ -135,8 +143,9 @@
 
         <ImageView
             android:id="@+id/scannedImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
             android:layout_gravity="center"
             android:layout_margin="@dimen/scanPadding" />
     </FrameLayout>

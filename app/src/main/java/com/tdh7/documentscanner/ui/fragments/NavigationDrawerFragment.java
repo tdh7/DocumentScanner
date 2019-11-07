@@ -48,7 +48,8 @@ public class NavigationDrawerFragment extends Fragment {
         Activity activity = getActivity();
         if(activity instanceof MainActivity) {
             ((MainActivity) activity).closeDrawerIfOpened();
-            ((MainActivity) activity).presentFragment(AboutFragment.newInstance());
+            mAppIcon.postDelayed((() ->
+            ((MainActivity) activity).presentFragment(AboutFragment.newInstance())),350);
         }
     }
 

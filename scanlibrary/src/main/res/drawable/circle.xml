@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <solid android:color="@color/polygonViewCircleBackground" />
+    <solid android:color="@color/scanner_theme_color" />
 
     <size
         android:width="@dimen/polygonViewCircleWidth"
@@ -10,5 +10,5 @@
 
     <stroke
         android:width="@dimen/polygonViewStrokeWidth"
-        android:color="@color/polygonViewCircleStrokeColor"></stroke>
+        android:color="@color/scanner_theme_color_alpha"/>
 </shape>

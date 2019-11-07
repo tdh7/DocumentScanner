@@ -70,6 +70,7 @@ public class PickImageFragment extends Fragment {
                 getActivity().finish();
             }
         });
+        openMediaContent();
     }
 
     private void clearTempImages() {

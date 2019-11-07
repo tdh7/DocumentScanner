@@ -1,14 +1,19 @@
 package com.tdh7.documentscanner.util;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 import androidx.annotation.NonNull;
+
+import java.io.IOException;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -130,6 +135,10 @@ public final class Util {
         return points!=null && points.length==8 && isNotDefaultValue(points);
     }
 
+    public static void reverseToTrueDefaultValue(float[] pointFS) {
+        System.arraycopy(mInvalidEdges,0,pointFS,0,8);
+    }
+
     public static void reverseToTrueDefaultValue(PointF[] pointFS) {
         pointFS[0].x = mTrueInvalidEdges[0];
         pointFS[1].x = mTrueInvalidEdges[1];
@@ -152,5 +161,16 @@ public final class Util {
         pointFS[1].y = mInvalidEdges[5];
         pointFS[2].y = mInvalidEdges[6];
         pointFS[3].y = mInvalidEdges[7];
+    }
+
+    public static Bitmap getBitmap(Context context, Uri selectedimg) throws IOException {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 3;
+        AssetFileDescriptor fileDescriptor = null;
+        fileDescriptor = context.getContentResolver().openAssetFileDescriptor(selectedimg, "r");
+
+        Bitmap original = BitmapFactory.decodeFileDescriptor(
+                fileDescriptor.getFileDescriptor(), null, options);
+        return original;
     }
 }

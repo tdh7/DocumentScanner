@@ -26,4 +26,5 @@
     <color name="heavyBlue">#00218B</color>
     <color name="heavyPurple">#162EA6</color>
     <color name="heavyPink">#B60024</color>
+    <color name="success_stroke_color">#A5DC86</color>
 </resources>
