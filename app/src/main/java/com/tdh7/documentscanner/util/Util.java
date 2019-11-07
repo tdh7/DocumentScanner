@@ -115,7 +115,7 @@ public final class Util {
 
     public static void getDefaultValue(float[] points) {
         if(points.length>7)
-        System.arraycopy(points, 0, mInvalidEdges, 0, 8);
+        System.arraycopy(points, 0, mTrueInvalidEdges, 0, 8);
     }
 
     public static boolean isNotDefaultValue(float[] points) {
@@ -165,12 +165,12 @@ public final class Util {
 
     public static Bitmap getBitmap(Context context, Uri selectedimg) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 3;
+        options.inSampleSize = 2;
         AssetFileDescriptor fileDescriptor = null;
         fileDescriptor = context.getContentResolver().openAssetFileDescriptor(selectedimg, "r");
 
         Bitmap original = BitmapFactory.decodeFileDescriptor(
-                fileDescriptor.getFileDescriptor(), null, options);
+                fileDescriptor.getFileDescriptor());
         return original;
     }
 }

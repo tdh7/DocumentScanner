@@ -1,6 +1,7 @@
 package com.scanlibrary;
 
 import android.content.ComponentCallbacks2;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class ScannerActivity extends AppCompatActivity implements IScanner, ComponentCallbacks2 {
     private ScanComponent mScanComponent = new ScanComponent();
+    public static final String MODE = "mode";
 
     public Bitmap getScannedBitmap(Bitmap bitmap, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
         return mScanComponent.getScannedBitmap(bitmap,x1,y1,x2,y2,x3,y3,x4,y4);
@@ -41,7 +43,14 @@ public class ScannerActivity extends AppCompatActivity implements IScanner, Comp
 
     PickImageFragment pickImageFragment;
     private void init() {
+        int mode = 0;
+        Intent intent = getIntent();
+        if(intent!=null) {
+            Bundle bundle = intent.getExtras();
+            if(bundle!=null) mode = bundle.getInt(MODE,0);
+        }
         pickImageFragment = new PickImageFragment();
+        pickImageFragment.mode = mode;
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

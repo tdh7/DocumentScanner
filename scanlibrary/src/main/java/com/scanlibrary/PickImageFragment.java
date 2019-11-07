@@ -25,6 +25,7 @@ import java.util.Date;
 
 public class PickImageFragment extends Fragment {
 
+    public int mode = 0;
     private View view;
     private Button cameraButton;
     private Button galleryButton;
@@ -70,7 +71,9 @@ public class PickImageFragment extends Fragment {
                 getActivity().finish();
             }
         });
+        if(mode==0)
         openMediaContent();
+        else openCamera();
     }
 
     private void clearTempImages() {
@@ -151,7 +154,8 @@ public class PickImageFragment extends Fragment {
 
     private Bitmap getBitmap(Uri selectedimg) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 3;
+
+        options.inSampleSize = 2;
         AssetFileDescriptor fileDescriptor = null;
         fileDescriptor =
                 getActivity().getContentResolver().openAssetFileDescriptor(selectedimg, "r");

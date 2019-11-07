@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -37,7 +39,9 @@ import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 import com.tdh7.documentscanner.util.Util;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -51,7 +55,7 @@ import static com.tdh7.documentscanner.ui.MainActivity.ACTION_PERMISSION_START_U
 public class MainFragment extends NavigationFragment {
     public static final String TAG ="MainFragment";
 
-    private static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
+    public static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
     public final static int REQUEST_CODE_PICK_FROM_GALLERY = 11;
     public final static int REQUEST_CODE_PICK_FROM_DEVICE_CAMERA = 12;
 
@@ -121,6 +125,8 @@ public class MainFragment extends NavigationFragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_START_SCAN_BY_LIBRARY:
+            case REQUEST_CODE_PICK_FROM_DEVICE_CAMERA:
+            case REQUEST_CODE_PICK_FROM_GALLERY:
                 if(resultCode==Activity.RESULT_OK) {
                     //Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
                     //Bitmap bitmap = null;
@@ -150,16 +156,6 @@ public class MainFragment extends NavigationFragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
-                }
-                break;
-            case REQUEST_CODE_PICK_FROM_GALLERY:
-                if(resultCode==Activity.RESULT_OK) {
-                    try {
-                        Bitmap bitmap = Util.getBitmap(getContext(), data.getData());
-
-                    } catch (Exception e) {
-                        Toasty.error(App.getInstance(),"Sorry, something went wrong. We're couldn't get the photo from system").show();
                     }
                 }
                 break;
@@ -316,11 +312,48 @@ public class MainFragment extends NavigationFragment {
         startActivityForResult(intent, REQUEST_CODE_START_SCAN_BY_LIBRARY);
     }
 
+    public void openSystemCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        File file = createImageFile();
+        boolean isDirectoryCreated = file.getParentFile().mkdirs();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Uri tempFileUri = FileProvider.getUriForFile(getActivity().getApplicationContext(),
+                    "com.scanlibrary.provider", // As defined in Manifest
+                    file);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
+        } else {
+            Uri tempFileUri = Uri.fromFile(file);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
+        }
+        startActivityForResult(cameraIntent, ScanConstants.START_CAMERA_REQUEST_CODE);
+    }
+
     @OnClick(R.id.search_hint)
     void appBarClick() {
         presentFragment(new SearchFragment());
     }
 
+    private void clearTempImages() {
+        try {
+            File tempFolder = new File(ScanConstants.IMAGE_PATH);
+            for (File f : tempFolder.listFiles())
+                f.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Uri fileUri;
+    private File createImageFile() {
+        clearTempImages();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new
+                Date());
+        File file = new File(ScanConstants.IMAGE_PATH, "IMG_" + timeStamp +
+                ".jpg");
+        fileUri = Uri.fromFile(file);
+        return file;
+    }
 
     void addPhotoFromGallery() {
         requestOpenMediaGallery();

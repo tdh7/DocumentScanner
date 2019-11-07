@@ -89,16 +89,7 @@ public class ResultFragment extends Fragment {
         rotateLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    showProgressDialog(getResources().getString(R.string.applying_filter));
-                    original = RotateBitmap(original, -90);
-                    transformed = original;
-                    scannedImageView.setImageBitmap(original);
-                    dismissDialog();
-                } catch (OutOfMemoryError e) {
-                    e.printStackTrace();
-                    dismissDialog();
-                }
+           executeRotate(-90);
             }
         });
 
@@ -106,16 +97,7 @@ public class ResultFragment extends Fragment {
         rotateRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    showProgressDialog(getResources().getString(R.string.applying_filter));
-                    original = RotateBitmap(original, 90);
-                    transformed = original;
-                    scannedImageView.setImageBitmap(original);
-                    dismissDialog();
-                } catch (OutOfMemoryError e) {
-                    e.printStackTrace();
-                    dismissDialog();
-                }
+              executeRotate(90);
             }
         });
 
@@ -123,16 +105,7 @@ public class ResultFragment extends Fragment {
         rotate360Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    showProgressDialog(getResources().getString(R.string.applying_filter));
-                    original = RotateBitmap(original, 180);
-                    transformed = original;
-                    scannedImageView.setImageBitmap(original);
-                    dismissDialog();
-                } catch (OutOfMemoryError e) {
-                    e.printStackTrace();
-                    dismissDialog();
-                }
+               executeRotate(180);
             }
         });
     }
@@ -330,6 +303,38 @@ public class ResultFragment extends Fragment {
                 dismissDialog();
             }
         }
+    }
+
+    private void executeRotate(final float angle) {
+        showProgressDialog("rotating...");
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(transformed==null)
+                        transformed = RotateBitmap(original,angle);
+                    else transformed = RotateBitmap(transformed,angle);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            scannedImageView.setImageBitmap(transformed);
+                            dismissDialog();
+                        }
+                    });
+                } catch (final OutOfMemoryError e) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            transformed = original;
+                            scannedImageView.setImageBitmap(original);
+                            e.printStackTrace();
+                            dismissDialog();
+                        }
+                    });
+                }
+
+            }
+        });
     }
 
     private class GrayButtonClickListener implements View.OnClickListener {

@@ -1,6 +1,7 @@
 package com.tdh7.documentscanner.ui.picker;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -20,12 +21,14 @@ import androidx.core.content.ContextCompat;
 
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
+import com.scanlibrary.ScannerActivity;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.fragments.EditorFragment;
+import com.tdh7.documentscanner.ui.fragments.MainFragment;
 import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 import com.tdh7.documentscanner.util.PreferenceUtil;
@@ -159,6 +162,13 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
                 ,PERMISSION_CAMERA);
     }
 
+    @OnClick(R.id.system_camera_icon)
+    void openSystemCamera() {
+        Intent intent = new Intent(getActivity(),ScannerActivity.class);
+        intent.putExtra(ScannerActivity.MODE,1);
+        startActivityForResult(intent, MainFragment.REQUEST_CODE_START_SCAN_BY_LIBRARY);
+        dismiss();
+    }
 
 
     private void removePermissionScreenIfAny() {

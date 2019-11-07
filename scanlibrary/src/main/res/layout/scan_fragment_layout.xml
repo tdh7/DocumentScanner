@@ -10,28 +10,30 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
-        <Button
-            android:id="@+id/scanButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/bottom_background_color"
-            android:padding="@dimen/bottom_bar_padding"
-            android:text="@string/scan"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" />
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
 
         <Button
             android:id="@+id/cancelButton3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/bottom_background_color"
+            android:background="@drawable/background_circle"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp" />
+        <Button
+            android:id="@+id/scanButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/background_circle"
             android:padding="@dimen/bottom_bar_padding"
-            android:text="@string/cancel"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" />
+            android:text="Continue"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp" />
     </LinearLayout>
 
     <FrameLayout

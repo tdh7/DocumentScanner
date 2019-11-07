@@ -2,6 +2,7 @@ package com.scanlibrary;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
@@ -194,6 +195,7 @@ public class PolygonView extends FrameLayout {
         ImageView imageView = new ImageView(context);
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         imageView.setLayoutParams(layoutParams);
+        imageView.setBackgroundColor(Color.TRANSPARENT);
         imageView.setImageResource(R.drawable.circle);
         imageView.setX(x);
         imageView.setY(y);
@@ -302,7 +304,7 @@ public class PolygonView extends FrameLayout {
                 case MotionEvent.ACTION_UP:
                     int color = 0;
                     if (isValidShape(getPoints())) {
-                        color = getResources().getColor(R.color.blue);
+                        color = Color.RED;
                     } else {
                         color = getResources().getColor(R.color.orange);
                     }

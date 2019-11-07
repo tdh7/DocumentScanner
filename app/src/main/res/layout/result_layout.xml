@@ -6,7 +6,7 @@
     <View
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_24"/>
+        android:layout_height="0dp"/>
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -133,7 +133,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
         <TextView
             android:id="@+id/doneButton"
             android:layout_width="0dp"
@@ -146,6 +147,7 @@
             android:textStyle="bold"
             android:textAllCaps="true"
             android:textSize="16sp"
+            android:background="@drawable/background_circle"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"/>
         <TextView
@@ -156,6 +158,7 @@
             android:padding="@dimen/bottom_bar_padding"
             android:text="@string/cancel"
             android:textAllCaps="true"
+            android:background="@drawable/background_circle"
             android:textColor="@android:color/black"
             android:gravity="center"
             android:textStyle="bold"
