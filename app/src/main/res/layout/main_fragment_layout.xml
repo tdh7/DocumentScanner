@@ -13,8 +13,7 @@
         android:id="@+id/constraint_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:fitsSystemWindows="true">
+        android:background="@android:color/white">
         <View
             android:id="@+id/app_bar"
             android:layout_width="0dp"
@@ -177,13 +176,19 @@
             app:fabCustomSize="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />-->
+   <!--     <com.adityaarora.liveedgedetection.view.TouchImageView
+            android:id="@+id/scanned_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:visibility="gone"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/background_light"
-        android:fitsSystemWindows="true" >
+        >
         <fragment
             android:id="@+id/fragment_drawer"
             android:name="com.tdh7.documentscanner.ui.fragments.NavigationDrawerFragment"

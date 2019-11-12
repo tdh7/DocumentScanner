@@ -45,4 +45,8 @@
     <string name="manual">Manual Mode</string>
     <string name="auto_capture">Auto Capture</string>
     <string name="add_x">Add (%1$d)</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Save file</string>
+    <string name="applying_filter">Applying filter...</string>
+    <string name="loading">Loading</string>
 </resources>

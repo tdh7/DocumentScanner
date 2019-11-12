@@ -20,23 +20,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.ldt.navigation.NavigationFragment;
-import com.scanlibrary.ScanConstants;
-import com.scanlibrary.ScannerActivity;
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
+import com.tdh7.documentscanner.util.ScanConstants;
 import com.tdh7.documentscanner.util.Util;
+import com.tdh7.documentscanner.util.Utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -52,7 +55,7 @@ import es.dmoral.toasty.Toasty;
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_OPEN_MEDIA_PICKER;
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_PERMISSION_START_UP;
 
-public class MainFragment extends NavigationFragment {
+public class MainFragment extends NavigationFragment implements CropEdgeQuickView.QuickViewActionCallback {
     public static final String TAG ="MainFragment";
 
     public static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
@@ -64,6 +67,22 @@ public class MainFragment extends NavigationFragment {
 
     @BindView(R.id.drawer_parent)
     DrawerLayout mDrawerParent;
+
+    @Override
+    public boolean onBackPressed() {
+        if(mCropEdgeQuickView!=null&&mCropEdgeQuickView.isAttached()) {
+            mCropEdgeQuickView.detach();
+            return false;
+        } else return true;
+    }
+
+    @Override
+    public void onSetStatusBarMargin(int value) {
+        ((ViewGroup.MarginLayoutParams)mAppBar.getLayoutParams()).topMargin = value;
+    }
+
+    @BindView(R.id.constraint_parent)
+    ConstraintLayout mConstraintParent;
 
     @BindView(R.id.app_bar) View mAppBar;
     @BindView(R.id.app_icon) View mAppLogoIcon;
@@ -120,13 +139,29 @@ public class MainFragment extends NavigationFragment {
 
     }
 
+/*    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_START_SCAN_BY_LIBRARY) {
+            if(resultCode == Activity.RESULT_OK) {
+                if(null != data && null != data.getExtras()) {
+                    String filePath = data.getExtras().getString(ScanConstants.SCANNED_RESULT);
+                    Bitmap baseBitmap = ScanUtils.decodeBitmapFromFile(filePath, ScanConstants.IMAGE_NAME);
+                    mScannedImage.setVisibility(View.VISIBLE);
+                    mScannedImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    mScannedImage.setImageBitmap(baseBitmap);
+                }
+            } else if(resultCode == Activity.RESULT_CANCELED) {
+                mScannedImage.setVisibility(View.GONE);
+            }
+        }
+    }*/
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_START_SCAN_BY_LIBRARY:
-            case REQUEST_CODE_PICK_FROM_DEVICE_CAMERA:
-            case REQUEST_CODE_PICK_FROM_GALLERY:
                 if(resultCode==Activity.RESULT_OK) {
                     //Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
                     //Bitmap bitmap = null;
@@ -159,8 +194,26 @@ public class MainFragment extends NavigationFragment {
                     }
                 }
                 break;
-
+            case REQUEST_CODE_PICK_FROM_DEVICE_CAMERA:
+            case REQUEST_CODE_PICK_FROM_GALLERY:
+                Bitmap bitmap = null;
+                try {
+                    bitmap = Utils.getBitmapWithUri(getContext(), data.getData());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (bitmap != null) {
+                    showQuickView(bitmap);
+                }
         }
+    }
+
+    private void showQuickView(Bitmap bitmap) {
+        float[] point = new float[8];
+        Util.getDefaultValue(point);
+        RawBitmapDocument document = new RawBitmapDocument(bitmap,0,new float[]{bitmap.getWidth(),bitmap.getHeight()}, point);
+        if(mCropEdgeQuickView==null) mCropEdgeQuickView = new CropEdgeQuickView();
+        mCropEdgeQuickView.attachAndPresent(this,document);
     }
 
     @BindView(R.id.empty_list_view)
@@ -189,14 +242,14 @@ public class MainFragment extends NavigationFragment {
                     if (fo.exists()) {
                         openFile(ScanConstants.PDF_PATH,(String) mListView.getItemAtPosition(position));
 
-                        /*Intent intent = new Intent(Intent.ACTION_VIEW);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         try {
                             startActivity(intent);
                         } catch (Exception e) {
-                            Toasty.error(MainActivity.this,R.string.open_pdf_error).show();
-                        }*/
+                            Toasty.error(App.getInstance(),R.string.open_pdf_error).show();
+                        }
                     }
                 }
             });
@@ -306,14 +359,19 @@ public class MainFragment extends NavigationFragment {
         mDrawerParent.openDrawer(GravityCompat.START);
     }
 
-    @OnClick(R.id.pick_photo_icon)
+
     protected void startScanByLibrary() {
-        Intent intent = new Intent(getActivity(), ScannerActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_START_SCAN_BY_LIBRARY);
+       /* Intent intent = new Intent(getActivity(), ScannerActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_START_SCAN_BY_LIBRARY);*/
+       // Intent intent = new Intent(getActivity(), ScanActivity.class);
+       // startActivityForResult(intent, REQUEST_CODE_START_SCAN_BY_LIBRARY);
     }
 
+    /*@BindView(R.id.scanned_image)
+    TouchImageView mScannedImage;*/
+
     public void openSystemCamera() {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+   /*     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         File file = createImageFile();
         boolean isDirectoryCreated = file.getParentFile().mkdirs();
 
@@ -326,7 +384,7 @@ public class MainFragment extends NavigationFragment {
             Uri tempFileUri = Uri.fromFile(file);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
         }
-        startActivityForResult(cameraIntent, ScanConstants.START_CAMERA_REQUEST_CODE);
+        startActivityForResult(cameraIntent, ScanConstants.START_CAMERA_REQUEST_CODE);*/
     }
 
     @OnClick(R.id.search_hint)
@@ -335,17 +393,17 @@ public class MainFragment extends NavigationFragment {
     }
 
     private void clearTempImages() {
-        try {
+      /*  try {
             File tempFolder = new File(ScanConstants.IMAGE_PATH);
             for (File f : tempFolder.listFiles())
                 f.delete();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private Uri fileUri;
-    private File createImageFile() {
+    /*private File createImageFile() {
         clearTempImages();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new
                 Date());
@@ -353,8 +411,9 @@ public class MainFragment extends NavigationFragment {
                 ".jpg");
         fileUri = Uri.fromFile(file);
         return file;
-    }
+    }*/
 
+    @OnClick(R.id.pick_photo_icon)
     void addPhotoFromGallery() {
         requestOpenMediaGallery();
     }
@@ -382,5 +441,32 @@ public class MainFragment extends NavigationFragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE_PICK_FROM_GALLERY);
+    }
+
+    private CropEdgeQuickView mCropEdgeQuickView;
+
+    @Override
+    public ViewGroup getParentLayout() {
+        return mConstraintParent;
+    }
+
+    @Override
+    public void onQuickViewAttach() {
+        mCropEdgeQuickView.showActionButton();
+        if(getActivity() instanceof MainActivity)
+            ((MainActivity) getActivity()).setTheme(false);
+    }
+
+    @Override
+    public void onQuickViewDetach(float[] points) {
+        mCropEdgeQuickView = null;
+        if(getActivity() instanceof MainActivity)
+            ((MainActivity) getActivity()).setTheme(true);
+    }
+
+    @Override
+    public void onActionClick() {
+        presentFragment(EditorFragment.newInstance(mCropEdgeQuickView.getBitmapDocument()));
+        mCropEdgeQuickView.detach();
     }
 }

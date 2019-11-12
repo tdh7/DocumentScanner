@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 public class MainActivity extends PermissionActivity {
     public static final String TAG ="MainActivity";
+    private static final String mOpenCvLibrary = "opencv_java3";
 
     public static final String PACKAGE_NAME = "com.tdh7.documentscanner.";
     public static final String ACTION_PERMISSION_START_UP = PACKAGE_NAME + "permission_start_up";
@@ -27,7 +28,9 @@ public class MainActivity extends PermissionActivity {
 
     MainFragment mMainFragment;
 
-
+    static {
+        System.loadLibrary(mOpenCvLibrary);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +40,9 @@ public class MainActivity extends PermissionActivity {
         mMainFragment = MainFragment.newInstance();
         initNavigation(savedInstanceState,R.id.container,mMainFragment);
         boolean hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
-        if(hasPermission) {
+      /*  if(hasPermission) {
             new Handler().post(this::openCamera);
-        }
+        }*/
     }
     public void openCamera() {
         presentFragment(CameraPickerFragment.newInstance());

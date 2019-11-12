@@ -20,5 +20,7 @@
         <item name="android:backgroundDimAmount">0.65</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
     </style>
 </resources>

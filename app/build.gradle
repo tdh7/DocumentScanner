@@ -18,6 +18,12 @@ android {
 
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            moduleName = "app"
+            stl = "gnustl_static"
+            abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'mips', 'mips64', 'x86', 'x86_64'
+        }
+
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -37,7 +43,8 @@ android {
 }
 
 dependencies {
-    implementation project(':scanlibrary')
+    implementation project(':openCVLibrary340')
+    //implementation project(':liveedgedetection')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -70,4 +77,13 @@ dependencies {
 
     // Loader
     implementation 'com.tuyenmonkey:mkloader:1.4.0'
+
+    // iText PDF
+    implementation 'com.itextpdf:itextg:5.5.10'
+
+    // Toasty
+    implementation 'com.github.GrenderG:Toasty:1.4.2'
+
+    // Photo View
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 }

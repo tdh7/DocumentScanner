@@ -264,7 +264,7 @@ public class MarkerView extends View implements ValueAnimator.AnimatorUpdateList
 
     private void initPaint() {
         paint = new Paint();
-        paint.setColor(getResources().getColor(com.scanlibrary.R.color.blue));
+        paint.setColor(getResources().getColor(R.color.scanner_text_color));
         paint.setStrokeWidth(2*oneDp);
         paint.setStyle(Paint.Style.STROKE);
         paint.setAntiAlias(true);

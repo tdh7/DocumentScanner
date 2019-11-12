@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
     <View
         android:id="@+id/status_bar"
@@ -167,23 +168,12 @@
             android:layout_marginStart="8dp"
            />
     </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/botBar"
-        android:layout_below="@id/topBar"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/scanPadding">
-
-        <ImageView
-            android:id="@+id/scannedImage"
+        <com.github.chrisbanes.photoview.PhotoView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/scannedImage"
+            android:layout_above="@id/botBar"
+            android:layout_below="@id/topBar"
             android:scaleType="centerInside"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/scanPadding" />
-    </FrameLayout>
-
-
+            android:layout_gravity="center"/>
 </RelativeLayout>

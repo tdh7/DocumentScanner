@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat;
 
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
-import com.scanlibrary.ScannerActivity;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
@@ -58,7 +57,7 @@ import static io.fotoapparat.selector.LensPositionSelectorsKt.back;
 import static io.fotoapparat.selector.PreviewFpsRangeSelectorsKt.highestFps;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
 
-public class CameraPickerFragment extends NavigationFragment implements CaptureIconView.CaptureListener {
+public class CameraPickerFragment extends NavigationFragment implements CaptureIconView.CaptureListener, CropEdgeQuickView.QuickViewCallback {
     private static final String TAG = "CameraPickerFragment";
     public static final int PERMISSION_CAMERA = 1;
 
@@ -164,9 +163,9 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     @OnClick(R.id.system_camera_icon)
     void openSystemCamera() {
-        Intent intent = new Intent(getActivity(),ScannerActivity.class);
-        intent.putExtra(ScannerActivity.MODE,1);
-        startActivityForResult(intent, MainFragment.REQUEST_CODE_START_SCAN_BY_LIBRARY);
+        //Intent intent = new Intent(getActivity(),ScannerActivity.class);
+        //intent.putExtra(ScannerActivity.MODE,1);
+        //startActivityForResult(intent, MainFragment.REQUEST_CODE_START_SCAN_BY_LIBRARY);
         dismiss();
     }
 
@@ -218,7 +217,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     public void onDestroy() {
         mEdgeFrameProcessor.destroy();
         mEdgeFrameProcessor = null;
-        mCropEdgeQuickView.destroy();
         mCropEdgeQuickView = null;
         super.onDestroy();
     }
@@ -256,7 +254,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
                 .previewScaleType(ScaleType.CenterCrop)
                 .lensPosition(back())
                 .build();
-        mCropEdgeQuickView.init(this);
     }
 
     @Override
@@ -317,8 +314,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
    }
 
    @BindView(R.id.capture_icon)
-   public
-   CaptureIconView mCaptureIcon;
+   public CaptureIconView mCaptureIcon;
 
    private int mCaptureMode = CAPTURE_MODE_NONE;
 
@@ -478,7 +474,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     @Override
     public boolean onBackPressed() {
-        if(mCropEdgeQuickView.isAttached()) {
+        if(mCropEdgeQuickView!=null&&mCropEdgeQuickView.isAttached()) {
             mCropEdgeQuickView.detach();
             return false;
         } else return true;
@@ -522,18 +518,26 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         return true;
     }
 
+    @Override
+    public ViewGroup getParentLayout() {
+        return mRoot;
+    }
+
+    @Override
     public void onQuickViewAttach() {
 
     }
 
-    public void onQuickViewDetach() {
+    @Override
+    public void onQuickViewDetach(float[] points) {
         mEdgeFrameProcessor.setActiveProcessor(true);
         if(mCaptureMode== CAPTURE_MODE_AUTO_CAPTURE)
-        mEdgeFrameProcessor.activeAutoCapture();
+            mEdgeFrameProcessor.activeAutoCapture();
         mCaptureIcon.unlockCapture();
+        mCropEdgeQuickView = null;
     }
 
-    private CropEdgeQuickView mCropEdgeQuickView = new CropEdgeQuickView();
+    private CropEdgeQuickView mCropEdgeQuickView;
 
     private void onCaptureBitmapAvailable(BitmapPhoto bitmapPhoto) {
         if(bitmapPhoto!=null) {
@@ -558,7 +562,10 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
                             getEdgeFrameProcessor().getAutoCapturer().getLatestEdges());
             mBitmapDocuments.add(document);
             mCaptureIcon.post(this::updateActionButton);
-            mCaptureIcon.post(() -> mCropEdgeQuickView.attachAndPresent(document));
+            mCaptureIcon.post(() -> {
+                if(mCropEdgeQuickView==null) mCropEdgeQuickView = new CropEdgeQuickView();
+                mCropEdgeQuickView.attachAndPresent(this,document);
+            });
         }
     }
 

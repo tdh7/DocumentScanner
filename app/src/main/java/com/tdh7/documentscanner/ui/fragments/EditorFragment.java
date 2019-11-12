@@ -26,16 +26,14 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
-import com.scanlibrary.ProgressDialogFragment;
-import com.scanlibrary.ScanComponent;
-import com.scanlibrary.ScanConstants;
-import com.scanlibrary.ScannerActivity;
-import com.scanlibrary.Utils;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.model.BitmapDocument;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.dialog.LoadingScreenDialog;
+import com.tdh7.documentscanner.util.ScanConstants;
+import com.tdh7.documentscanner.util.ScanUtils;
+import com.tdh7.documentscanner.util.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -58,7 +56,6 @@ public class EditorFragment extends NavigationFragment {
     private Button grayModeButton;
     private Button bwButton;
     private Bitmap transformed;
-    private static ProgressDialogFragment progressDialogFragment;
 
     private Button rotateLeftButton;
     private Button rotateRightButton;
@@ -81,7 +78,7 @@ public class EditorFragment extends NavigationFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        view = inflater.inflate(com.scanlibrary.R.layout.result_layout, null);
+        view = inflater.inflate(R.layout.result_layout, null);
         return view;
     }
 
@@ -109,13 +106,19 @@ public class EditorFragment extends NavigationFragment {
             @Override
             public void run() {
                 view.post(()-> showLoading());
-                BitmapDocument bitmapDocument = document.buildBitmapDocument(mScanComponent);
-                view.post(()-> {
-                   setScannedDocument(bitmapDocument);
-                   mLoadingDialog.dismiss();
-                   mLoadingDialog = null;
-                });
+                BitmapDocument bitmapDocument = ScanUtils.buildBitmapDocument(document);
+                view.post(() -> setScannedDocument(bitmapDocument));
+                hideLoading();
+
             }
+        });
+    }
+
+    private void hideLoading() {
+        view.post(()-> {
+
+            mLoadingDialog.dismiss();
+            mLoadingDialog = null;
         });
     }
 
@@ -131,20 +134,20 @@ public class EditorFragment extends NavigationFragment {
 
     private void init() {
         mStatusBar = view.findViewById(R.id.status_bar);
-        scannedImageView = (ImageView) view.findViewById(com.scanlibrary.R.id.scannedImage);
-        originalButton = (Button) view.findViewById(com.scanlibrary.R.id.original);
+        scannedImageView = (ImageView) view.findViewById(R.id.scannedImage);
+        originalButton = (Button) view.findViewById(R.id.original);
         originalButton.setOnClickListener(new OriginalButtonClickListener());
-        MagicColorButton = (Button) view.findViewById(com.scanlibrary.R.id.magicColor);
+        MagicColorButton = (Button) view.findViewById(R.id.magicColor);
         MagicColorButton.setOnClickListener(new MagicColorButtonClickListener());
-        grayModeButton = (Button) view.findViewById(com.scanlibrary.R.id.grayMode);
+        grayModeButton = (Button) view.findViewById(R.id.grayMode);
         grayModeButton.setOnClickListener(new GrayButtonClickListener());
-        bwButton = (Button) view.findViewById(com.scanlibrary.R.id.BWMode);
+        bwButton = (Button) view.findViewById(R.id.BWMode);
         bwButton.setOnClickListener(new BWButtonClickListener());
 
-        doneButton = view.findViewById(com.scanlibrary.R.id.doneButton);
+        doneButton = view.findViewById(R.id.doneButton);
         doneButton.setOnClickListener(new DoneButtonClickListener());
 
-        View cancelButton = view.findViewById(com.scanlibrary.R.id.cancelButton2);
+        View cancelButton = view.findViewById(R.id.cancelButton2);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +156,7 @@ public class EditorFragment extends NavigationFragment {
             }
         });
 
-        rotateLeftButton = (Button) view.findViewById(com.scanlibrary.R.id.rotateLeftButton);
+        rotateLeftButton = (Button) view.findViewById(R.id.rotateLeftButton);
         rotateLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +164,7 @@ public class EditorFragment extends NavigationFragment {
             }
         });
 
-        rotateRightButton = (Button) view.findViewById(com.scanlibrary.R.id.rotateRightButton);
+        rotateRightButton = (Button) view.findViewById(R.id.rotateRightButton);
         rotateRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,7 +172,7 @@ public class EditorFragment extends NavigationFragment {
             }
         });
 
-        rotate360Button = (Button) view.findViewById(com.scanlibrary.R.id.rotate360Button);
+        rotate360Button = (Button) view.findViewById(R.id.rotate360Button);
         rotate360Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,7 +263,7 @@ public class EditorFragment extends NavigationFragment {
                 public void onClick(DialogInterface dialog, int which) {
                     foname = iname.getText().toString();
 
-                    showProgressDialog(getResources().getString(com.scanlibrary.R.string.loading));
+                    showProgressDialog(getResources().getString(R.string.loading));
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -335,16 +338,15 @@ public class EditorFragment extends NavigationFragment {
         return true;
     }
 
-    ScanComponent mScanComponent = new ScanComponent();
     private class BWButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-            showProgressDialog(getResources().getString(com.scanlibrary.R.string.applying_filter));
+            showProgressDialog(getResources().getString(R.string.applying_filter));
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        transformed = mScanComponent.getBWBitmap(original);
+                        transformed = ScanUtils.getBWBitmap(original);
                     } catch (final OutOfMemoryError e) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -372,12 +374,12 @@ public class EditorFragment extends NavigationFragment {
     private class MagicColorButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-            showProgressDialog(getResources().getString(com.scanlibrary.R.string.applying_filter));
+            showProgressDialog(getResources().getString(R.string.applying_filter));
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        transformed = mScanComponent.getMagicColorBitmap(original);
+                        transformed = ScanUtils.getMagicColorBitmap(original);
                     } catch (final OutOfMemoryError e) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -406,7 +408,7 @@ public class EditorFragment extends NavigationFragment {
         @Override
         public void onClick(View v) {
             try {
-                showProgressDialog(getResources().getString(com.scanlibrary.R.string.applying_filter));
+                showProgressDialog(getResources().getString(R.string.applying_filter));
                 transformed = original;
                 scannedImageView.setImageBitmap(original);
                 dismissDialog();
@@ -420,12 +422,12 @@ public class EditorFragment extends NavigationFragment {
     private class GrayButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(final View v) {
-            showProgressDialog(getResources().getString(com.scanlibrary.R.string.applying_filter));
+            showProgressDialog(getResources().getString(R.string.applying_filter));
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        transformed = mScanComponent.getGrayBitmap(original);
+                        transformed = ScanUtils.getGrayBitmap(original);
                     } catch (final OutOfMemoryError e) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -451,18 +453,11 @@ public class EditorFragment extends NavigationFragment {
     }
 
     protected synchronized void showProgressDialog(String message) {
-        if (progressDialogFragment != null && progressDialogFragment.isVisible()) {
-            // Before creating another loading dialog, close all opened loading dialogs (if any)
-            progressDialogFragment.dismissAllowingStateLoss();
-        }
-        progressDialogFragment = null;
-        progressDialogFragment = new ProgressDialogFragment(message);
-        FragmentManager fm = getChildFragmentManager();
-        progressDialogFragment.show(fm, ProgressDialogFragment.class.toString());
+        showLoading();
     }
 
     protected synchronized void dismissDialog() {
-        progressDialogFragment.dismissAllowingStateLoss();
+        hideLoading();
     }
 
     @Override

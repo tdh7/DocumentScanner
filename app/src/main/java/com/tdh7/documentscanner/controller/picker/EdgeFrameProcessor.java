@@ -7,12 +7,22 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.renderscript.RenderScript;
 
-import com.scanlibrary.ScanComponent;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
+import com.tdh7.documentscanner.util.ImageDetectionProperties;
+import com.tdh7.documentscanner.util.Quadrilateral;
 import com.tdh7.documentscanner.util.RenderScriptHelper;
+import com.tdh7.documentscanner.util.ScanUtils;
 import com.tdh7.documentscanner.util.Util;
+
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -21,6 +31,8 @@ import java.util.List;
 import io.fotoapparat.parameter.Resolution;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
+
+import static org.opencv.core.CvType.CV_8UC1;
 
 public class EdgeFrameProcessor implements FrameProcessor {
     private static final String TAG = "EdgeFrameProcessor";
@@ -34,12 +46,20 @@ public class EdgeFrameProcessor implements FrameProcessor {
     public void setRotateDegree(int rotateDegree) {
         mRotateDegree = rotateDegree;
     }
+    private void toast(@StringRes int s) {
+        CameraPickerFragment fragment = mWeakFragment.get();
+        if(fragment!=null) fragment.toast(s);
+    }
 
+    private void toast(String s) {
+        CameraPickerFragment fragment = mWeakFragment.get();
+        if(fragment!=null) fragment.toast(s);
+    }
     private int mRotateDegree= 0;
     private RenderScript mRenderScript;
-    public ScanComponent getScanComponent() {
+  /*  public ScanComponent getScanComponent() {
         return mScanComponent;
-    }
+    }*/
 
     public boolean isActiveProcessor() {
         return mActiveProcessor;
@@ -57,12 +77,12 @@ public class EdgeFrameProcessor implements FrameProcessor {
 
     private AutoCapturer mAutoCapturer;
 
-    private ScanComponent mScanComponent = new ScanComponent();
+  /*  private ScanComponent mScanComponent = new ScanComponent();*/
     public void destroy() {
         if(mAutoCapturer!=null)
         mAutoCapturer.destroy();
         mWeakFragment.clear();
-        mScanComponent = null;
+        //mScanComponent = null;
         mRenderScript = null;
     }
 
@@ -139,10 +159,192 @@ public class EdgeFrameProcessor implements FrameProcessor {
             return pointFs;
         }
 
-        private float[] mPoints = new float[]{0,1,0,1,0,0,1,1};
+    @Override
+    public void process(@NonNull Frame frame) {
 
-        @Override
-        public void process(@NonNull Frame frame) {
+        // do nothing if processor is inactive
+        mRotateDegree = frame.getRotation();
+        if(!isActiveProcessor()) return;
+        CameraPickerFragment cpf = mWeakFragment.get();
+
+        // do nothing if no camera picker
+        if(cpf==null) return;
+
+        try {
+            Resolution size = frame.getSize();
+            Mat yuv = new Mat(new Size(size.width, size.height * 1.5), CV_8UC1);
+            yuv.put(0, 0, frame.getImage());
+
+            Mat mat = new Mat(new Size(size.width, size.height), CvType.CV_8UC4);
+            Imgproc.cvtColor(yuv, mat, Imgproc.COLOR_YUV2BGR_NV21, 4);
+            yuv.release();
+
+            Size originalPreviewSize = mat.size();
+            int originalPreviewArea = mat.rows() * mat.cols();
+
+            Quadrilateral largestQuad = ScanUtils.detectLargestQuadrilateral(mat);
+            //clearAndInvalidateCanvas();
+
+            mat.release();
+
+            if (null != largestQuad) {
+                findLargestRect(largestQuad.contour, largestQuad.points, originalPreviewSize, originalPreviewArea);
+            } else {
+                //toast("Finding rect");
+            }
+        } catch (Exception e) {
+            //toast("Finding rect with an exception");
+        }
+    }
+
+    private void scalePoint(float[] pixelPoint, float scaleX, float scaleY) {
+        pixelPoint[0] *=scaleX;
+        pixelPoint[1] *=scaleX;
+        pixelPoint[2] *=scaleX;
+        pixelPoint[3] *=scaleX;
+
+        pixelPoint[4] *=scaleY;
+        pixelPoint[5] *=scaleY;
+        pixelPoint[6] *=scaleY;
+        pixelPoint[7] *=scaleY;
+
+    }
+
+    /**
+     *  centerCrop các điểm thuộc một hình chữ nhật
+     *  trả về kích cỡ hình chữ nhật mới
+     *  Lưu ý: Hàm này chỉ center crop chứ không resize các điểm để đồng bộ với hình chữ nhật  tham số
+     * @param pixelPoint các điểm cũ
+     * @param wSrc độ rộng hình chữ nhật cũ
+     * @param hSrc độ cao hình chữ nhật
+     * @param wViewPort độ rộng hình chữ nhật để tính tỷ lệ
+     * @param hViewPort độ cao hình chữ nhật để tính tỷ lệ
+     * @return độ rộng và độ cao mới (ít nhất một trong hai là giá trị của hình chữ nhật cũ)
+     */
+    private float[] centerCropPoint(float[] pixelPoint, float wSrc, float hSrc, float wViewPort, float hViewPort) {
+        float wPerHDest = wViewPort/hViewPort;
+        float wPerHSrc = wSrc/hSrc;
+        if(wPerHSrc<wPerHDest) {
+            // bị cắt đi chiều cao, giữ nguyên chiều rộng
+            float hDest = wSrc/wPerHDest;
+            //result = Bitmap.createBitmap(bitmap,0,(int)(hOrg/2 - hDest/2),(int)wOrg,(int)hDest);
+
+            float newTop = hSrc/2 - hDest/2;
+            pixelPoint[4] -= newTop;
+            pixelPoint[5] -= newTop;
+            pixelPoint[6] -= newTop;
+            pixelPoint[7] -= newTop;
+            return new float[] {wSrc,hDest};
+        } else {
+            // bị cắt theo chiều rộng, giữ nguyên chiều cao
+            float wDest = hSrc*wPerHDest;
+            //result = Bitmap.createBitmap(bitmap,(int)(wOrg/2 - wDest/2),0,(int)wDest,(int)hOrg);
+
+            float newLeft = wSrc/2 - wDest/2;
+            pixelPoint[0] -= newLeft;
+            pixelPoint[1] -= newLeft;
+            pixelPoint[2] -= newLeft;
+            pixelPoint[3] -= newLeft;
+            return new float[] {wDest, hSrc};
+        }
+    }
+
+    private void findLargestRect(MatOfPoint2f approx, Point[] p, Size stdSize, int previewArea) {
+        CameraPickerFragment cpf = mWeakFragment.get();
+        if(cpf == null) return;
+
+        // ATTENTION: axis are swapped
+        float previewWidth = (float) stdSize.height;
+        float previewHeight = (float) stdSize.width;
+
+        Log.i(TAG, "previewWidth: " + String.valueOf(previewWidth));
+        Log.i(TAG, "previewHeight: " + String.valueOf(previewHeight));
+
+        //Points are drawn in anticlockwise direction
+
+        /*
+        path.moveTo(previewWidth - (float) points[0].y, (float) points[0].x);
+        path.lineTo(previewWidth - (float) points[1].y, (float) points[1].x);
+        path.lineTo(previewWidth - (float) points[2].y, (float) points[2].x);
+        path.lineTo(previewWidth - (float) points[3].y, (float) points[3].x);
+        */
+        float[] points = new float[8];
+        points[0] = (float) previewWidth - (float) p[0].y;
+        points[1] = (float) previewWidth - (float) p[1].y;
+        points[2] = (float) previewWidth - (float) p[2].y;
+        points[3] = (float) previewWidth - (float) p[3].y;
+
+        points[4] = (float) p[0].x;
+        points[5] = (float) p[1].x;
+        points[6] = (float) p[2].x;
+        points[7] = (float) p[3].x;
+        float[] viewPort = cpf.getViewPort();
+        float[] centerCropSize = centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
+        scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
+        convertToPercent(points,viewPort[0],viewPort[1]);
+        mAutoCapturer.onProcess(points);
+        cpf.setPoints(points);
+
+        double area = Math.abs(Imgproc.contourArea(approx));
+        Log.i(TAG, "Contour Area: " + String.valueOf(area));
+
+
+        //Height calculated on Y axis
+        double resultHeight = p[1].x - p[0].x;
+        double bottomHeight = p[2].x - p[3].x;
+        if (bottomHeight > resultHeight)
+            resultHeight = bottomHeight;
+
+        //Width calculated on X axis
+        double resultWidth = p[3].y - p[0].y;
+        double bottomWidth = p[2].y - p[1].y;
+        if (bottomWidth > resultWidth)
+            resultWidth = bottomWidth;
+
+        Log.i(TAG, "resultWidth: " + String.valueOf(resultWidth));
+        Log.i(TAG, "resultHeight: " + String.valueOf(resultHeight));
+
+        ImageDetectionProperties imgDetectionPropsObj
+                = new ImageDetectionProperties(previewWidth, previewHeight, resultWidth, resultHeight,
+                previewArea, area, p[0], p[1], p[2], p[3]);
+
+
+        if (imgDetectionPropsObj.isDetectedAreaBeyondLimits()) {
+            //toast("Finding rect");
+        } else if (imgDetectionPropsObj.isDetectedAreaBelowLimits()) {
+
+            if (imgDetectionPropsObj.isEdgeTouching()) {
+                //toast("Move away");
+            } else {
+                //toast("Move closer");
+            }
+        } else if (imgDetectionPropsObj.isDetectedHeightAboveLimit()) {
+            //toast("Move away");
+        } else if (imgDetectionPropsObj.isDetectedWidthAboveLimit() || imgDetectionPropsObj.isDetectedAreaAboveLimit()) {
+            //toast("Move away");
+        } else {
+            if (imgDetectionPropsObj.isEdgeTouching()) {
+                //toast("Move away");
+            } else if (imgDetectionPropsObj.isAngleNotCorrect(approx)) {
+                //toast("Adjust angle");
+            } else {
+                Log.i(TAG, "GREEN" + "(resultWidth/resultHeight) > 4: " + (resultWidth / resultHeight) +
+                        " points[0].x == 0 && points[3].x == 0: " + p[0].x + ": " + p[3].x +
+                        " points[2].x == previewHeight && points[1].x == previewHeight: " + p[2].x + ": " + p[1].x +
+                        "previewHeight: " + previewHeight);
+                //toast("capturing");
+
+            /*    if (!isAutoCaptureScheduled) {
+                    scheduleAutoCapture(scanHint);
+                }*/
+            }
+        }
+        Log.i(TAG, "Preview Area 95%: " + 0.95 * previewArea +
+                " Preview Area 20%: " + 0.20 * previewArea +
+                " Area: " + String.valueOf(area));
+    }
+
+        public void _process(@NonNull Frame frame) {
             if(!isActiveProcessor()) return;
             CameraPickerFragment cpf = mWeakFragment.get();
             if(cpf!=null) {
@@ -171,12 +373,11 @@ public class EdgeFrameProcessor implements FrameProcessor {
 
                 Log.d(TAG, "process: image size = "+ frame.getSize().width+"x"+frame.getSize().height+", rotation = "+frame.getRotation());
 
-                if(mScanComponent==null) return;
-                float[] points = mScanComponent.getPoints(croppedBitmap);
+                //if(mScanComponent==null) return;
+                float[] points = null;//mScanComponent.getPoints(croppedBitmap);
                 if(points==null) return;
                 convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
                 mAutoCapturer.onProcess(points);
-                System.arraycopy(points,0,mPoints,0,8);
                 cpf.setPoints(points);
                 /*if(points!=null) {
                     StringBuilder pbuilder = new StringBuilder("Points detected : ");
