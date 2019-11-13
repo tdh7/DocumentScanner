@@ -8,28 +8,42 @@
     android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true">
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    app:layout_constraintTop_toBottomOf="@id/divider"
-    app:layout_constraintBottom_toBottomOf="parent"
-    tools:context="com.tdh7.documentscanner.ui.fragments.AboutFragment">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingStart="32dp"
-    android:paddingEnd="32dp"
-   >
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:context="com.tdh7.documentscanner.ui.fragments.AboutFragment">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:paddingBottom="64dp"
+            >
+            <ImageView
+                android:id="@+id/app_logo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/scan_stock_96"
+                android:layout_marginTop="32dp"
+                android:padding="24dp"
+                android:background="@drawable/background_invisible_then_border_on_pressed"
+                android:tint="@color/scanner_theme_color"/>
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ứng dụng quét tài liệu"
+                android:text="Document Scanner ®"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/helvetica_font"
-                android:layout_marginTop="36dp"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/heavyYellow"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/app_logo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
             <TextView
@@ -39,26 +53,160 @@
                 android:text="Version 2.0.1"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                android:textColor="@android:color/black"
                 android:fontFamily="@font/helvetica_font"
-                android:layout_marginTop="36dp"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:id="@+id/dot_icon_2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ic_dot"
+                android:padding="21dp"
+                android:tint="#ABABAB"
+                app:layout_constraintTop_toBottomOf="@id/version"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+            <TextView
+                android:id="@+id/author_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Developed by"
+                app:layout_constraintTop_toBottomOf="@id/dot_icon_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"
+                android:textStyle="bold"/>
             <TextView
                 android:id="@+id/description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/about_content"
-                android:textSize="16sp"
-                android:layout_marginTop="36dp"
+                android:text="TDH 7 Team"
+                android:textSize="22sp"
                 android:gravity="center"
-                android:textColor="#666"
-                android:fontFamily="@font/helvetica_font"
-                app:layout_constraintTop_toBottomOf="@id/version"
+                android:textStyle="bold|italic"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/heavyYellow"
+                app:layout_constraintTop_toBottomOf="@id/author_text_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <ImageView
+                android:id="@+id/dot_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ic_dot"
+                android:padding="21dp"
+                android:tint="#ABABAB"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+            <TextView
+                android:id="@+id/build_on_top_of"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/built_on_top_of"
+                app:layout_constraintTop_toBottomOf="@id/dot_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/old_document_scanner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Document Scanner"
+                app:layout_constraintTop_toBottomOf="@id/build_on_top_of"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#0C4294"
+                android:textSize="21sp"
+                android:layout_marginTop="12dp"
+                android:textStyle="bold|italic"/>
+            <TextView
+                android:id="@+id/build_on_top_of_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="This application is developed from the beginning of Document Scanner project created by"
+                app:layout_constraintTop_toBottomOf="@id/old_document_scanner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#666"
+                android:textSize="14sp"
+                />
+            <TextView
+                android:id="@+id/old_author_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="&quot; Nguyễn Văn Bình\n1412049, HCMUS University &quot;"
+                app:layout_constraintTop_toBottomOf="@id/build_on_top_of_description"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#444"
+                android:layout_marginTop="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold|italic"/>
+            <ImageView
+                android:id="@+id/dot_icon_1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ic_dot"
+                android:padding="21dp"
+                android:tint="#ABABAB"
+                app:layout_constraintTop_toBottomOf="@id/old_author_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                />
+            <TextView
+                android:id="@+id/icon_license"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/icons_by_icons8"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/dot_icon_1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@android:color/black"
+                android:textSize="14dp"
+                android:layout_marginTop="12dp"
+                android:textStyle="bold"/>
+            <ImageView
+                android:id="@+id/icons8_image"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                app:srcCompat="@drawable/icons8_logo"
+                android:padding="10dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/icon_license"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+            <TextView
+                android:id="@+id/icon_license_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icons8_com"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/icons8_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#00C853"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
     <ImageView
         android:id="@+id/back_button"
         android:layout_width="50dp"
@@ -70,7 +218,7 @@
         android:padding="10dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-     />
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

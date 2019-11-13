@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_parent"
-    tools:openDrawer="start"
     android:focusable="true"
     android:clickable="true">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +13,73 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/header_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="24dp"
+            android:textSize="20sp"
+            android:fontFamily="@font/helvetica_font"
+            android:textColor="#666"
+            android:textStyle="bold"
+            android:text="Danh sách tài liệu"
+            app:layout_constraintTop_toBottomOf="@id/app_bar"
+            />
+        <TextView
+            android:id="@+id/empty_list_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#666"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/header_list"
+            app:layout_constraintEnd_toEndOf="@id/header_list"
+            android:text="Danh sách trống\nNhấn nút bên dưới để quét tài liệu mới"
+            app:layout_constraintTop_toBottomOf="@id/header_list"/>
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:choiceMode="singleChoice"
+            android:layout_margin="10dp"
+            android:paddingBottom="61dp"
+            app:layout_constraintTop_toBottomOf="@id/empty_list_view"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <com.tdh7.documentscanner.ui.widget.ScaleSwipeRefreshLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/app_bar"
+            app:layout_constraintEnd_toEndOf="@id/app_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:background="@android:color/white"
+            tools:listitem="@layout/item_saved_document"
+            />
+
+        </com.tdh7.documentscanner.ui.widget.ScaleSwipeRefreshLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="32dp"
+            app:srcCompat="@drawable/ic_add_24dp"
+            app:fabCustomSize="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
         <View
             android:id="@+id/app_bar"
             android:layout_width="0dp"
@@ -128,60 +194,6 @@
             app:layout_constraintBottom_toBottomOf="@id/app_bar"
             tools:visibility="gone"
             />
-        <TextView
-            android:id="@+id/header_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="24dp"
-            android:textSize="20sp"
-            android:fontFamily="@font/helvetica_font"
-            android:textColor="#666"
-            android:textStyle="bold"
-            android:text="Danh sách tài liệu"
-            app:layout_constraintTop_toBottomOf="@id/app_bar"
-            />
-        <TextView
-            android:id="@+id/empty_list_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginTop="8dp"
-            android:textColor="#666"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@id/header_list"
-            app:layout_constraintEnd_toEndOf="@id/header_list"
-            android:text="Danh sách trống\nNhấn nút bên dưới để quét tài liệu mới"
-            app:layout_constraintTop_toBottomOf="@id/header_list"/>
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:choiceMode="singleChoice"
-            android:layout_margin="10dp"
-            android:paddingBottom="61dp"
-            app:layout_constraintTop_toBottomOf="@id/empty_list_view"
-            app:layout_constraintBottom_toBottomOf="parent"/>
- <!--       <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="32dp"
-            app:srcCompat="@drawable/ic_add_24dp"
-            app:fabCustomSize="60dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />-->
-   <!--     <com.adityaarora.liveedgedetection.view.TouchImageView
-            android:id="@+id/scanned_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center"
-            android:visibility="gone"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
     <FrameLayout
         android:layout_width="match_parent"

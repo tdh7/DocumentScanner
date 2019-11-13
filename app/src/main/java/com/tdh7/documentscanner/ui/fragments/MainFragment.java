@@ -2,16 +2,12 @@ package com.tdh7.documentscanner.ui.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,18 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ldt.navigation.NavigationFragment;
-import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
@@ -42,15 +37,12 @@ import com.tdh7.documentscanner.util.Util;
 import com.tdh7.documentscanner.util.Utils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
 
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_OPEN_MEDIA_PICKER;
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_PERMISSION_START_UP;
@@ -61,6 +53,12 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     public static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
     public final static int REQUEST_CODE_PICK_FROM_GALLERY = 11;
     public final static int REQUEST_CODE_PICK_FROM_DEVICE_CAMERA = 12;
+
+
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+
+    SavedDocumentAdapter mAdapter = new SavedDocumentAdapter();
 
     @BindDimen(R.dimen.dp_unit)
     float mOneDp;
@@ -116,6 +114,8 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         ButterKnife.bind(this, view);
         mDrawerParent.setScrimColor(0x33000000);
         mDrawerParent.setDrawerElevation(mOneDp * 2f);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
       //  executePermissionAction(new Intent(ACTION_PERMISSION_START_UP), PermissionActivity.PERMISSION_ALL);
@@ -220,6 +220,14 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     View mEmptyView;
 
     public void showSavedList() {
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list.add("");
+        }
+        mAdapter.setData(list);
+
+
+        if(true) return;
         mListView.setEmptyView(mEmptyView);
         File file = new File(ScanConstants.PDF_PATH);
         alist = new ArrayList<>();
@@ -238,49 +246,11 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    File fo = new File(ScanConstants.PDF_PATH + "/" + (String) mListView.getItemAtPosition(position));
-                    if (fo.exists()) {
-                        openFile(ScanConstants.PDF_PATH,(String) mListView.getItemAtPosition(position));
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        try {
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            Toasty.error(App.getInstance(),R.string.open_pdf_error).show();
-                        }
-                    }
+                    Util.requestOtherAppToOpenThisFile(getContext(), ScanConstants.PDF_PATH,(String) mListView.getItemAtPosition(position));
                 }
             });
         }
         registerForContextMenu(mListView);
-    }
-
-    private void openFile(String directory, String file) {
-        try {
-            File filePath = new File(directory);
-            File fileToWrite = new File(filePath, file);
-            final Uri data = FileProvider.getUriForFile(getContext(), "com.scanlibrary.provider", fileToWrite);
-            getActivity().grantUriPermission(getActivity().getPackageName(), data, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            String fileExtension = file.substring(file.lastIndexOf("."));
-            Log.d(TAG, "onItemClick: extension " + fileExtension);
-            final Intent intent = new Intent(Intent.ACTION_VIEW);
-            if (fileExtension.contains("apk")) {
-                Log.d(TAG, "open as apk");
-                intent.setDataAndType(data, "application/vnd.android.package-archive");
-                // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-            else
-                intent.setData(data);
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Toasty.error(App.getInstance(),"Not found any app that could open this file").show();
-        } catch (Exception e) {
-            Toasty.error(App.getInstance(),"Sorry, something went wrong").show();
-            Log.d(TAG, "exception when trying to open file: "+e.getMessage());
-        }
     }
 
     @Override
@@ -377,7 +347,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Uri tempFileUri = FileProvider.getUriForFile(getActivity().getApplicationContext(),
-                    "com.scanlibrary.provider", // As defined in Manifest
+                    "com.tdh7.documentscanner.provider", // As defined in Manifest
                     file);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
         } else {

@@ -26,6 +26,7 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
+import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.model.BitmapDocument;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
@@ -288,6 +289,7 @@ public class EditorFragment extends NavigationFragment {
                                 }
                                 PdfWriter.getInstance(document, new FileOutputStream(fo));
                                 document.open();
+
                                 document.add(image);
                                 document.close();
                                 //end save
@@ -300,7 +302,6 @@ public class EditorFragment extends NavigationFragment {
                                 //end open
 
                                 data.putExtra(ScanConstants.SCANNED_RESULT, fo.getName());
-                                getActivity().setResult(Activity.RESULT_OK, data);
 
                                 original.recycle();
                                 getActivity().runOnUiThread(new Runnable() {
@@ -317,7 +318,7 @@ public class EditorFragment extends NavigationFragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toasty.error(getContext(),"Sorry, something went wrong!").show();
+                                        Toasty.error(App.getInstance(),"Sorry, something went wrong!").show();
                                         dismissDialog();
                                         getActivity().finish();
                                     }

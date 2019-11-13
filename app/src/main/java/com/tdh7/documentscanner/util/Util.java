@@ -1,6 +1,8 @@
 package com.tdh7.documentscanner.util;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,14 +12,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
+import com.tdh7.documentscanner.App;
+
+import java.io.File;
 import java.io.IOException;
+
+import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
 public final class Util {
+    private static final String TAG = "Util";
     public static Bitmap resizeBitmap(@NonNull Bitmap src, int maxForSmallerSize) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -172,5 +182,35 @@ public final class Util {
         Bitmap original = BitmapFactory.decodeFileDescriptor(
                 fileDescriptor.getFileDescriptor());
         return original;
+    }
+
+    public static void requestOtherAppToOpenThisFile(Context context, String directory, String file) {
+        try {
+            File filePath = new File(directory);
+            File fileToOpen = new File(filePath, file);
+            if(!fileToOpen.exists()) {
+                Toasty.error(App.getInstance(),"Sorry, this document is no longer available").show();
+            }
+
+            final Uri data = FileProvider.getUriForFile(context, "com.tdh7.documentscanner.provider", fileToOpen);
+            context.grantUriPermission(context.getPackageName(), data, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            String fileExtension = file.substring(file.lastIndexOf("."));
+            Log.d(TAG, "onItemClick: extension " + fileExtension);
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            if (fileExtension.contains("apk")) {
+                Log.d(TAG, "open as apk");
+                intent.setDataAndType(data, "application/vnd.android.package-archive");
+                // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            else
+                intent.setData(data);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toasty.error(App.getInstance(),"Sorry, couldn't found any app that be able to open this file").show();
+        } catch (Exception e) {
+            Toasty.error(App.getInstance(),"Sorry, something went wrong :((").show();
+            Log.d(TAG, "An exception when trying to open file: "+e.getMessage());
+        }
     }
 }
