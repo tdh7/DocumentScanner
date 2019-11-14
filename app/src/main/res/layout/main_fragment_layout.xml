@@ -13,73 +13,40 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white">
-
-        <TextView
-            android:id="@+id/header_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="24dp"
-            android:textSize="20sp"
-            android:fontFamily="@font/helvetica_font"
-            android:textColor="#666"
-            android:textStyle="bold"
-            android:text="Danh sách tài liệu"
-            app:layout_constraintTop_toBottomOf="@id/app_bar"
-            />
-        <TextView
-            android:id="@+id/empty_list_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginTop="8dp"
-            android:textColor="#666"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@id/header_list"
-            app:layout_constraintEnd_toEndOf="@id/header_list"
-            android:text="Danh sách trống\nNhấn nút bên dưới để quét tài liệu mới"
-            app:layout_constraintTop_toBottomOf="@id/header_list"/>
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:choiceMode="singleChoice"
-            android:layout_margin="10dp"
-            android:paddingBottom="61dp"
-            app:layout_constraintTop_toBottomOf="@id/empty_list_view"
-            app:layout_constraintBottom_toBottomOf="parent"/>
         <com.tdh7.documentscanner.ui.widget.ScaleSwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="@id/app_bar"
             app:layout_constraintEnd_toEndOf="@id/app_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/app_bar">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:clipToPadding="false"
-            android:background="@android:color/white"
-            tools:listitem="@layout/item_saved_document"
-            />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:background="@android:color/white"
+                tools:listitem="@layout/item_saved_document"
+                android:paddingBottom="108dp"
+                />
 
         </com.tdh7.documentscanner.ui.widget.ScaleSwipeRefreshLayout>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+        <ImageView
+            android:id="@+id/floating_add_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
             app:srcCompat="@drawable/ic_add_24dp"
-            app:fabCustomSize="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="12dp"
+            android:background="@drawable/background_floating_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"/>
         <View
             android:id="@+id/app_bar"
             android:layout_width="0dp"

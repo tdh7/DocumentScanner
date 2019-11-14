@@ -1,22 +1,15 @@
 package com.tdh7.documentscanner.ui.fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.ContextMenu;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,14 +18,18 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ldt.navigation.NavigationFragment;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
+import com.tdh7.documentscanner.model.DocumentInfo;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
+import com.tdh7.documentscanner.ui.dialog.LoadingScreenDialog;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 import com.tdh7.documentscanner.util.ScanConstants;
+import com.tdh7.documentscanner.util.ScanUtils;
 import com.tdh7.documentscanner.util.Util;
 import com.tdh7.documentscanner.util.Utils;
 
@@ -58,7 +55,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
-    SavedDocumentAdapter mAdapter = new SavedDocumentAdapter();
+    DocumentAdapter mAdapter;
 
     @BindDimen(R.dimen.dp_unit)
     float mOneDp;
@@ -86,9 +83,6 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     @BindView(R.id.app_icon) View mAppLogoIcon;
     @BindView(R.id.app_title) View mAppTitle;
 
-    private ArrayList<String> alist;
-    private ArrayAdapter<String>adap;
-
     public static MainFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -114,18 +108,19 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         ButterKnife.bind(this, view);
         mDrawerParent.setScrimColor(0x33000000);
         mDrawerParent.setDrawerElevation(mOneDp * 2f);
+        mAdapter = new DocumentAdapter();
+        mAdapter.setParentFragment(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        //executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
-      //  executePermissionAction(new Intent(ACTION_PERMISSION_START_UP), PermissionActivity.PERMISSION_ALL);
+        mSwipeRefreshLayout.setOnRefreshListener(this::refreshData);
         mAppBar.postDelayed(this::hideLogo,3000);
     }
 
-    @BindView(R.id.list) ListView mListView;
     @BindView(R.id.search_hint) View mSearchHint;
     @BindView(R.id.pick_camera_icon) View mCameraIcon;
     @BindView(R.id.pick_photo_icon) View mAddImageIcon;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     private void hideLogo() {
 
@@ -161,39 +156,6 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE_START_SCAN_BY_LIBRARY:
-                if(resultCode==Activity.RESULT_OK) {
-                    //Uri uri = data.getExtras().getParcelable(ScanConstants.SCANNED_RESULT);
-                    //Bitmap bitmap = null;
-                    try {
-                        //bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        //getContentResolver().delete(uri, null, null);
-                        //scannedImageView.setImageBitmap(bitmap);
-                        String fstr = data.getStringExtra(ScanConstants.SCANNED_RESULT);
-                        alist.add(fstr);
-                        if (alist.size() == 1) {
-                            adap = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alist);
-                            mListView.setAdapter(adap);
-                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    File fo = new File(ScanConstants.PDF_PATH + "/" + (String) mListView.getItemAtPosition(position));
-                                    if (fo.exists()) {
-                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setDataAndType(Uri.fromFile(fo), "application/pdf");
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-                        } else {
-                            adap.notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
             case REQUEST_CODE_PICK_FROM_DEVICE_CAMERA:
             case REQUEST_CODE_PICK_FROM_GALLERY:
                 Bitmap bitmap = null;
@@ -203,142 +165,74 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
                     e.printStackTrace();
                 }
                 if (bitmap != null) {
-                    showQuickView(bitmap);
+                    detectEdgeAndShowQuickView(bitmap);
                 }
         }
     }
 
-    private void showQuickView(Bitmap bitmap) {
-        float[] point = new float[8];
-        Util.getDefaultValue(point);
-        RawBitmapDocument document = new RawBitmapDocument(bitmap,0,new float[]{bitmap.getWidth(),bitmap.getHeight()}, point);
-        if(mCropEdgeQuickView==null) mCropEdgeQuickView = new CropEdgeQuickView();
-        mCropEdgeQuickView.attachAndPresent(this,document);
-    }
+    private void detectEdgeAndShowQuickView(Bitmap bitmap) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                mConstraintParent.post(()-> showLoading());
+                float[] point = ScanUtils.detectEdge(bitmap);
+                Util.logPoints("ScanUtils",point);
+                RawBitmapDocument document = new RawBitmapDocument(
+                        bitmap,
+                        0,
+                        new float[] {
+                                bitmap.getWidth(),
+                                bitmap.getHeight()
+                        },
+                        point);
+                mConstraintParent.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mCropEdgeQuickView==null) mCropEdgeQuickView = new CropEdgeQuickView();
+                        mCropEdgeQuickView.attachAndPresent(MainFragment.this,document);
+                        hideLoading();
+                    }
+                });
 
-    @BindView(R.id.empty_list_view)
-    View mEmptyView;
-
-    public void showSavedList() {
-        ArrayList<String> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            list.add("");
-        }
-        mAdapter.setData(list);
-
-
-        if(true) return;
-        mListView.setEmptyView(mEmptyView);
-        File file = new File(ScanConstants.PDF_PATH);
-        alist = new ArrayList<>();
-        if (file.exists()) {
-            File[] cfile = file.listFiles();
-            for (File f : cfile) {
-                if (f.isFile() && f.getName().endsWith(".pdf")) {
-                    alist.add(f.getName());
-                }
             }
-        }
-
-        if (alist.size() > 0) {
-            adap = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alist);
-            mListView.setAdapter(adap);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Util.requestOtherAppToOpenThisFile(getContext(), ScanConstants.PDF_PATH,(String) mListView.getItemAtPosition(position));
-                }
-            });
-        }
-        registerForContextMenu(mListView);
+        });
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.list) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.setHeaderTitle(alist.get(info.position));
-            menu.add(Menu.NONE, 0, 0, "Chia sẻ tài liệu");
-            menu.add(Menu.NONE, 1, 1, "Xóa tài liệu");
-        }
-    }
-
-    File fndel;
-    int fidel = -1;
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int menuItemIndex = item.getItemId();
-        File fl = new File(ScanConstants.PDF_PATH + "/" + alist.get(info.position));
-
-        fndel = null;
-        fidel = -1;
-
-        if (fl.exists()) {
-            switch (menuItemIndex) {
-                case 0:
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fl));
-                    sendIntent.setType("application/pdf");
-                    startActivity(sendIntent);
-                    break;
-                case 1:
-                    fndel = fl;
-                    fidel = info.position;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Bạn chắc chắn xóa?");
-                    builder.setPositiveButton("Chấp nhận", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (fndel != null && fidel >= 0) {
-                                fndel.delete();
-                                alist.remove(fidel);
-                                adap.notifyDataSetChanged();
-                                if (alist.size() <= 0) {
-                                    mListView.setAdapter(null);
-                                }
+    public void refreshData() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<DocumentInfo> list = new ArrayList<>();
+                try {
+                    File file = new File(ScanConstants.PDF_PATH);
+                    if (file.exists()) {
+                        File[] cfile = file.listFiles();
+                        for (File f : cfile) {
+                            if (f.isFile() && f.getName().endsWith(".pdf")) {
+                                list.add(new DocumentInfo(f.getName(), f.getAbsolutePath(),
+                                        Util.humanReadableByteCount(f.length()) + " • " +
+                                                DateUtils.formatDateTime(getContext(), f.lastModified(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
+                                                        DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_WEEKDAY)));
                             }
-                            fndel = null;
-                            fidel = -1;
-                            dialog.dismiss();
                         }
-                    });
-                    builder.setNegativeButton("Hủy bỏ", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.show();
-                    break;
-                case 2:
-                    break;
-            }
-        }
-        return true;
-    }
+                    }
+                } catch (Exception ignored) {}
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setData(list);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
 
-    private Bitmap convertByteArrayToBitmap(byte[] data) {
-        return BitmapFactory.decodeByteArray(data, 0, data.length);
+            }
+        });
     }
 
     @OnClick(R.id.menu_icon)
     void menuClick() {
-        //presentFragment(new AboutFragment());
         mDrawerParent.openDrawer(GravityCompat.START);
     }
-
-
-    protected void startScanByLibrary() {
-       /* Intent intent = new Intent(getActivity(), ScannerActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_START_SCAN_BY_LIBRARY);*/
-       // Intent intent = new Intent(getActivity(), ScanActivity.class);
-       // startActivityForResult(intent, REQUEST_CODE_START_SCAN_BY_LIBRARY);
-    }
-
-    /*@BindView(R.id.scanned_image)
-    TouchImageView mScannedImage;*/
 
     public void openSystemCamera() {
    /*     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -438,5 +332,21 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     public void onActionClick() {
         presentFragment(EditorFragment.newInstance(mCropEdgeQuickView.getBitmapDocument()));
         mCropEdgeQuickView.detach();
+    }
+    LoadingScreenDialog mLoadingDialog = null;
+
+
+    private void hideLoading() {
+        mConstraintParent.post(()-> {
+
+            mLoadingDialog.dismiss();
+            mLoadingDialog = null;
+        });
+    }
+
+    private void showLoading() {
+
+        mLoadingDialog = LoadingScreenDialog.newInstance(getContext());
+        mLoadingDialog.show(getChildFragmentManager(),"LoadingScreenDialog");
     }
 }

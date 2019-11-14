@@ -107,8 +107,18 @@ public class EditorFragment extends NavigationFragment {
             @Override
             public void run() {
                 view.post(()-> showLoading());
-                BitmapDocument bitmapDocument = ScanUtils.buildBitmapDocument(document);
-                view.post(() -> setScannedDocument(bitmapDocument));
+
+                    BitmapDocument bitmapDocument;
+                    try {
+                        bitmapDocument = ScanUtils.buildBitmapDocument(document);
+                        view.post(() -> setScannedDocument(bitmapDocument));
+                    } catch (Exception e) {
+                        view.postDelayed(() -> {
+                            Toasty.error(App.getInstance(),"Error when trying to crop the document").show();
+                            dismiss();
+                        },350);
+
+                    }
                 hideLoading();
 
             }

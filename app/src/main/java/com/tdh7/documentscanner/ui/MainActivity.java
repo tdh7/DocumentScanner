@@ -40,9 +40,9 @@ public class MainActivity extends PermissionActivity {
         mMainFragment = MainFragment.newInstance();
         initNavigation(savedInstanceState,R.id.container,mMainFragment);
         boolean hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
-      /*  if(hasPermission) {
+        if(hasPermission) {
             new Handler().post(this::openCamera);
-        }*/
+        }
     }
     public void openCamera() {
         presentFragment(CameraPickerFragment.newInstance());
@@ -79,8 +79,8 @@ public class MainActivity extends PermissionActivity {
             switch (action) {
                 case ACTION_PERMISSION_START_UP:
                     if(permissionType==PermissionActivity.PERMISSION_STORAGE && granted)
-                    //showSavedList();
-                        mMainFragment.showSavedList();
+                    //refreshData();
+                        mMainFragment.refreshData();
                     break;
                 case ACTION_OPEN_CAMERA_PICKER:
                     if(permissionType==PermissionActivity.PERMISSION_CAMERA && granted) {
