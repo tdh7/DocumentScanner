@@ -77,10 +77,10 @@ public class EdgeFrameProcessor implements FrameProcessor {
 
     private AutoCapturer mAutoCapturer;
 
-  /*  private ScanComponent mScanComponent = new ScanComponent();*/
+    /*  private ScanComponent mScanComponent = new ScanComponent();*/
     public void destroy() {
         if(mAutoCapturer!=null)
-        mAutoCapturer.destroy();
+            mAutoCapturer.destroy();
         mWeakFragment.clear();
         //mScanComponent = null;
         mRenderScript = null;
@@ -100,64 +100,64 @@ public class EdgeFrameProcessor implements FrameProcessor {
         mAutoCapturer = new AutoCapturer(fragment);
     }
 
-     /*   private SparseArray<PointF> getEdgePoints( MarkerView view,float[] points, int w, int h) {
-            List<PointF> pointFs = getContourEdgePoints(points,(float) view.getWidth()/w,(float) view.getHeight()/h);
-            SparseArray<PointF> orderedPoints = orderedValidEdgePoints(view, pointFs,w,h);
-            return orderedPoints;
-        }*/
-        private  static SparseArray<PointF> getOutlinePoints(int width, int height) {
-            SparseArray<PointF> outlinePoints = new SparseArray<>();
-            outlinePoints.put(0, new PointF(0, 0));
-            outlinePoints.put(1, new PointF(width, 0));
-            outlinePoints.put(2, new PointF(0, height));
-            outlinePoints.put(3, new PointF(width, height));
-            return outlinePoints;
-        }
-        private PointF rotatePoint(float cx, float cy, float angleInRad, PointF p) {
-            float s = (float) Math.sin(angleInRad);
-            float c = (float) Math.cos(angleInRad);
+    /*   private SparseArray<PointF> getEdgePoints( MarkerView view,float[] points, int w, int h) {
+           List<PointF> pointFs = getContourEdgePoints(points,(float) view.getWidth()/w,(float) view.getHeight()/h);
+           SparseArray<PointF> orderedPoints = orderedValidEdgePoints(view, pointFs,w,h);
+           return orderedPoints;
+       }*/
+    private  static SparseArray<PointF> getOutlinePoints(int width, int height) {
+        SparseArray<PointF> outlinePoints = new SparseArray<>();
+        outlinePoints.put(0, new PointF(0, 0));
+        outlinePoints.put(1, new PointF(width, 0));
+        outlinePoints.put(2, new PointF(0, height));
+        outlinePoints.put(3, new PointF(width, height));
+        return outlinePoints;
+    }
+    public static PointF rotatePoint(float cx, float cy, float angleInRad, PointF p) {
+        float s = (float) Math.sin(angleInRad);
+        float c = (float) Math.cos(angleInRad);
 
-            // translate point back to origin:
-            p.x -= cx;
-            p.y -= cy;
+        // translate point back to origin:
+        p.x -= cx;
+        p.y -= cy;
 
-            // rotate point
-            float xnew = p.x * c - p.y * s;
-            float ynew = p.x * s + p.y * c;
+        // rotate point
+        float xnew = p.x * c - p.y * s;
+        float ynew = p.x * s + p.y * c;
 
-            // translate point back:
-            p.x = xnew + cx;
-            p.y = ynew + cy;
-            return p;
-        }
+        // translate point back:
+        p.x = xnew + cx;
+        p.y = ynew + cy;
+        return p;
+    }
 
-        private List<PointF> getContourEdgePoints(float[] points, float widthRatio, float heightRatio, float rotateDegree) {
+    private List<PointF> getContourEdgePoints(float[] points, float widthRatio, float heightRatio, float rotateDegree) {
 
-            float x1 = points[0]*widthRatio;
-            float x2 = points[1]*widthRatio;
-            float x3 = points[2]*widthRatio;
-            float x4 = points[3]*widthRatio;
+        float x1 = points[0]*widthRatio;
+        float x2 = points[1]*widthRatio;
+        float x3 = points[2]*widthRatio;
+        float x4 = points[3]*widthRatio;
 
-            float y1 = points[4]*heightRatio;
-            float y2 = points[5]*heightRatio;
-            float y3 = points[6]*heightRatio;
-            float y4 = points[7]*heightRatio;
+        float y1 = points[4]*heightRatio;
+        float y2 = points[5]*heightRatio;
+        float y3 = points[6]*heightRatio;
+        float y4 = points[7]*heightRatio;
 
-            PointF p0 = new PointF(points[0]*widthRatio,points[4]*heightRatio);
-            PointF p1 = new PointF(points[1]*widthRatio,points[5]*heightRatio);
-            PointF p2 = new PointF(points[2]*widthRatio,points[6]*heightRatio);
-            PointF p3 = new PointF(points[3]*widthRatio,points[7]*heightRatio);
+        PointF p0 = new PointF(points[0]*widthRatio,points[4]*heightRatio);
+        PointF p1 = new PointF(points[1]*widthRatio,points[5]*heightRatio);
+        PointF p2 = new PointF(points[2]*widthRatio,points[6]*heightRatio);
+        PointF p3 = new PointF(points[3]*widthRatio,points[7]*heightRatio);
 
-            List<PointF> pointFs = new ArrayList<>();
-            float rad = (float) Math.toRadians(- rotateDegree);
+        List<PointF> pointFs = new ArrayList<>();
+        float rad = (float) Math.toRadians(- rotateDegree);
 
-            pointFs.add(rotatePoint(0.5f,0.5f,rad,p0));
-            pointFs.add(rotatePoint(0.5f,0.5f,rad,p1));
-            pointFs.add(rotatePoint(0.5f,0.5f,rad,p2));
-            pointFs.add(rotatePoint(0.5f,0.5f,rad,p3));
+        pointFs.add(rotatePoint(0.5f,0.5f,rad,p0));
+        pointFs.add(rotatePoint(0.5f,0.5f,rad,p1));
+        pointFs.add(rotatePoint(0.5f,0.5f,rad,p2));
+        pointFs.add(rotatePoint(0.5f,0.5f,rad,p3));
 
-            return pointFs;
-        }
+        return pointFs;
+    }
 
     @Override
     public void process(@NonNull Frame frame) {
@@ -197,58 +197,6 @@ public class EdgeFrameProcessor implements FrameProcessor {
         }
     }
 
-    private void scalePoint(float[] pixelPoint, float scaleX, float scaleY) {
-        pixelPoint[0] *=scaleX;
-        pixelPoint[1] *=scaleX;
-        pixelPoint[2] *=scaleX;
-        pixelPoint[3] *=scaleX;
-
-        pixelPoint[4] *=scaleY;
-        pixelPoint[5] *=scaleY;
-        pixelPoint[6] *=scaleY;
-        pixelPoint[7] *=scaleY;
-
-    }
-
-    /**
-     *  centerCrop các điểm thuộc một hình chữ nhật
-     *  trả về kích cỡ hình chữ nhật mới
-     *  Lưu ý: Hàm này chỉ center crop chứ không resize các điểm để đồng bộ với hình chữ nhật  tham số
-     * @param pixelPoint các điểm cũ
-     * @param wSrc độ rộng hình chữ nhật cũ
-     * @param hSrc độ cao hình chữ nhật
-     * @param wViewPort độ rộng hình chữ nhật để tính tỷ lệ
-     * @param hViewPort độ cao hình chữ nhật để tính tỷ lệ
-     * @return độ rộng và độ cao mới (ít nhất một trong hai là giá trị của hình chữ nhật cũ)
-     */
-    private float[] centerCropPoint(float[] pixelPoint, float wSrc, float hSrc, float wViewPort, float hViewPort) {
-        float wPerHDest = wViewPort/hViewPort;
-        float wPerHSrc = wSrc/hSrc;
-        if(wPerHSrc<wPerHDest) {
-            // bị cắt đi chiều cao, giữ nguyên chiều rộng
-            float hDest = wSrc/wPerHDest;
-            //result = Bitmap.createBitmap(bitmap,0,(int)(hOrg/2 - hDest/2),(int)wOrg,(int)hDest);
-
-            float newTop = hSrc/2 - hDest/2;
-            pixelPoint[4] -= newTop;
-            pixelPoint[5] -= newTop;
-            pixelPoint[6] -= newTop;
-            pixelPoint[7] -= newTop;
-            return new float[] {wSrc,hDest};
-        } else {
-            // bị cắt theo chiều rộng, giữ nguyên chiều cao
-            float wDest = hSrc*wPerHDest;
-            //result = Bitmap.createBitmap(bitmap,(int)(wOrg/2 - wDest/2),0,(int)wDest,(int)hOrg);
-
-            float newLeft = wSrc/2 - wDest/2;
-            pixelPoint[0] -= newLeft;
-            pixelPoint[1] -= newLeft;
-            pixelPoint[2] -= newLeft;
-            pixelPoint[3] -= newLeft;
-            return new float[] {wDest, hSrc};
-        }
-    }
-
     private void findLargestRect(MatOfPoint2f approx, Point[] p, Size stdSize, int previewArea) {
         CameraPickerFragment cpf = mWeakFragment.get();
         if(cpf == null) return;
@@ -279,8 +227,8 @@ public class EdgeFrameProcessor implements FrameProcessor {
         points[6] = (float) p[2].x;
         points[7] = (float) p[3].x;
         float[] viewPort = cpf.getViewPort();
-        float[] centerCropSize = centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
-        scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
+        float[] centerCropSize = ScanUtils.centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
+        ScanUtils.scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
         ScanUtils.convertToPercent(points,viewPort[0],viewPort[1]);
         mAutoCapturer.onProcess(points);
         cpf.setPoints(points);
@@ -344,41 +292,41 @@ public class EdgeFrameProcessor implements FrameProcessor {
                 " Area: " + String.valueOf(area));
     }
 
-        public void _process(@NonNull Frame frame) {
-            if(!isActiveProcessor()) return;
-            CameraPickerFragment cpf = mWeakFragment.get();
-            if(cpf!=null) {
-                long start = System.currentTimeMillis();
-                byte[] byteArray = frame.getImage();
-               Resolution resolution = frame.getSize();
-                mRotateDegree = frame.getRotation();
-                long tick1 = System.currentTimeMillis();
-                Bitmap frameBitmap = RenderScriptHelper.convertYuvToRgbIntrinsic(mRenderScript,byteArray,resolution.width,resolution.height);
-                Bitmap resizedBitmap;
-                if(Math.max(frameBitmap.getWidth(),frameBitmap.getHeight())>768) {
-                    resizedBitmap = Util.resizeBitmap(frameBitmap, 768);
-                    frameBitmap.recycle();
-                }
-                else resizedBitmap = frameBitmap;
+    public void _process(@NonNull Frame frame) {
+        if(!isActiveProcessor()) return;
+        CameraPickerFragment cpf = mWeakFragment.get();
+        if(cpf!=null) {
+            long start = System.currentTimeMillis();
+            byte[] byteArray = frame.getImage();
+            Resolution resolution = frame.getSize();
+            mRotateDegree = frame.getRotation();
+            long tick1 = System.currentTimeMillis();
+            Bitmap frameBitmap = RenderScriptHelper.convertYuvToRgbIntrinsic(mRenderScript,byteArray,resolution.width,resolution.height);
+            Bitmap resizedBitmap;
+            if(Math.max(frameBitmap.getWidth(),frameBitmap.getHeight())>768) {
+                resizedBitmap = Util.resizeBitmap(frameBitmap, 768);
+                frameBitmap.recycle();
+            }
+            else resizedBitmap = frameBitmap;
 
-                Bitmap rotatedBitmap;
-                if(mRotateDegree!=0) {
-                    rotatedBitmap = Util.rotateBitmap(resizedBitmap, - mRotateDegree);
-                    resizedBitmap.recycle();
-                } else rotatedBitmap = resizedBitmap;
-                Bitmap croppedBitmap = Util.centerCropBitmap(rotatedBitmap,cpf.getViewPort());
-                rotatedBitmap.recycle();
-                long tick2 = System.currentTimeMillis();
-                cpf.setPreview(croppedBitmap, frame.getRotation());
+            Bitmap rotatedBitmap;
+            if(mRotateDegree!=0) {
+                rotatedBitmap = Util.rotateBitmap(resizedBitmap, - mRotateDegree);
+                resizedBitmap.recycle();
+            } else rotatedBitmap = resizedBitmap;
+            Bitmap croppedBitmap = Util.centerCropBitmap(rotatedBitmap,cpf.getViewPort());
+            rotatedBitmap.recycle();
+            long tick2 = System.currentTimeMillis();
+            cpf.setPreview(croppedBitmap, frame.getRotation());
 
-                Log.d(TAG, "process: image size = "+ frame.getSize().width+"x"+frame.getSize().height+", rotation = "+frame.getRotation());
+            Log.d(TAG, "process: image size = "+ frame.getSize().width+"x"+frame.getSize().height+", rotation = "+frame.getRotation());
 
-                //if(mScanComponent==null) return;
-                float[] points = null;//mScanComponent.getPoints(croppedBitmap);
-                if(points==null) return;
-                ScanUtils.convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
-                mAutoCapturer.onProcess(points);
-                cpf.setPoints(points);
+            //if(mScanComponent==null) return;
+            float[] points = null;//mScanComponent.getPoints(croppedBitmap);
+            if(points==null) return;
+            ScanUtils.convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
+            mAutoCapturer.onProcess(points);
+            cpf.setPoints(points);
                 /*if(points!=null) {
                     StringBuilder pbuilder = new StringBuilder("Points detected : ");
                     for (int i = 0; i < points.length; i++) {
@@ -405,8 +353,8 @@ public class EdgeFrameProcessor implements FrameProcessor {
                     });
                 }*/
 
-            }
         }
+    }
 
 
 }

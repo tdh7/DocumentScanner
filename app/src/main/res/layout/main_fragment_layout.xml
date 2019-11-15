@@ -30,6 +30,9 @@
                 android:background="@android:color/white"
                 tools:listitem="@layout/item_saved_document"
                 android:paddingBottom="108dp"
+                tools:layout_manager="GridLayoutManager"
+                tools:itemCount="2"
+                tools:span_count = "2"
                 />
 
         </com.tdh7.documentscanner.ui.widget.ScaleSwipeRefreshLayout>

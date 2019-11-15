@@ -27,6 +27,9 @@ public class MainActivity extends PermissionActivity {
 
 
     MainFragment mMainFragment;
+    public void openSystemCamera() {
+        if(mMainFragment!=null) mMainFragment.openSystemCamera();
+    }
 
     static {
         System.loadLibrary(mOpenCvLibrary);

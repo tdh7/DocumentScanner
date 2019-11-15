@@ -3,11 +3,16 @@ package com.tdh7.documentscanner.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.hardware.Camera;
+import androidx.exifinterface.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
@@ -24,12 +29,14 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -761,6 +768,9 @@ public class ScanUtils {
         Utils.matToBitmap(resultMat,result);
         return result;
     }
+    public static Mat crop(Mat src, int left, int top, int width, int height) {
+        return new Mat(src, new Rect(left,top,width,height));
+    }
 
     public static BitmapDocument buildBitmapDocument(RawBitmapDocument rawDocument) {
         Bitmap rotatedBitmap;
@@ -819,11 +829,11 @@ public class ScanUtils {
         points[7]/=h;
     }
 
-    public static float[] detectEdge(Bitmap bitmap) {
+    public static float[] detectEdge(Bitmap bitmap, int angle) {
         float[] edge = new float[8];
 
         try {
-            Mat mat = new Mat();
+            Mat mat = new Mat (bitmap.getHeight(), bitmap.getWidth(), CvType.CV_8UC1);
             Utils.bitmapToMat(bitmap, mat);
 
             Size originalPreviewSize = mat.size();
@@ -870,7 +880,11 @@ public class ScanUtils {
             edge[5] = (float) p[1].y;
             edge[6] = (float) p[2].y;
             edge[7] = (float) p[3].y;
+            Util.logPoints(TAG,edge);
+
             convertToPercent(edge,previewWidth,previewHeight);
+            if(angle!=0)
+                rotatePoint(edge,0.5f,0.5f, angle);
             Log.d(TAG, "detectEdge: available result");
             return edge;
 
@@ -879,5 +893,161 @@ public class ScanUtils {
             Log.d(TAG, "detectEdge: exception");
             return edge;
         }
+    }
+
+    /**
+     *  centerCrop các điểm thuộc một hình chữ nhật
+     *  trả về kích cỡ hình chữ nhật mới
+     *  Lưu ý: Hàm này chỉ center crop chứ không resize các điểm để đồng bộ với hình chữ nhật  tham số
+     * @param pixelPoint các điểm cũ
+     * @param wSrc độ rộng hình chữ nhật cũ
+     * @param hSrc độ cao hình chữ nhật
+     * @param wViewPort độ rộng hình chữ nhật để tính tỷ lệ
+     * @param hViewPort độ cao hình chữ nhật để tính tỷ lệ
+     * @return độ rộng và độ cao mới (ít nhất một trong hai là giá trị của hình chữ nhật cũ)
+     */
+    public static float[] centerCropPoint(float[] pixelPoint, float wSrc, float hSrc, float wViewPort, float hViewPort) {
+        float wPerHDest = wViewPort/hViewPort;
+        float wPerHSrc = wSrc/hSrc;
+        if(wPerHSrc<wPerHDest) {
+            // bị cắt đi chiều cao, giữ nguyên chiều rộng
+            float hDest = wSrc/wPerHDest;
+            //result = Bitmap.createBitmap(bitmap,0,(int)(hOrg/2 - hDest/2),(int)wOrg,(int)hDest);
+
+            float newTop = hSrc/2 - hDest/2;
+            pixelPoint[4] -= newTop;
+            pixelPoint[5] -= newTop;
+            pixelPoint[6] -= newTop;
+            pixelPoint[7] -= newTop;
+            return new float[] {wSrc,hDest};
+        } else {
+            // bị cắt theo chiều rộng, giữ nguyên chiều cao
+            float wDest = hSrc*wPerHDest;
+            //result = Bitmap.createBitmap(bitmap,(int)(wOrg/2 - wDest/2),0,(int)wDest,(int)hOrg);
+
+            float newLeft = wSrc/2 - wDest/2;
+            pixelPoint[0] -= newLeft;
+            pixelPoint[1] -= newLeft;
+            pixelPoint[2] -= newLeft;
+            pixelPoint[3] -= newLeft;
+            return new float[] {wDest, hSrc};
+        }
+    }
+
+    public static void rotatePoint(float[] points, float centerX, float centerY, float degreeAngle) {
+        // anticlockwise rotate
+        double radAngle = Math.toRadians(degreeAngle);
+        float s = (float) Math.sin(radAngle);
+        float c = (float) Math.cos(radAngle);
+        for (int i = 0; i < 4; i++) {
+            points[i] -= centerX;
+            points[i+4] -= centerY;
+
+            float xnew = points[i]*c- points[i+4]*s;
+            float ynew = points[i]*s + points[i+4]*c;
+
+            points[i] = xnew + centerX;
+            points[i+4] = ynew + centerY;
+        }
+    }
+
+    public static void rotatePoint2(float[] points, float centerX, float centerY, float degreeAngle) {
+
+    }
+
+    public static PointF rotatePoint(float cx, float cy, float angleInRad, PointF p) {
+        float s = (float) Math.sin(angleInRad);
+        float c = (float) Math.cos(angleInRad);
+
+        // translate point back to origin:
+        p.x -= cx;
+        p.y -= cy;
+
+        // rotate point
+        float xnew = p.x * c - p.y * s;
+        float ynew = p.x * s + p.y * c;
+
+        // translate point back:
+        p.x = xnew + cx;
+        p.y = ynew + cy;
+        return p;
+    }
+
+    public static void scalePoint(float[] pixelPoint, float scaleX, float scaleY) {
+        pixelPoint[0] *=scaleX;
+        pixelPoint[1] *=scaleX;
+        pixelPoint[2] *=scaleX;
+        pixelPoint[3] *=scaleX;
+
+        pixelPoint[4] *=scaleY;
+        pixelPoint[5] *=scaleY;
+        pixelPoint[6] *=scaleY;
+        pixelPoint[7] *=scaleY;
+
+    }
+
+    private static String getRealPathFromURI(Context context, Uri contentURI) {
+        String filePath;
+        Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            filePath = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            filePath = cursor.getString(idx);
+            cursor.close();
+        }
+        return filePath;
+    }
+
+    public static int getOrientation(Context context, Uri photoUri)
+    {
+        Cursor cursor = context.getContentResolver().query(photoUri,
+                new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
+
+        if (cursor.getCount() != 1) {
+            cursor.close();
+            return -1;
+        }
+
+        cursor.moveToFirst();
+        int orientation = cursor.getInt(0);
+        cursor.close();
+        cursor = null;
+        return orientation;
+    }
+
+    public static int getCameraPhotoOrientation(Context context, Uri uri) {
+        int rotate = 0;
+        try {
+            //context.getContentResolver().notifyChange(imageUri, null);
+
+            ExifInterface ei;
+            if (Build.VERSION.SDK_INT > 23) {
+                InputStream input = context.getContentResolver().openInputStream(uri);
+                ei = new ExifInterface(input);
+            }
+            else
+                ei = new ExifInterface(uri.getPath());
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+
+            Log.i("RotateImage", "Exif orientation: " + orientation);
+            Log.i("RotateImage", "Rotate value: " + rotate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rotate;
     }
 }

@@ -5,7 +5,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="@layout/main_fragment_layout">
+    android:clickable="true"
+    android:focusable="true"
+>
     <ImageView
         android:id="@+id/app_icon"
         android:layout_height="50dp"
@@ -17,10 +19,9 @@
         android:paddingTop="10dp"
         android:tint="@color/scanner_theme_color"
         android:paddingBottom="10dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintEnd_toStartOf="@id/app_title"
         app:layout_constraintHorizontal_chainStyle="packed"
-        android:fitsSystemWindows="true"
         />
     <TextView
         android:id="@+id/app_title"
