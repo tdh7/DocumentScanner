@@ -17,14 +17,14 @@
     >
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:src="@drawable/document_round"
+        android:src="@drawable/document_round_big"
         />
 
     <TextView
@@ -36,12 +36,12 @@
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:gravity="center_vertical|start"
-        android:layout_marginStart="8dp":
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:layout_marginTop="16dp"
-        android:textSize="16sp"
+        android:textSize="14sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/image_view"
         app:layout_constraintEnd_toStartOf="@id/menu_button"

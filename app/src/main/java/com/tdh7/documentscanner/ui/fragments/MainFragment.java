@@ -34,6 +34,7 @@ import com.tdh7.documentscanner.util.Util;
 import com.tdh7.documentscanner.util.Utils;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 import butterknife.BindDimen;
@@ -50,6 +51,8 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     public static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
     public final static int REQUEST_CODE_PICK_FROM_GALLERY = 11;
     public final static int REQUEST_CODE_PICK_FROM_DEVICE_CAMERA = 12;
+    public static final int REQUEST_CODE_SHARE_FILE = 13;
+
 
 
     @BindView(R.id.recycler_view)
@@ -167,6 +170,9 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
                 if (bitmap != null) {
                     detectEdgeAndShowQuickView(bitmap);
                 }
+            case REQUEST_CODE_SHARE_FILE:
+                Log.d(TAG, "receive share file result "+resultCode+", with intent "+data);
+                break;
         }
     }
 
@@ -206,8 +212,15 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
                 try {
                     File file = new File(ScanConstants.PDF_PATH);
                     if (file.exists()) {
-                        File[] cfile = file.listFiles();
-                        for (File f : cfile) {
+                        //File[] fileArray = file.listFiles();
+                        File[] fileArray = file.listFiles(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File dir, String name) {
+                                return name.endsWith(".pdf");
+                            }
+                        });
+                        if(fileArray!= null)
+                        for (File f : fileArray) {
                             if (f.isFile() && f.getName().endsWith(".pdf")) {
                                 list.add(new DocumentInfo(f.getName(), f.getAbsolutePath(),
                                         Util.humanReadableByteCount(f.length()) + " • " +

@@ -5,6 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ldt.navigation.NavigationFragment;
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.model.CountSectionItem;
 import com.tdh7.documentscanner.model.DocumentInfo;
 import com.tdh7.documentscanner.ui.dialog.OptionBottomSheet;
 import com.tdh7.documentscanner.util.ScanConstants;
@@ -37,9 +41,9 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.ItemHo
     public void destroy() {
     }
 
-    private ArrayList<DocumentInfo> mData = new ArrayList<>();
+    private ArrayList<DocumentObject> mData = new ArrayList<>();
 
-    public void setData(List<DocumentInfo> list) {
+    public void setData(List<DocumentObject> list) {
         mData.clear();
         if(list!=null) mData.addAll(list);
         notifyDataSetChanged();
@@ -111,6 +115,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.ItemHo
                     builder.setPositiveButton("Yes", (dialog, which) -> {
                             if (deleteFile.delete()) {
                                 Log.d(TAG, "deleted file");
+                                mAdapter.mData.remove(mPosition);
                                 mAdapter.notifyItemRemoved(mPosition);
                         }
                         dialog.dismiss();
@@ -136,6 +141,27 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.ItemHo
                 .show(mParentFragment.getActivity().getSupportFragmentManager(),OptionBottomSheet.TAG);
     }
 
+    public interface DocumentObject {}
+
+    public class SectionItemHolder extends RecyclerView.ViewHolder {
+        TextView mTitle;
+        TextView mCount;
+
+        SectionItemHolder(View itemView) {
+            super(itemView);
+            mTitle = itemView.findViewById(R.id.title);
+            mCount = itemView.findViewById(R.id.number);
+        }
+        public void bind(DocumentObject object) {
+            if(object instanceof CountSectionItem) {
+                mTitle.setText(((CountSectionItem) object).getTitle());
+                mCount.setText(String.valueOf(((CountSectionItem) object).getCount()));
+            }/* else if(object instanceof String) {
+                mTitle.setText((String)object);
+            }*/ else mTitle.setText(R.string.invalid_section);
+        }
+    }
+
     public class ItemHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title)
         TextView mTitle;
@@ -148,7 +174,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.ItemHo
 
         @OnClick(R.id.quick_button_one)
         void onButtonOneClick() {
-            onRootClick();
+            Util.requestOtherAppToOpenThisFile(mStateTextView.getContext(), ScanConstants.PDF_PATH,mData.get(getAdapterPosition()).mFileTitle);
         }
 
         @OnClick(R.id.quick_button_two)
@@ -158,7 +184,15 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.ItemHo
 
         @OnClick(R.id.root)
         void onRootClick() {
-            Util.requestOtherAppToOpenThisFile(mStateTextView.getContext(), ScanConstants.PDF_PATH,mData.get(getAdapterPosition()).mFileTitle);
+
+            itemView.animate().scaleX(0.86f).scaleY(0.86f).setDuration(250).setInterpolator(new OvershootInterpolator()).withEndAction(
+                    () -> {
+                        itemView.animate().scaleX(1).setDuration(200).setInterpolator(new DecelerateInterpolator()).scaleY(1).withEndAction(
+                                this::onButtonOneClick)
+                                .start();
+                    }
+            ).start();
+
         }
 
         @OnClick(R.id.menu_button)

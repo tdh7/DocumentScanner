@@ -17,10 +17,12 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.model.DocumentInfo;
+import com.tdh7.documentscanner.ui.fragments.MainFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -255,7 +257,7 @@ public final class Util {
                 Toasty.error(App.getInstance(),"Sorry, this document is no longer available").show();
             }
 
-            final Uri data = FileProvider.getUriForFile(context, "com.tdh7.documentscanner.provider", fileToOpen);
+            final Uri data = FileProvider.getUriForFile(context, ScanConstants.APP_PROVIDER, fileToOpen);
             context.grantUriPermission(context.getPackageName(), data, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             String fileExtension = file.substring(file.lastIndexOf("."));
             Log.d(TAG, "onItemClick: extension " + fileExtension);
@@ -285,11 +287,23 @@ public final class Util {
                 Toasty.error(App.getInstance(),"Sorry, this document is no longer available").show();
             }
 
-            final Uri data = FileProvider.getUriForFile(context, "com.tdh7.documentscanner.provider", file);
+            final Uri data = FileProvider.getUriForFile(context, ScanConstants.APP_PROVIDER, file);
             final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_STREAM, data);
             intent.setDataAndType(data,context.getContentResolver().getType(data));
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            context.startActivity(intent);
+
+
+         /*   Intent _intent = ShareCompat.IntentBuilder.from((Activity) context)
+                    .setStream(data) // uri from FileProvider
+                    .getIntent()
+                    .setAction(Intent.ACTION_SEND) //Change if needed
+                    .setDataAndType(data, context.getContentResolver().getType(data))
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);*/
+            //context.startActivity(intent);
+            ((Activity)context).startActivityForResult(intent, MainFragment.REQUEST_CODE_SHARE_FILE);
+
+
         } catch (ActivityNotFoundException e) {
             Toasty.error(App.getInstance(),"Sorry, couldn't found any app that be able to use this file").show();
         } catch (Exception e) {
