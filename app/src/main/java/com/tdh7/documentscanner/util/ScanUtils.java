@@ -805,4 +805,79 @@ public class ScanUtils {
         document.mDocumentBitmap = documentBitmap;
         return document;
     }
+
+    public static void convertToPercent(float[] points, float w, float h) {
+        if(points==null||points.length!=8) return;
+        points[0]/=w;
+        points[1]/=w;
+        points[2]/=w;
+        points[3]/=w;
+
+        points[4]/=h;
+        points[5]/=h;
+        points[6]/=h;
+        points[7]/=h;
+    }
+
+    public static float[] detectEdge(Bitmap bitmap) {
+        float[] edge = new float[8];
+
+        try {
+            Mat mat = new Mat();
+            Utils.bitmapToMat(bitmap, mat);
+
+            Size originalPreviewSize = mat.size();
+            int originalPreviewArea = mat.rows() * mat.cols();
+
+            Quadrilateral largestQuad = ScanUtils.detectLargestQuadrilateral(mat);
+
+            if (null == largestQuad) {
+                Util.getDefaultValue(edge);
+                return edge;
+            }
+
+            float previewWidth = (float) originalPreviewSize.width;
+            float previewHeight = (float) originalPreviewSize.height;
+            double area = Math.abs(Imgproc.contourArea(largestQuad.contour));
+            Point[] p = largestQuad.points;
+            //Height calculated on Y axis
+            double resultHeight = p[1].y- p[0].y;
+            double bottomHeight = p[3].y - p[2].y;
+            if (bottomHeight > resultHeight)
+                resultHeight = bottomHeight;
+
+            //Width calculated on X axis
+            double resultWidth = p[3].x - p[0].x;
+            double bottomWidth = p[2].x - p[1].x;
+            if (bottomWidth > resultWidth)
+                resultWidth = bottomWidth;
+            ImageDetectionProperties imgDetectionPropsObj
+                    = new ImageDetectionProperties(previewWidth, previewHeight, resultWidth, resultHeight,
+                    originalPreviewArea, area, p[0], p[1], p[2], p[3]);
+
+            if (imgDetectionPropsObj.isDetectedAreaBeyondLimits()) {
+                Util.getDefaultValue(edge);
+                Log.d(TAG, "detectEdge: beyond limits");
+                return edge;
+            }
+
+            edge[0] = (float) p[0].x;
+            edge[1] = (float) p[1].x;
+            edge[2] = (float) p[2].x;
+            edge[3] = (float) p[3].x;
+
+            edge[4] = (float) p[0].y;
+            edge[5] = (float) p[1].y;
+            edge[6] = (float) p[2].y;
+            edge[7] = (float) p[3].y;
+            convertToPercent(edge,previewWidth,previewHeight);
+            Log.d(TAG, "detectEdge: available result");
+            return edge;
+
+        } catch (Exception e) {
+            Util.getDefaultValue(edge);
+            Log.d(TAG, "detectEdge: exception");
+            return edge;
+        }
+    }
 }

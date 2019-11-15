@@ -54,4 +54,10 @@
     <string name="icons_by_icons8">Icons By Icons8</string>
     <string name="icons8_com">icons8.com</string>
     <string name="built_on_top_of">Be built on top of</string>
+    <string name="normal">normal</string>
+    <string name="dangerous_divider" translatable="false">dangerous_divider</string>
+    <string name="focus_divider" translatable="false">focus</string>
+    <string name="warning_divider">warning_divider</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
 </resources>

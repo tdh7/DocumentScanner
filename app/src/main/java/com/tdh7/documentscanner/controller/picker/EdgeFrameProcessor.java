@@ -281,7 +281,7 @@ public class EdgeFrameProcessor implements FrameProcessor {
         float[] viewPort = cpf.getViewPort();
         float[] centerCropSize = centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
         scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
-        convertToPercent(points,viewPort[0],viewPort[1]);
+        ScanUtils.convertToPercent(points,viewPort[0],viewPort[1]);
         mAutoCapturer.onProcess(points);
         cpf.setPoints(points);
 
@@ -376,7 +376,7 @@ public class EdgeFrameProcessor implements FrameProcessor {
                 //if(mScanComponent==null) return;
                 float[] points = null;//mScanComponent.getPoints(croppedBitmap);
                 if(points==null) return;
-                convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
+                ScanUtils.convertToPercent(points,croppedBitmap.getWidth(),croppedBitmap.getHeight());
                 mAutoCapturer.onProcess(points);
                 cpf.setPoints(points);
                 /*if(points!=null) {
@@ -408,16 +408,5 @@ public class EdgeFrameProcessor implements FrameProcessor {
             }
         }
 
-    private void convertToPercent(float[] points, float w, float h) {
-        if(points==null||points.length!=8) return;
-        points[0]/=w;
-        points[1]/=w;
-        points[2]/=w;
-        points[3]/=w;
 
-        points[4]/=h;
-        points[5]/=h;
-        points[6]/=h;
-        points[7]/=h;
-    }
 }

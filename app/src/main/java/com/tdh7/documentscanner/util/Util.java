@@ -1,5 +1,6 @@
 package com.tdh7.documentscanner.util;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -12,22 +13,78 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
 import com.tdh7.documentscanner.App;
+import com.tdh7.documentscanner.model.DocumentInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static com.tdh7.documentscanner.util.Tool.hasSoftKeys;
 
 public final class Util {
     private static final String TAG = "Util";
+
+    public static int getNavigationHeight(Activity activity)
+    {
+
+        int navigationBarHeight = 0;
+        int resourceId = activity.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            navigationBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
+        }
+        if(!hasSoftKeys(activity.getWindowManager())) return 0;
+        return  navigationBarHeight;
+    }
+    public static String humanReadableByteCount(long bytes) {
+        boolean si = true;
+        int unit = 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public static Locale getCurrentLocale(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else{
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
+    }
+
+    public static String formatPrettyDateTime(long time) {
+        if(time==-1) return "Undefined";
+        return DateUtils.formatDateTime(App.getInstance().getApplicationContext(), time, DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
+                DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_WEEKDAY);
+    }
+
+    public static String formatPrettyDateTimeWithSecond(long time) {
+        if(time==-1) return "Undefined";
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss E, dd MMM yyyy",getCurrentLocale(App.getInstance().getApplicationContext()));
+        return formatter.format(new Date(time));
+    }
+
+    public static String formatDuration(long durationInMillis) {
+        long millis = durationInMillis % 1000;
+        long second = (durationInMillis / 1000) % 60;
+        long minute = (durationInMillis / (1000 * 60)) % 60;
+        long hour = (durationInMillis / (1000 * 60 * 60)) % 24;
+
+        return String.format("%02d:%02d:%02d.%d", hour, minute, second, millis);
+    }
     public static Bitmap resizeBitmap(@NonNull Bitmap src, int maxForSmallerSize) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -125,7 +182,7 @@ public final class Util {
 
     public static void getDefaultValue(float[] points) {
         if(points.length>7)
-        System.arraycopy(points, 0, mTrueInvalidEdges, 0, 8);
+        System.arraycopy(mTrueInvalidEdges, 0, points, 0, 8);
     }
 
     public static boolean isNotDefaultValue(float[] points) {
@@ -173,6 +230,12 @@ public final class Util {
         pointFS[3].y = mInvalidEdges[7];
     }
 
+    public static void logPoints(String TAG, float[] points) {
+        if(points.length==8) {
+            Log.d(TAG, "p0 = ("+points[0]+", "+points[4]+"), p1 = ("+points[1]+", "+points[5]+"), p2 = ("+points[2]+", "+points[6]+"), p3 = ("+points[3]+", "+points[7]+")");
+        }
+    }
+
     public static Bitmap getBitmap(Context context, Uri selectedimg) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
@@ -211,6 +274,27 @@ public final class Util {
         } catch (Exception e) {
             Toasty.error(App.getInstance(),"Sorry, something went wrong :((").show();
             Log.d(TAG, "An exception when trying to open file: "+e.getMessage());
+        }
+    }
+
+    public static void shareThisFile(Context context, String directory, String fileTitle) {
+        try {
+            File filePath = new File(directory);
+            File file = new File(filePath, fileTitle);
+            if(!file.exists()) {
+                Toasty.error(App.getInstance(),"Sorry, this document is no longer available").show();
+            }
+
+            final Uri data = FileProvider.getUriForFile(context, "com.tdh7.documentscanner.provider", file);
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setDataAndType(data,context.getContentResolver().getType(data));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toasty.error(App.getInstance(),"Sorry, couldn't found any app that be able to use this file").show();
+        } catch (Exception e) {
+            Toasty.error(App.getInstance(),"Sorry, something went wrong :((").show();
+            Log.d(TAG, "An exception when trying to send file: "+e.getMessage());
         }
     }
 }
