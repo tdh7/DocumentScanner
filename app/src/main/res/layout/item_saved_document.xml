@@ -12,6 +12,7 @@
     android:background="@drawable/background_item_saved_document"
     android:clickable="true"
     android:focusable="true"
+    tools:showIn="@layout/main_fragment_layout"
     >
     <ImageView
         android:id="@+id/image_view"
@@ -38,7 +39,7 @@
         android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/image_view"
@@ -48,13 +49,13 @@
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="https://someurl.com/somefile.scf"
+        tools:text="https://someurl.com/somefile.scf"
         android:textColor="#444"
         android:textSize="12sp"
         android:maxLines="1"
         android:textStyle="bold"
         android:ellipsize="end"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintEnd_toEndOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/title"
@@ -64,7 +65,7 @@
         android:id="@+id/state_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="24Mb | 08:45 Monday 22 Feb 2019"
+        tools:text="24Mb | 08:45 Monday 22 Feb 2019"
         android:textColor="@color/scanner_text_color"
         android:textSize="12sp"
         android:maxLines="1"
@@ -74,6 +75,7 @@
         app:layout_constraintEnd_toEndOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/description"
         android:layout_marginBottom="8dp"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/quick_button_one"
@@ -134,5 +136,6 @@
         android:layout_marginEnd="10dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true"
+        tools:targetApi="lollipop" />
 </androidx.constraintlayout.widget.ConstraintLayout>
