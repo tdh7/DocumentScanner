@@ -179,8 +179,8 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.ItemHo
         }
 
         public void bind(DocumentInfo info) {
-            mDescription.setText(info.mFileTitle);
-            mStateTextView.setText(info.mDescription);
+            mTitle.setText(info.mFileTitle);
+            mDescription.setText(info.mDescription);
         }
     }
 }
