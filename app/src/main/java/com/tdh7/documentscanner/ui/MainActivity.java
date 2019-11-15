@@ -24,12 +24,14 @@ public class MainActivity extends PermissionActivity {
     public static final String ACTION_PERMISSION_START_UP = PACKAGE_NAME + "permission_start_up";
     public static final String ACTION_OPEN_CAMERA_PICKER = PACKAGE_NAME + "open_camera_picker";
     public static final String ACTION_OPEN_MEDIA_PICKER =    PACKAGE_NAME + "open_media_picker";
-
-
     MainFragment mMainFragment;
 
     static {
         System.loadLibrary(mOpenCvLibrary);
+    }
+
+    public void openSystemCamera() {
+        if(mMainFragment!=null) mMainFragment.openSystemCamera();
     }
 
     @Override

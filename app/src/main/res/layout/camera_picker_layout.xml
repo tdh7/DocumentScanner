@@ -96,7 +96,7 @@
         app:layout_constraintTop_toTopOf="@id/bottom_control_view"
         app:layout_constraintBottom_toBottomOf="@id/bottom_control_view"
         app:layout_constraintStart_toStartOf="@id/bottom_control_view"
-        android:visibility="gone"/>
+        />
     <TextView
         android:id="@+id/manual_text"
         android:layout_width="wrap_content"

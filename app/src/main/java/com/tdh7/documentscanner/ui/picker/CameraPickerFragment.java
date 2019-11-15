@@ -1,6 +1,7 @@
 package com.tdh7.documentscanner.ui.picker;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -163,10 +164,16 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     @OnClick(R.id.system_camera_icon)
     void openSystemCamera() {
-        //Intent intent = new Intent(getActivity(),ScannerActivity.class);
-        //intent.putExtra(ScannerActivity.MODE,1);
-        //startActivityForResult(intent, MainFragment.REQUEST_CODE_START_SCAN_BY_LIBRARY);
+        Activity activity = getActivity();
         dismiss();
+        if(activity instanceof MainActivity) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) activity).openSystemCamera();
+                }
+            },350);
+        }
     }
 
 

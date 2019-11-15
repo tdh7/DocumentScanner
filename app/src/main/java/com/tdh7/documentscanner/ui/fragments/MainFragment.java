@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ldt.navigation.NavigationFragment;
+import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.model.DocumentInfo;
@@ -34,12 +38,15 @@ import com.tdh7.documentscanner.util.Util;
 import com.tdh7.documentscanner.util.Utils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_OPEN_MEDIA_PICKER;
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_PERMISSION_START_UP;
@@ -157,32 +164,41 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_PICK_FROM_DEVICE_CAMERA:
+                detectEdgeAndShowQuickView(fileUri);
+                break;
             case REQUEST_CODE_PICK_FROM_GALLERY:
-                Bitmap bitmap = null;
-                try {
-                    bitmap = Utils.getBitmapWithUri(getContext(), data.getData());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (bitmap != null) {
-                    detectEdgeAndShowQuickView(bitmap);
-                }
+                    detectEdgeAndShowQuickView(data.getData());
         }
     }
 
-    private void detectEdgeAndShowQuickView(Bitmap bitmap) {
+    private void detectEdgeAndShowQuickView(Uri uri) {
+        if(uri==null) {
+            Toasty.error(App.getInstance(),"Sorry, something went wrong when trying to get the image").show();
+            return;
+        }
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 mConstraintParent.post(()-> showLoading());
-                float[] point = ScanUtils.detectEdge(bitmap);
+                Bitmap bitmap = null;
+                try {
+                    if(getContext()!=null)
+                        bitmap = Utils.getBitmapWithUri(getContext(),uri);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                int rotate = ScanUtils.getCameraPhotoOrientation(getContext(),uri);
+                Log.d(TAG, "image is rotatd by "+rotate);
+                float[] point = ScanUtils.detectEdge(bitmap, rotate);
                 Util.logPoints("ScanUtils",point);
                 RawBitmapDocument document = new RawBitmapDocument(
                         bitmap,
-                        0,
+                        rotate,
                         new float[] {
-                                bitmap.getWidth(),
-                                bitmap.getHeight()
+                                (rotate%180==0) ? bitmap.getWidth() : bitmap.getHeight(),
+                                (rotate%180==0) ? bitmap.getHeight() : bitmap.getWidth(),
+
                         },
                         point);
                 mConstraintParent.post(new Runnable() {
@@ -234,8 +250,18 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         mDrawerParent.openDrawer(GravityCompat.START);
     }
 
+    private File createImageFile() {
+        clearTempImages();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new
+                Date());
+        File file = new File(ScanConstants.IMAGE_PATH, "IMG_" + timeStamp +
+                ".jpg");
+        fileUri = Uri.fromFile(file);
+        return file;
+    }
+
     public void openSystemCamera() {
-   /*     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         File file = createImageFile();
         boolean isDirectoryCreated = file.getParentFile().mkdirs();
 
@@ -248,7 +274,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
             Uri tempFileUri = Uri.fromFile(file);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempFileUri);
         }
-        startActivityForResult(cameraIntent, ScanConstants.START_CAMERA_REQUEST_CODE);*/
+        startActivityForResult(cameraIntent, REQUEST_CODE_PICK_FROM_DEVICE_CAMERA);
     }
 
     @OnClick(R.id.search_hint)
@@ -257,13 +283,13 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     }
 
     private void clearTempImages() {
-      /*  try {
+        try {
             File tempFolder = new File(ScanConstants.IMAGE_PATH);
             for (File f : tempFolder.listFiles())
                 f.delete();
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private Uri fileUri;
@@ -338,7 +364,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
 
     private void hideLoading() {
         mConstraintParent.post(()-> {
-
+            if(mLoadingDialog!=null)
             mLoadingDialog.dismiss();
             mLoadingDialog = null;
         });

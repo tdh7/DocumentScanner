@@ -35,7 +35,7 @@ public class ImageDetectionProperties {
     }
 
     public boolean isDetectedAreaBeyondLimits() {
-        return resultArea > previewArea * 0.95  || resultArea < previewArea * 0.20;
+        return /*resultArea > previewArea * 0.95  || */resultArea < previewArea * 0.1;
     }
 
     public boolean isDetectedWidthAboveLimit() {

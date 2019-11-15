@@ -113,7 +113,7 @@ public class EdgeFrameProcessor implements FrameProcessor {
             outlinePoints.put(3, new PointF(width, height));
             return outlinePoints;
         }
-        private PointF rotatePoint(float cx, float cy, float angleInRad, PointF p) {
+        public static PointF rotatePoint(float cx, float cy, float angleInRad, PointF p) {
             float s = (float) Math.sin(angleInRad);
             float c = (float) Math.cos(angleInRad);
 
@@ -197,58 +197,6 @@ public class EdgeFrameProcessor implements FrameProcessor {
         }
     }
 
-    private void scalePoint(float[] pixelPoint, float scaleX, float scaleY) {
-        pixelPoint[0] *=scaleX;
-        pixelPoint[1] *=scaleX;
-        pixelPoint[2] *=scaleX;
-        pixelPoint[3] *=scaleX;
-
-        pixelPoint[4] *=scaleY;
-        pixelPoint[5] *=scaleY;
-        pixelPoint[6] *=scaleY;
-        pixelPoint[7] *=scaleY;
-
-    }
-
-    /**
-     *  centerCrop các điểm thuộc một hình chữ nhật
-     *  trả về kích cỡ hình chữ nhật mới
-     *  Lưu ý: Hàm này chỉ center crop chứ không resize các điểm để đồng bộ với hình chữ nhật  tham số
-     * @param pixelPoint các điểm cũ
-     * @param wSrc độ rộng hình chữ nhật cũ
-     * @param hSrc độ cao hình chữ nhật
-     * @param wViewPort độ rộng hình chữ nhật để tính tỷ lệ
-     * @param hViewPort độ cao hình chữ nhật để tính tỷ lệ
-     * @return độ rộng và độ cao mới (ít nhất một trong hai là giá trị của hình chữ nhật cũ)
-     */
-    private float[] centerCropPoint(float[] pixelPoint, float wSrc, float hSrc, float wViewPort, float hViewPort) {
-        float wPerHDest = wViewPort/hViewPort;
-        float wPerHSrc = wSrc/hSrc;
-        if(wPerHSrc<wPerHDest) {
-            // bị cắt đi chiều cao, giữ nguyên chiều rộng
-            float hDest = wSrc/wPerHDest;
-            //result = Bitmap.createBitmap(bitmap,0,(int)(hOrg/2 - hDest/2),(int)wOrg,(int)hDest);
-
-            float newTop = hSrc/2 - hDest/2;
-            pixelPoint[4] -= newTop;
-            pixelPoint[5] -= newTop;
-            pixelPoint[6] -= newTop;
-            pixelPoint[7] -= newTop;
-            return new float[] {wSrc,hDest};
-        } else {
-            // bị cắt theo chiều rộng, giữ nguyên chiều cao
-            float wDest = hSrc*wPerHDest;
-            //result = Bitmap.createBitmap(bitmap,(int)(wOrg/2 - wDest/2),0,(int)wDest,(int)hOrg);
-
-            float newLeft = wSrc/2 - wDest/2;
-            pixelPoint[0] -= newLeft;
-            pixelPoint[1] -= newLeft;
-            pixelPoint[2] -= newLeft;
-            pixelPoint[3] -= newLeft;
-            return new float[] {wDest, hSrc};
-        }
-    }
-
     private void findLargestRect(MatOfPoint2f approx, Point[] p, Size stdSize, int previewArea) {
         CameraPickerFragment cpf = mWeakFragment.get();
         if(cpf == null) return;
@@ -279,8 +227,8 @@ public class EdgeFrameProcessor implements FrameProcessor {
         points[6] = (float) p[2].x;
         points[7] = (float) p[3].x;
         float[] viewPort = cpf.getViewPort();
-        float[] centerCropSize = centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
-        scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
+        float[] centerCropSize = ScanUtils.centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
+        ScanUtils.scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
         ScanUtils.convertToPercent(points,viewPort[0],viewPort[1]);
         mAutoCapturer.onProcess(points);
         cpf.setPoints(points);
