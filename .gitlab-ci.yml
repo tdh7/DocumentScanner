@@ -2,7 +2,6 @@ image: jangrewe/gitlab-ci-android
 
 stages:
 - build
-- deploy
 
 before_script:
 - export GRADLE_USER_HOME=$(pwd)/.gradle
@@ -18,12 +17,9 @@ build:
   script:
   - ./gradlew assembleDebug
   artifacts:
+    script:
+     - email.to=$EMAIL_TARGET
     paths:
     - app/build/outputs/
 
-deployRelease:
-  stage: deploy
-  script:
-    - release.dir=app/build/outputs/
-    - app.name=BestAppEver
-    - email.to=$EMAIL_TARGET
+   
