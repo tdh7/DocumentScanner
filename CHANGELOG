@@ -1,0 +1,14 @@
+# Version 1.05
+
+Removed Google Maps Fragment
+Added:
+ - Settings crash
+ - ANR when loading
+##
+# Version 1.04
+
+Added Google Maps Fragment
+Fixed:
+ - Settings crash
+ - ANR when loading
+##
