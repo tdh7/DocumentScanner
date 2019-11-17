@@ -1,4 +1,3 @@
-
 image: jangrewe/gitlab-ci-android
 
 before_script:
@@ -61,4 +60,3 @@ deployRelease:
     --zapier.hook=$ZAPIER_EMAIL_HOOK2
     --email.to=$EMAIL_TARGET2
   cache: {}
-view raw.gitlab-ci.yml hosted with ❤ by GitHub
