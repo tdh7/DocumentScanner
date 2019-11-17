@@ -25,12 +25,7 @@ import java.util.Date;
 
 public class PickImageFragment extends Fragment {
 
-    public int mode = 0;
-    private View view;
-    private Button cameraButton;
-    private Button galleryButton;
-    private Uri fileUri;
-    private IScanner scanner;
+    
 
     @Override
     public void onAttach(Activity activity) {
