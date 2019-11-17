@@ -28,6 +28,7 @@ assembleRelease:
   artifacts:
     paths:
     - app/build/outputs/apk/release
+    - CHANGELOG
 
 deployRelease:
   image: python:3.5.2
