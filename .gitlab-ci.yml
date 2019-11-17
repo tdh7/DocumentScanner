@@ -11,24 +11,15 @@ cache:
 
 stages:
 - build
-- test
 - release
 - deploy
 
-lintDebug:
-  stage: build
-  script:
-  - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
 
 assembleDebug:
   stage: build
   script:
   - ./gradlew assembleDebug
 
-testDebug:
-  stage: test
-  script:
-  - ./gradlew -Pci --console=plain :app:testDebug
 
 assembleRelease:
   stage: release
@@ -49,6 +40,8 @@ deployRelease:
     --app.name=BestAppEver
     --dropbox.token=$DROPBOX_TOKEN2
     --dropbox.folder=release
+    --changelog.file=CHANGELOG
+    --template.file=TEMPLATE
     --zapier.hook=$ZAPIER_EMAIL_HOOK2
     --email.to=$EMAIL_TARGET2
   cache: {}
