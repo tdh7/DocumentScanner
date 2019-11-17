@@ -60,7 +60,13 @@ public class MainActivity extends PermissionActivity {
             case AppCompatDelegate.MODE_NIGHT_YES:
                 setTheme(R.style.ThemeDark);
                 return false;
+            
+            case AppCompatDelegate.MODE_NIGHT_NO:
+                setTheme(R.style.ThemeLight);
+                return true;
+
             case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
+            default:
                 int themeMode = getResources().getConfiguration().uiMode &
                         Configuration.UI_MODE_NIGHT_MASK;
                 switch (themeMode) {
@@ -73,11 +79,7 @@ public class MainActivity extends PermissionActivity {
                     default:
                         setTheme(R.style.ThemeLight);
                         return true;
-                }
-            case AppCompatDelegate.MODE_NIGHT_NO:
-            default:
-                setTheme(R.style.ThemeLight);
-                return true;
+                }    
         }
     }
 

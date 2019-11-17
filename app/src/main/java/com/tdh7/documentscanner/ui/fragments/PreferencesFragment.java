@@ -42,16 +42,18 @@ public class PreferencesFragment extends NavigationFragment {
         ButterKnife.bind(this,view);
         int current = AppCompatDelegate.getDefaultNightMode();
         switch (current) {
-            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
-                mCurrentOption = R.string.follow_system;
-                break;
             case AppCompatDelegate.MODE_NIGHT_YES:
                 mCurrentOption = R.string.dark;
                 break;
+
             case AppCompatDelegate.MODE_NIGHT_NO:
+            mCurrentOption = R.string.light;
+            break;
+
+            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
             default:
-                mCurrentOption = R.string.light;
-                break;
+            mCurrentOption = R.string.follow_system;
+            break;
         }
 
         mAppThemeButton.setText(mCurrentOption);
