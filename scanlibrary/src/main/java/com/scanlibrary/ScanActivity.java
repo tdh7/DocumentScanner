@@ -37,7 +37,7 @@ public class ScanActivity extends AppCompatActivity implements IScanner, Compone
 
     @Override
     public void onBitmapSelect(Uri uri) {
-        ScanFragment fragment = new ScanFragment();
+
         Bundle bundle = new Bundle();
         bundle.putParcelable(ScanConstants.SELECTED_BITMAP, uri);
         fragment.setArguments(bundle);
