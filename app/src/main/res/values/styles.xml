@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">@color/flatWhite</item>
         <item name="colorPrimary">@color/flatWhite</item>
@@ -12,6 +12,7 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>
+    <style name="AppTheme" parent="ThemeLight"/>
 
     <style name="DialogDimDisabled" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>

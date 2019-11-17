@@ -217,22 +217,6 @@ public class EdgeFrameProcessor implements FrameProcessor {
         path.lineTo(previewWidth - (float) points[3].y, (float) points[3].x);
         */
         float[] points = new float[8];
-        points[0] = (float) previewWidth - (float) p[0].y;
-        points[1] = (float) previewWidth - (float) p[1].y;
-        points[2] = (float) previewWidth - (float) p[2].y;
-        points[3] = (float) previewWidth - (float) p[3].y;
-
-        points[4] = (float) p[0].x;
-        points[5] = (float) p[1].x;
-        points[6] = (float) p[2].x;
-        points[7] = (float) p[3].x;
-        float[] viewPort = cpf.getViewPort();
-        float[] centerCropSize = ScanUtils.centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
-        ScanUtils.scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
-        ScanUtils.convertToPercent(points,viewPort[0],viewPort[1]);
-        mAutoCapturer.onProcess(points);
-        cpf.setPoints(points);
-
         double area = Math.abs(Imgproc.contourArea(approx));
         Log.i(TAG, "Contour Area: " + String.valueOf(area));
 
@@ -259,7 +243,29 @@ public class EdgeFrameProcessor implements FrameProcessor {
 
         if (imgDetectionPropsObj.isDetectedAreaBeyondLimits()) {
             //toast("Finding rect");
-        } else if (imgDetectionPropsObj.isDetectedAreaBelowLimits()) {
+            Util.getDefaultValue(points);
+            mAutoCapturer.onProcess(points);
+            cpf.setPoints(points);
+            return;
+        }
+
+        points[0] = (float) previewWidth - (float) p[0].y;
+        points[1] = (float) previewWidth - (float) p[1].y;
+        points[2] = (float) previewWidth - (float) p[2].y;
+        points[3] = (float) previewWidth - (float) p[3].y;
+
+        points[4] = (float) p[0].x;
+        points[5] = (float) p[1].x;
+        points[6] = (float) p[2].x;
+        points[7] = (float) p[3].x;
+        float[] viewPort = cpf.getViewPort();
+        float[] centerCropSize = ScanUtils.centerCropPoint(points,previewWidth,previewHeight,viewPort[0],viewPort[1]);
+        ScanUtils.scalePoint(points,viewPort[0]/centerCropSize[0],viewPort[1]/centerCropSize[1]);
+        ScanUtils.convertToPercent(points,viewPort[0],viewPort[1]);
+        mAutoCapturer.onProcess(points);
+        cpf.setPoints(points);
+
+        if (imgDetectionPropsObj.isDetectedAreaBelowLimits()) {
 
             if (imgDetectionPropsObj.isEdgeTouching()) {
                 //toast("Move away");

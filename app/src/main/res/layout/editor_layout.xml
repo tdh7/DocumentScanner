@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white">
+    android:background="?backColor">
     <View
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:textSize="14sp"
             android:textAllCaps="false"
 
-            android:textColor="@android:color/black" />
+            android:textColor="?light_is_000" />
 
         <Button
             android:id="@+id/magicColor"
@@ -40,7 +40,7 @@
             android:text="Magic color"
             android:textSize="14sp"
             android:textAllCaps="false"
-            android:textColor="@android:color/black"  />
+            android:textColor="?light_is_000"  />
 
         <Button
             android:id="@+id/grayMode"
@@ -53,7 +53,7 @@
             android:text="Gray Mode"
             android:textSize="14sp"
             android:textAllCaps="false"
-            android:textColor="@android:color/black"  />
+            android:textColor="?light_is_000"  />
 
         <Button
             android:id="@+id/BWMode"
@@ -66,19 +66,19 @@
             android:textSize="14sp"
             android:textAllCaps="false"
             android:text="B and W"
-            android:textColor="@android:color/black" />
+            android:textColor="?light_is_000" />
     </LinearLayout>
     <View
         android:id="@+id/divider_top"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/topBar"
-        android:background="#22000000"/>
+        android:background="?divider_color"/>
     <View
         android:id="@+id/divider_bot"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#22000000"
+        android:background="?divider_color"
         android:layout_above="@id/botBar"/>
     <LinearLayout
         android:id="@+id/botBar"
@@ -100,7 +100,7 @@
 
             android:textSize="14sp"
             android:textAllCaps="false"
-            android:textColor="@android:color/black"  />
+            android:textColor="?light_is_000"  />
 
         <Button
             android:id="@+id/rotateRightButton"
@@ -113,7 +113,7 @@
             android:textAllCaps="false"
             android:drawableTop="@drawable/ic_rotate_right_black_24dp"
             android:text="Rotate Right"
-            android:textColor="@android:color/black"  />
+            android:textColor="?light_is_000"  />
 
         <Button
             android:id="@+id/rotate360Button"
@@ -126,7 +126,7 @@
             android:text="Rotate 180"
             android:textSize="14sp"
             android:textAllCaps="false"
-            android:textColor="@android:color/black"  />
+            android:textColor="?light_is_000"  />
     </LinearLayout>
 
     <LinearLayout
@@ -143,7 +143,7 @@
             android:layout_weight="1"
             android:padding="@dimen/bottom_bar_padding"
             android:text="@string/done"
-            android:textColor="@android:color/black"
+            android:textColor="?light_is_000"
             android:gravity="center"
             android:textStyle="bold"
             android:textAllCaps="true"
@@ -160,7 +160,7 @@
             android:text="@string/cancel"
             android:textAllCaps="true"
             android:background="@drawable/background_circle"
-            android:textColor="@android:color/black"
+            android:textColor="?light_is_000"
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="16sp"

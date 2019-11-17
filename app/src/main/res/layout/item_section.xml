@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <TextView android:id="@+id/title"
+    <TextView
+        android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="Scanned Documents"
@@ -16,7 +17,7 @@
         android:maxLines="1"
         android:textStyle="bold"
         android:ellipsize="end"
-        android:textColor="@color/scanner_text_color"
+        android:textColor="?scanned_document_color"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingTop="10dp"
@@ -55,6 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/list"
         android:padding="14dp"
+        android:tint="?scanned_document_color"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/circle_background_support_touch"/>
+        android:background="@drawable/circle_background_support_touch_transparent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

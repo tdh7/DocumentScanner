@@ -10,9 +10,10 @@
     android:layout_marginEnd="4dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:background="@drawable/background_item_saved_document"
+    android:background="?background_item_saved_document"
     android:clickable="true"
     android:focusable="true"
+    tools:showIn="@layout/main_fragment_layout"
     >
     <ImageView
         android:id="@+id/image_view"
@@ -37,7 +38,7 @@
         android:layout_height="wrap_content"
         tools:text="Some file name abasead dasidf cadf ads"
         android:gravity="center"
-        android:textColor="#444"
+        android:textColor="?title_item_saved_document"
         android:layout_marginStart="45dp"
         android:layout_marginEnd="45dp"
         android:ellipsize="end"
@@ -63,6 +64,7 @@
         android:layout_marginTop="8dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
+        android:tint="?app_bar_icon_tint"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:clickable="true"

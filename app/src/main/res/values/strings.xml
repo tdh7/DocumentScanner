@@ -61,4 +61,10 @@
     <string name="share">Share</string>
     <string name="delete">Delete</string>
     <string name="invalid_section">Invalid Section</string>
+    <string name="preferences">Preferences</string>
+    <string name="app_theme">App Theme</string>
+    <string name="app_theme_note">*Changing the app theme requires application restarting</string>
+    <string name="follow_system">Follow System</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
 </resources>

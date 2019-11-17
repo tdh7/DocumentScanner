@@ -16,6 +16,7 @@ public final class PreferenceUtil {
     public static final int TYPE_GRID_TWO_ROW = 1;
     public static final int TYPE_GRID_FOUR_ROW = 2;
     public static final String LIST_VIEW_TYPE = "list_view_type";
+    public static final String APP_THEME_OPTION = "app_theme_option";
     private static PreferenceUtil sInstance;
     private final SharedPreferences mPreferences;
     private PreferenceUtil(@NonNull final Context context) {
@@ -42,5 +43,13 @@ public final class PreferenceUtil {
 
     public void setSavedListType(int mode) {
         mPreferences.edit().putInt(LIST_VIEW_TYPE,mode).apply();
+    }
+
+    public int getAppThemeOption() {
+        return mPreferences.getInt(APP_THEME_OPTION,0);
+    }
+
+    public void setAppThemeOption(int mode) {
+        mPreferences.edit().putInt(APP_THEME_OPTION,mode).apply();
     }
 }

@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1049,5 +1048,15 @@ public class ScanUtils {
             e.printStackTrace();
         }
         return rotate;
+    }
+
+    public static void boundToViewPort(float[] points, float[] viewPort) {
+        for (int i = 0; i <4; i++) {
+            if(points[i] < 0) points[i] = 0;
+            else if(points[i] > viewPort[0]) points[i] = viewPort[0];
+
+            if(points[i+4]<0) points[i+4] = 0;
+            else if(points[i+4] > viewPort[1]) points[i+4] = viewPort[1];
+        }
     }
 }

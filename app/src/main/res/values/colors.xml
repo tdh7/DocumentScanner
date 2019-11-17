@@ -29,4 +29,8 @@
     <color name="success_stroke_color">#A5DC86</color>
     <color name="shadowColor" >#44000000</color>
     <color name="DarkerColorL3">#161218</color>
+    <color name="search_hint_light">#8A8A8A</color>
+    <color name="search_hint_dark">#9AA0A5</color>
+    <color name="app_bar_icon_tint_light">#626262</color>
+    <color name="app_bar_icon_tint_dark">#9AA0A5</color>
 </resources>

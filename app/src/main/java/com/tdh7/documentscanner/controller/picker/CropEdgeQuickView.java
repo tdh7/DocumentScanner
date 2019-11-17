@@ -20,6 +20,7 @@ import com.tdh7.documentscanner.controller.filter.canvas.QuickViewCanvasFilter;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
+import com.tdh7.documentscanner.util.ScanUtils;
 import com.tdh7.documentscanner.util.Tool;
 import com.tdh7.documentscanner.util.Util;
 
@@ -134,6 +135,7 @@ public class CropEdgeQuickView {
             mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
             mMarkerView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
 
+            ScanUtils.boundToViewPort(document.mEdgePoints, new float[]{1,1});
             mMarkerView.setPoints(document.mEdgePoints);
             mQuickViewCallback.onQuickViewAttach();
           // mLayout.setAlpha(0);
