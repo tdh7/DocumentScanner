@@ -1,0 +1,10 @@
+#subject
+New {app_name} release, version {app_version}
+#body
+New version is available for download:
+{app_download_url}
+
+Changes:
+{change_log}
+
+This email was sent automatically, please do not reply.
