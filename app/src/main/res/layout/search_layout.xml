@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/white"
+    android:background="?backColor"
     android:clickable="true"
     android:focusable="true">
 <androidx.core.widget.NestedScrollView
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_arrow_back_24dp"
-        android:tint="#666"
+        android:tint="?app_bar_icon_tint"
         android:padding="10dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"/>
@@ -55,7 +55,7 @@
         android:gravity="center_vertical"
         android:paddingTop="3dp"
         android:layout_marginStart="8dp"
-        android:textColor="#999"
+        android:textColor="?search_hint_color"
         android:fontFamily="@font/helvetica_font"
         android:textSize="17sp"/>
     <View

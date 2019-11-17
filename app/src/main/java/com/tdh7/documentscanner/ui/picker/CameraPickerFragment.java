@@ -1,6 +1,7 @@
 package com.tdh7.documentscanner.ui.picker;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -21,7 +22,9 @@ import androidx.core.content.ContextCompat;
 
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
+import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.controller.ThemeStyle;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
@@ -40,6 +43,8 @@ import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
+import es.dmoral.toasty.Toasty;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.configuration.CameraConfiguration;
 import io.fotoapparat.configuration.UpdateConfiguration;
@@ -163,12 +168,23 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     @OnClick(R.id.system_camera_icon)
     void openSystemCamera() {
-        //Intent intent = new Intent(getActivity(),ScannerActivity.class);
-        //intent.putExtra(ScannerActivity.MODE,1);
-        //startActivityForResult(intent, MainFragment.REQUEST_CODE_START_SCAN_BY_LIBRARY);
+        Activity activity = getActivity();
         dismiss();
+        if(activity instanceof MainActivity) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) activity).openSystemCamera();
+                }
+            },350);
+        }
     }
 
+    @OnLongClick(R.id.system_camera_icon)
+    void longClickSystemCamera() {
+        Util.vibrate(App.getInstance());
+        Toasty.normal(App.getInstance(),"Use the system camera").show();
+    }
 
     private void removePermissionScreenIfAny() {
         if(getContext()!=null&&mPermissionView!=null) {
@@ -457,19 +473,13 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
     @Override
     public void onResume() {
         super.onResume();
-      // mRoot.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            //    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-         //       | View.SYSTEM_UI_FLAG_FULLSCREEN
-      // );
-       if(getActivity() instanceof MainActivity)
-           ((MainActivity) getActivity()).setTheme(false);
+        ThemeStyle.pushTheme(false);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if(getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).setTheme(true);
+        ThemeStyle.popTheme();
     }
 
     @Override

@@ -45,4 +45,6 @@
             <enum name="fullQuickView" value="2"/>
         </attr>
     </declare-styleable>
+
+
 </resources>

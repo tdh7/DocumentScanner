@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="backColor" format="color|reference"/>
+    <attr name="titleColor" format="color|reference"/>
+    <attr name="search_hint_color" format="color|reference"/>
+    <attr name="app_bar_background" format="color|reference"/>
+    <attr name="app_bar_icon_tint" format="color|reference"/>
+    <attr name="background_item_saved_document" format="color|reference"/>
+    <attr name="title_item_saved_document" format="color|reference"/>
+    <attr name="scanned_document_color" format="color|reference"/>
+    <attr name="document_title_color" format="color|reference"/>
+    <attr name="light_is_55eeeeee" format="color"/>
+    <attr name="light_is_fff" format="color"/>
+    <attr name="light_is_000" format="color"/>
+    <attr name="light_is_666" format="color"/>
+    <attr name="light_is_111" format="color"/>
+    <attr name="light_is_eee" format="color"/>
+    <attr name="light_is_22000000" format="color"/>
+    <attr name="light_is_33000000" format="color"/>
+    <attr name="divider_color" format="color"/>
+    <attr name="choosing_button_color" format="color"/>
+</resources>

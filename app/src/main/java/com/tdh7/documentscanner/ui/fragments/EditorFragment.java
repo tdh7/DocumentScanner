@@ -1,6 +1,5 @@
 package com.tdh7.documentscanner.ui.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,8 +17,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
@@ -49,7 +48,7 @@ public class EditorFragment extends NavigationFragment {
 
     private View view;
     private View mStatusBar;
-    private ImageView scannedImageView;
+    private PhotoView scannedImageView;
     private View doneButton;
     private Bitmap original;
     private Button originalButton;
@@ -79,7 +78,7 @@ public class EditorFragment extends NavigationFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        view = inflater.inflate(R.layout.result_layout, null);
+        view = inflater.inflate(R.layout.editor_layout, null);
         return view;
     }
 
@@ -145,7 +144,8 @@ public class EditorFragment extends NavigationFragment {
 
     private void init() {
         mStatusBar = view.findViewById(R.id.status_bar);
-        scannedImageView = (ImageView) view.findViewById(R.id.scannedImage);
+        scannedImageView = view.findViewById(R.id.scannedImage);
+        scannedImageView.setMinimumScale(0.85f);
         originalButton = (Button) view.findViewById(R.id.original);
         originalButton.setOnClickListener(new OriginalButtonClickListener());
         MagicColorButton = (Button) view.findViewById(R.id.magicColor);
@@ -249,6 +249,7 @@ public class EditorFragment extends NavigationFragment {
 
     public void setScannedImage(Bitmap scannedImage) {
         scannedImageView.setImageBitmap(scannedImage);
+        scannedImageView.setScale(0.85f,true);
         transformed =  original = scannedImage;
     }
 
