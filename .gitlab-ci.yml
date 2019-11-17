@@ -17,8 +17,6 @@ build:
   script:
   - ./gradlew assembleDebug
   artifacts:
-    script:
-     - email.to=$EMAIL_TARGET
     paths:
     - app/build/outputs/
 
