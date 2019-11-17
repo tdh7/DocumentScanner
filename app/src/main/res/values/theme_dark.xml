@@ -12,7 +12,7 @@
     <item name="app_bar_icon_tint">@android:color/white</item>
     <item name="background_item_saved_document">@drawable/background_item_saved_document_dark</item>
     <item name="title_item_saved_document">#E9EAEC</item>
-    <item name="scanned_document_color">#FFE7BA</item>
+    <item name="scanned_document_color">@color/tomato</item>
     <item name="document_title_color">@android:color/white</item>
     <item name="light_is_55eeeeee">#55111111</item>
     <item name="light_is_fff">@android:color/black</item>
