@@ -18,7 +18,7 @@
             android:drawableTop="@drawable/ic_image"
             android:singleLine="true"
             android:text="Original"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="3dp"
             android:textColor="@android:color/white" />
 
         <Button
