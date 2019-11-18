@@ -38,7 +38,7 @@ deployRelease:
   - git clone https://github.com/mega-arbuz/apk-release-deploy.git
   - python apk-release-deploy/deploy.py
     --release.dir=app/build/outputs/apk/release
-    --app.name=BestAppEver
+    --app.name=Scanner
     --dropbox.token=$DROPBOX_TOKEN2
     --dropbox.folder=release
     --changelog.file=CHANGELOG
