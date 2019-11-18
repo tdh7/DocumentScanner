@@ -15,13 +15,13 @@ stages:
 - deploy
 
 
-assembleDebug:
+Build:
   stage: build
   script:
   - ./gradlew assembleDebug
 
 
-assembleRelease:
+Release:
   stage: release
   script:
   - ./gradlew assembleRelease
@@ -30,7 +30,7 @@ assembleRelease:
     - app/build/outputs/apk/release
     - CHANGELOG
 
-deployRelease:
+Deploy:
   image: python:3.5.2
   stage: deploy
   script:
@@ -38,7 +38,7 @@ deployRelease:
   - git clone https://github.com/mega-arbuz/apk-release-deploy.git
   - python apk-release-deploy/deploy.py
     --release.dir=app/build/outputs/apk/release
-    --app.name=Scanner
+    --app.name=ScannerApp
     --dropbox.token=$DROPBOX_TOKEN2
     --dropbox.folder=release
     --changelog.file=CHANGELOG
