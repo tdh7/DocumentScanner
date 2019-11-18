@@ -43,6 +43,6 @@ deployRelease:
     --dropbox.folder=release
     --changelog.file=CHANGELOG
     --template.file=TEMPLATE
-    --zapier.hook=$ZAPIER_EMAIL_HOOK2
+    --zapier.hook=$ZAPIER_EMAIL_HOOK
     --email.to=$EMAIL_TARGET2
   cache: {}
