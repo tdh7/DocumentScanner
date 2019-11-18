@@ -15,6 +15,7 @@
     <attr name="light_is_666" format="color"/>
     <attr name="light_is_111" format="color"/>
     <attr name="light_is_eee" format="color"/>
+    <attr name="light_is_11000000" format="color"/>
     <attr name="light_is_22000000" format="color"/>
     <attr name="light_is_33000000" format="color"/>
     <attr name="divider_color" format="color"/>

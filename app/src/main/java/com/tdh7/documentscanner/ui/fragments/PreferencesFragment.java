@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.ldt.navigation.NavigationFragment;
+import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.dialog.OptionBottomSheet;
 
@@ -126,5 +127,10 @@ public class PreferencesFragment extends NavigationFragment {
         if(getActivity() instanceof AppCompatActivity)
         OptionBottomSheet.newInstance(mAppThemeOptionIDs, mOptionCallback.attach(this))
                 .show(getActivity().getSupportFragmentManager(), OptionBottomSheet.TAG);
+    }
+
+    @Override
+    public int defaultTransition() {
+        return PresentStyle.SLIDE_LEFT;
     }
 }

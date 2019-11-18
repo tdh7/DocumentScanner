@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -204,7 +203,7 @@ public class EditorFragment extends NavigationFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            scannedImageView.setImageBitmap(transformed);
+                            setImage(transformed, true);
                             dismissDialog();
                         }
                     });
@@ -213,7 +212,7 @@ public class EditorFragment extends NavigationFragment {
                         @Override
                         public void run() {
                             transformed = original;
-                            scannedImageView.setImageBitmap(original);
+                            setImage(transformed, true);
                             e.printStackTrace();
                             dismissDialog();
                         }
@@ -248,9 +247,13 @@ public class EditorFragment extends NavigationFragment {
     }
 
     public void setScannedImage(Bitmap scannedImage) {
-        scannedImageView.setImageBitmap(scannedImage);
-        scannedImageView.setScale(0.85f,true);
+       setImage(scannedImage, true);
         transformed =  original = scannedImage;
+    }
+
+    private void setImage(Bitmap bitmap, boolean animate) {
+        scannedImageView.setImageBitmap(bitmap);
+        scannedImageView.setScale(0.85f,animate);
     }
 
     String foname;
@@ -364,7 +367,7 @@ public class EditorFragment extends NavigationFragment {
                             @Override
                             public void run() {
                                 transformed = original;
-                                scannedImageView.setImageBitmap(original);
+                                setImage(original, false);
                                 e.printStackTrace();
                                 dismissDialog();
                                 onClick(v);
@@ -374,7 +377,7 @@ public class EditorFragment extends NavigationFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            scannedImageView.setImageBitmap(transformed);
+                            setImage(transformed, false);
                             dismissDialog();
                         }
                     });
@@ -397,7 +400,7 @@ public class EditorFragment extends NavigationFragment {
                             @Override
                             public void run() {
                                 transformed = original;
-                                scannedImageView.setImageBitmap(original);
+                                setImage(transformed, false);
                                 e.printStackTrace();
                                 dismissDialog();
                                 onClick(v);
@@ -407,7 +410,7 @@ public class EditorFragment extends NavigationFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            scannedImageView.setImageBitmap(transformed);
+                            setImage(transformed, false);
                             dismissDialog();
                         }
                     });
@@ -422,7 +425,7 @@ public class EditorFragment extends NavigationFragment {
             try {
                 showProgressDialog(getResources().getString(R.string.applying_filter));
                 transformed = original;
-                scannedImageView.setImageBitmap(original);
+                setImage(transformed, false);
                 dismissDialog();
             } catch (OutOfMemoryError e) {
                 e.printStackTrace();
@@ -445,7 +448,7 @@ public class EditorFragment extends NavigationFragment {
                             @Override
                             public void run() {
                                 transformed = original;
-                                scannedImageView.setImageBitmap(original);
+                                setImage(transformed, false);
                                 e.printStackTrace();
                                 dismissDialog();
                                 onClick(v);
@@ -455,7 +458,7 @@ public class EditorFragment extends NavigationFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            scannedImageView.setImageBitmap(transformed);
+                            setImage(transformed, false);
                             dismissDialog();
                         }
                     });

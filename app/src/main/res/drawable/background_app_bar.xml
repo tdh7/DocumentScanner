@@ -8,17 +8,6 @@
                 android:right="1dp"
                 android:bottom="1dp"
                 android:left="1dp"/>
-            <solid android:color="#00CCCCCC"/>
-        </shape>
-    </item>
-    <item>
-        <shape>
-            <corners android:radius="@dimen/app_bar_corner" />
-            <padding
-                android:top="1dp"
-                android:right="1dp"
-                android:bottom="1dp"
-                android:left="1dp"/>
             <solid android:color="#05CCCCCC"/>
         </shape>
     </item>

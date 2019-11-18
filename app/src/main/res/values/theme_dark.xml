@@ -20,9 +20,10 @@
     <item name="light_is_666">#999</item>
     <item name="light_is_111">#EEE</item>
     <item name="light_is_eee">#111</item>
+    <item name="light_is_11000000">#10FFFFFF</item>
     <item name="light_is_22000000">#22FFFFFF</item>
     <item name="light_is_33000000">#33FFFFFF</item>
     <item name="divider_color">#22999999</item>
-    <item name="choosing_button_color">#55111111</item>
+    <item name="choosing_button_color">#10FFFFFF</item>
 </style>
 </resources>
