@@ -1,5 +1,5 @@
 #subject
-New {app_name} release, version {app_version}
+New {app_name} release
 #body
 New version is available for download:
 {app_download_url}
