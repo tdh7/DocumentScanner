@@ -326,3 +326,9 @@ public class AutoCapturer {
 
 
 }
+
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class)
+public class AutoCapturerTest {
+
+}
