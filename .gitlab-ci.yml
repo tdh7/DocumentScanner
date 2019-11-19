@@ -10,11 +10,11 @@ cache:
   - .gradle/
 
 stages:
-- release
+- build
 - deploy
 
-buildRelease:
-  stage: release
+BuildRelease:
+  stage: build
   script:
   - ./gradlew assembleRelease
   artifacts:
@@ -22,7 +22,7 @@ buildRelease:
     - app/build/outputs/apk/release
     - CHANGELOG
 
-deployRelease:
+Deploy:
   image: python:3.5.2
   stage: deploy
   script:
