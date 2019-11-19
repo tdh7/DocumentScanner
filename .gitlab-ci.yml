@@ -10,18 +10,10 @@ cache:
   - .gradle/
 
 stages:
-- build
 - release
 - deploy
 
-
-Build:
-  stage: build
-  script:
-  - ./gradlew assembleDebug
-
-
-Release:
+buildRelease:
   stage: release
   script:
   - ./gradlew assembleRelease
@@ -30,7 +22,7 @@ Release:
     - app/build/outputs/apk/release
     - CHANGELOG
 
-Deploy:
+deployRelease:
   image: python:3.5.2
   stage: deploy
   script:
@@ -44,5 +36,5 @@ Deploy:
     --changelog.file=CHANGELOG
     --template.file=TEMPLATE
     --zapier.hook=$ZAPIER_EMAIL_HOOK
-    --email.to=$EMAIL_TARGET2, @EMAIL_TARGET
+    --email.to=$EMAIL_TARGET
   cache: {}
