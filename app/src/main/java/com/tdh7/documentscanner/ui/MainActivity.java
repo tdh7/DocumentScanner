@@ -37,10 +37,6 @@ public class MainActivity extends PermissionActivity {
         System.loadLibrary(mOpenCvLibrary);
     }
 
-    public void openSystemCamera() {
-        if(mMainFragment!=null) mMainFragment.openSystemCamera();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
