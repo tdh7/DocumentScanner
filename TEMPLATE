@@ -1,8 +1,10 @@
 #subject
 New version of {app_name} is ready to download.
 #body
-You can download release APK File with the link belows:
+New version of {app_name} from {app_name} project is ready to review.
+
+You can download APK File with the link belows:
 {app_download_url}
 
-Changes:
+Change Logs:
 {change_log}

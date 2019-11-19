@@ -27,8 +27,7 @@ Deploy:
   stage: deploy
   script:
     - pip install requests
-    - git clone https://github.com/mega-arbuz/apk-release-deploy.git
-    - python apk-release-deploy/deploy.py
+    - python deploy.py
       --release.dir=app/build/outputs/apk/release
       --app.name=$APP_NAME
       --dropbox.token=$DROPBOX_TOKEN2
