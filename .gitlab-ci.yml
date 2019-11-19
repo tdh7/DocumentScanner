@@ -1,39 +1,40 @@
 image: jangrewe/gitlab-ci-android
 
 before_script:
-  - export GRADLE_USER_HOME=$(pwd)/.gradle
-  - chmod +x ./gradlew
+- export GRADLE_USER_HOME=$(pwd)/.gradle
+- chmod +x ./gradlew
 
 cache:
   key: ${CI_PROJECT_ID}
   paths:
-    - .gradle/
+  - .gradle/
 
 stages:
-  - build
-  - deploy
+- build
+- deploy
 
 BuildRelease:
   stage: build
   script:
-    - ./gradlew assembleRelease
+  - ./gradlew assembleRelease
   artifacts:
     paths:
-      - app/build/outputs/apk/release
-      - CHANGELOG
+    - app/build/outputs/apk/release
+    - CHANGELOG
 
 Deploy:
   image: python:3.5.2
   stage: deploy
   script:
-    - pip install requests
-    - python deploy.py
-      --release.dir=app/build/outputs/apk/release
-      --app.name=$APP_NAME
-      --dropbox.token=$DROPBOX_TOKEN2
-      --dropbox.folder=release
-      --changelog.file=CHANGELOG
-      --template.file=TEMPLATE
-      --zapier.hook=$ZAPIER_EMAIL_HOOK
-      --email.to=$EMAIL_TARGET
+  - pip install requests
+  - git clone https://github.com/mega-arbuz/apk-release-deploy.git
+  - python apk-release-deploy/deploy.py
+    --release.dir=app/build/outputs/apk/release
+    --app.name=$APP_NAME
+    --dropbox.token=$DROPBOX_TOKEN2
+    --dropbox.folder=release
+    --changelog.file=CHANGELOG
+    --template.file=TEMPLATE
+    --zapier.hook=$ZAPIER_EMAIL_HOOK
+    --email.to=$EMAIL_TARGET
   cache: {}
