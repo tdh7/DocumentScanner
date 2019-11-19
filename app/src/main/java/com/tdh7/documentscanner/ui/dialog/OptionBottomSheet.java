@@ -109,6 +109,12 @@ public class OptionBottomSheet extends BottomSheetDialogFragment implements View
             }
             else if(options[i]==R.string.dangerous_divider) {
                 optionType = R.string.dangerous_divider;
+                View divider = new View(context);
+                divider.setBackgroundColor(0x66cccccc);
+                LinearLayout.LayoutParams divParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)dp);
+                divParam.bottomMargin = (int)dp_8;
+                divParam.topMargin = (int)(7*dp);
+                root.addView(divider,divParam);
                 continue;
             } else if(options[i]==R.string.normal) {
                 optionType = R.string.normal;

@@ -1,5 +1,6 @@
 package com.tdh7.documentscanner.ui.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,7 +28,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.ldt.navigation.NavigationFragment;
 import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.controller.ThemeStyle;
 import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
+import com.tdh7.documentscanner.model.CountSectionItem;
 import com.tdh7.documentscanner.model.DocumentInfo;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
@@ -38,6 +42,7 @@ import com.tdh7.documentscanner.util.Util;
 import com.tdh7.documentscanner.util.Utils;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,7 +62,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     public static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
     public final static int REQUEST_CODE_PICK_FROM_GALLERY = 11;
     public final static int REQUEST_CODE_PICK_FROM_DEVICE_CAMERA = 12;
-
+    public static final int REQUEST_CODE_SHARE_FILE = 13;
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -77,6 +82,8 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
             return false;
         } else return true;
     }
+
+
 
     @Override
     public void onSetStatusBarMargin(int value) {
@@ -118,9 +125,19 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         mAdapter = new DocumentAdapter();
         mAdapter.setParentFragment(this);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        GridLayoutManager glm = new GridLayoutManager(getContext(),4);
+        glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return mAdapter.getSpanSize(glm.getSpanCount(),position);
+            }
+        });
+        mRecyclerView.setLayoutManager(glm);
         mSwipeRefreshLayout.setOnRefreshListener(this::refreshData);
         mAppBar.postDelayed(this::hideLogo,3000);
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
+        }
     }
 
     @BindView(R.id.search_hint) View mSearchHint;
@@ -164,10 +181,12 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_PICK_FROM_DEVICE_CAMERA:
+                if(resultCode== Activity.RESULT_OK)
                 detectEdgeAndShowQuickView(fileUri);
                 break;
             case REQUEST_CODE_PICK_FROM_GALLERY:
-                    detectEdgeAndShowQuickView(data.getData());
+                if(resultCode== Activity.RESULT_OK)
+                detectEdgeAndShowQuickView(data.getData());
         }
     }
 
@@ -186,6 +205,16 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
                         bitmap = Utils.getBitmapWithUri(getContext(),uri);
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+
+                if(bitmap==null) {
+                    mConstraintParent.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toasty.error(App.getInstance(),"Sorry, something went wrong when trying to get the image").show();
+                        }
+                    });
+                    return;
                 }
 
                 int rotate = ScanUtils.getCameraPhotoOrientation(getContext(),uri);
@@ -218,12 +247,19 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                ArrayList<DocumentInfo> list = new ArrayList<>();
+                ArrayList<DocumentAdapter.DocumentObject> list = new ArrayList<>();
                 try {
                     File file = new File(ScanConstants.PDF_PATH);
                     if (file.exists()) {
-                        File[] cfile = file.listFiles();
-                        for (File f : cfile) {
+                        //File[] fileArray = file.listFiles();
+                        File[] fileArray = file.listFiles(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File dir, String name) {
+                                return name.endsWith(".pdf");
+                            }
+                        });
+                        if(fileArray!= null)
+                        for (File f : fileArray) {
                             if (f.isFile() && f.getName().endsWith(".pdf")) {
                                 list.add(new DocumentInfo(f.getName(), f.getAbsolutePath(),
                                         Util.humanReadableByteCount(f.length()) + " • " +
@@ -232,10 +268,14 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
                             }
                         }
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+
+                }
+                if(mSwipeRefreshLayout!=null)
                 mSwipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
+                        list.add(0, new CountSectionItem("Scanned Documents",list.size()));
                         mAdapter.setData(list);
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -277,6 +317,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         startActivityForResult(cameraIntent, REQUEST_CODE_PICK_FROM_DEVICE_CAMERA);
     }
 
+
     @OnClick(R.id.search_hint)
     void appBarClick() {
         presentFragment(new SearchFragment());
@@ -311,9 +352,6 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     @Override
     public void onResume() {
         super.onResume();
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).executeWriteStorageAction(new Intent(ACTION_PERMISSION_START_UP));
-        }
     }
 
     @OnClick(R.id.pick_camera_icon)
@@ -343,15 +381,13 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     @Override
     public void onQuickViewAttach() {
         mCropEdgeQuickView.showActionButton();
-        if(getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).setTheme(false);
+        ThemeStyle.pushTheme(false);
     }
 
     @Override
     public void onQuickViewDetach(float[] points) {
         mCropEdgeQuickView = null;
-        if(getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).setTheme(true);
+        ThemeStyle.popTheme();
     }
 
     @Override
@@ -361,6 +397,10 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     }
     LoadingScreenDialog mLoadingDialog = null;
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     private void hideLoading() {
         mConstraintParent.post(()-> {
@@ -374,5 +414,10 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
 
         mLoadingDialog = LoadingScreenDialog.newInstance(getContext());
         mLoadingDialog.show(getChildFragmentManager(),"LoadingScreenDialog");
+    }
+
+    @Override
+    public boolean isWhiteTheme(boolean current) {
+        return false;
     }
 }

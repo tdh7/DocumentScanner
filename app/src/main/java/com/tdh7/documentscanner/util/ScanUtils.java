@@ -9,7 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.hardware.Camera;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -884,7 +883,7 @@ public class ScanUtils {
 
             convertToPercent(edge,previewWidth,previewHeight);
             if(angle!=0)
-            rotatePoint(edge,0.5f,0.5f, angle);
+                rotatePoint(edge,0.5f,0.5f, angle);
             Log.d(TAG, "detectEdge: available result");
             return edge;
 
@@ -1049,5 +1048,15 @@ public class ScanUtils {
             e.printStackTrace();
         }
         return rotate;
+    }
+
+    public static void boundToViewPort(float[] points, float[] viewPort) {
+        for (int i = 0; i <4; i++) {
+            if(points[i] < 0) points[i] = 0;
+            else if(points[i] > viewPort[0]) points[i] = viewPort[0];
+
+            if(points[i+4]<0) points[i+4] = 0;
+            else if(points[i+4] > viewPort[1]) points[i+4] = viewPort[1];
+        }
     }
 }

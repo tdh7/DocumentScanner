@@ -1,0 +1,25 @@
+<resources>
+<style name="ThemeLight" parent="ThemeLight.Base"/>
+<style name="ThemeLight.Base" parent="BaseTheme">
+    <item name="backColor">@android:color/white</item>
+    <item name="titleColor">@color/tomato</item>
+    <item name="search_hint_color">@color/search_hint_light</item>
+    <item name="app_bar_background">@drawable/background_app_bar</item>
+    <item name="app_bar_icon_tint">@color/app_bar_icon_tint_light</item>
+    <item name="background_item_saved_document">@drawable/background_item_saved_document</item>
+    <item name="title_item_saved_document">@android:color/black</item>
+    <item name="scanned_document_color">@color/scanner_text_color</item>
+    <item name="document_title_color">#444</item>
+    <item name="light_is_55eeeeee">#55eeeeee</item>
+    <item name="light_is_fff">@android:color/white</item>
+    <item name="light_is_000">@android:color/black</item>
+    <item name="light_is_666">#666</item>
+    <item name="light_is_111">#111</item>
+    <item name="light_is_eee">#eee</item>
+    <item name="light_is_11000000">#10000000</item>
+    <item name="light_is_22000000">#22000000</item>
+    <item name="light_is_33000000">#33000000</item>
+    <item name="divider_color">#22666666</item>
+    <item name="choosing_button_color">#07000000</item>
+</style>
+</resources>

@@ -86,4 +86,5 @@ dependencies {
 
     // Photo View
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
 }

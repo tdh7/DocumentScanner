@@ -1,6 +1,8 @@
 package com.tdh7.documentscanner.model;
 
-public class DocumentInfo {
+import com.tdh7.documentscanner.ui.fragments.DocumentAdapter;
+
+public class DocumentInfo implements DocumentAdapter.DocumentObject {
     public DocumentInfo(String fileTitle, String path, String description) {
         mFileTitle = fileTitle;
         mPath = path;

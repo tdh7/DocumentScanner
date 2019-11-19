@@ -32,7 +32,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.navigation_drawer_view,container,false);
+        return inflater.inflate(R.layout.navigation_drawer,container,false);
     }
 
     @Override
@@ -53,4 +53,13 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    @OnClick(R.id.pref_section)
+    void openPreferences() {
+        Activity activity = getActivity();
+        if(activity instanceof MainActivity) {
+            ((MainActivity) activity).closeDrawerIfOpened();
+            mAppIcon.postDelayed((() ->
+                    ((MainActivity) activity).presentFragment(PreferencesFragment.newInstance())),350);
+        }
+    }
 }
