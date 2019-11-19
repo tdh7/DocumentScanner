@@ -1,0 +1,33 @@
+#subject
+New version of {app_name} is ready to download.
+#body
+You can download release APK File with the link belows:
+{app_download_url}
+
+Changes:
+{change_log}
+
+This email was sent automatically, please do not reply.
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html lang="en">
+<head>
+<meta content="text/html; charset=US-ASCII" http-equiv="Content-Type">
+<title>
+GitLab
+</title>
+</div>
+<div class="footer" style="margin-top: 10px;">
+<p style="font-size: small; color: #777;">
+&#8212;
+<br>
+<a href="https://gitlab.com/tdh7/DocumentScanner">View repository on GitLab</a>.
+<br>
+You're receiving this email because of your account on gitlab.com.
+If you'd like to receive fewer emails, you can
+adjust your notification settings.
+<script type="application/ld+json">{"@context":"http://schema.org","@type":"EmailMessage","action":{"@type":"ViewAction","name":"View Commit","url":"https://gitlab.com/tdh7/DocumentScanner"}}</script>
+</p>
+</div>
+</body>
+</html>
