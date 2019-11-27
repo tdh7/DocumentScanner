@@ -15,9 +15,13 @@
     <attr name="light_is_666" format="color"/>
     <attr name="light_is_111" format="color"/>
     <attr name="light_is_eee" format="color"/>
+    <attr name="background_border_color_inactive" format="color"/>
+    <attr name="background_border_color_active" format="color"/>
     <attr name="light_is_11000000" format="color"/>
     <attr name="light_is_22000000" format="color"/>
     <attr name="light_is_33000000" format="color"/>
     <attr name="divider_color" format="color"/>
     <attr name="choosing_button_color" format="color"/>
+    <attr name="menu_icon_tint" format="color"/>
+    <attr name="lightIsDarkFocus" format="color"/>
 </resources>

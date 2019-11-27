@@ -2,7 +2,6 @@ package com.tdh7.documentscanner.ui.picker;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -29,8 +28,8 @@ import com.tdh7.documentscanner.controller.picker.CropEdgeQuickView;
 import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
+import com.tdh7.documentscanner.ui.editor.DocumentEditorFragment;
 import com.tdh7.documentscanner.ui.fragments.EditorFragment;
-import com.tdh7.documentscanner.ui.fragments.MainFragment;
 import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
 import com.tdh7.documentscanner.util.PreferenceUtil;
@@ -326,7 +325,7 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
        }
        dismiss();
        mCaptureIcon.post(() ->
-               presentFragment(EditorFragment.newInstance(mBitmapDocuments.get(mBitmapDocuments.size()-1))));
+               presentFragment(DocumentEditorFragment.newInstance().addAll(mBitmapDocuments)));
    }
 
    @BindView(R.id.capture_icon)
@@ -535,7 +534,6 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
 
     @Override
     public void onQuickViewAttach() {
-
     }
 
     @Override

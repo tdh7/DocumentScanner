@@ -14,7 +14,7 @@
     android:clickable="true"
     tools:layout_marginTop="32dp"
     android:focusable="true"
-    app:cardBackgroundColor="@color/flatWhite"
+    app:cardBackgroundColor="?backColor"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:background="@android:color/transparent"
-        android:background="@color/flatWhite">
+        android:background="?backColor">
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
@@ -35,7 +35,7 @@
             android:fontFamily="@font/helvetica_font"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="?light_is_000"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/close"/>
@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/close"
-            android:tint="@android:color/black"
+            android:tint="?light_is_000"
             android:focusable="true"
             android:clickable="true"
             android:padding="32dp"/>
@@ -72,7 +72,7 @@
             android:layout_marginTop="16dp"
             android:textSize="20sp"
             android:fontFamily="@font/helvetica_font"
-            android:textColor="@android:color/black"
+            android:textColor="?lightIsDarkFocus"
             android:paddingTop="8dp"
             android:paddingBottom="16dp"/>
         <TextView
@@ -85,7 +85,7 @@
             tools:text="@string/storage_permission_description"
             android:gravity="center"
             android:textSize="14sp"
-            android:textColor="@android:color/black"
+            android:textColor="?light_is_000"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"/>
         <TextView
@@ -97,7 +97,7 @@
             android:layout_marginBottom="32dp"
             android:layout_marginEnd="30dp"
             android:text="@string/ok_got_it"
-            android:textColor="@color/darkFocus"
+            android:textColor="?lightIsDarkFocus"
             android:textSize="16sp"
             android:background="@drawable/background_invisible_then_border_on_pressed"
             app:layout_constraintTop_toBottomOf="@id/permission_description"

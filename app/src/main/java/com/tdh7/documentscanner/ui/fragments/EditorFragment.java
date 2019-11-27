@@ -1,5 +1,7 @@
 package com.tdh7.documentscanner.ui.fragments;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -192,14 +194,17 @@ public class EditorFragment extends NavigationFragment {
     }
 
     private void executeRotate(float angle) {
+        if(transformed==null) transformed = original;
+        rotateImageTo(angle);
+        if(true) return;
         showProgressDialog("rotating...");
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 try {
                     if(transformed==null)
-                    transformed = RotateBitmap(original,angle);
-                    else transformed = RotateBitmap(transformed,angle);
+                    transformed = Utils.rotateBitmap(original,angle);
+                    else transformed = Utils.rotateBitmap(transformed,angle);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -212,6 +217,7 @@ public class EditorFragment extends NavigationFragment {
                         @Override
                         public void run() {
                             transformed = original;
+                            mCurrentRotate = angle;
                             setImage(transformed, true);
                             e.printStackTrace();
                             dismissDialog();
@@ -222,12 +228,7 @@ public class EditorFragment extends NavigationFragment {
             }
         });
     }
-
-    public static Bitmap RotateBitmap(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-    }
+    private float mCurrentRotate = 0;
 
     private Bitmap getBitmap() {
         Uri uri = getUri();
@@ -251,9 +252,52 @@ public class EditorFragment extends NavigationFragment {
         transformed =  original = scannedImage;
     }
 
+    private ValueAnimator mValueAnimator;
+    private  void rotateImageTo(float angle) {
+        if(mValueAnimator!=null&&mValueAnimator.isRunning()) return;
+        if(angle!=mCurrentRotate) {
+            mValueAnimator = ValueAnimator.ofFloat(mCurrentRotate,angle);
+            mValueAnimator.setDuration(350);
+            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    rotateImage((Float) animation.getAnimatedValue());
+                }
+            });
+            mValueAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mValueAnimator = null;
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            mValueAnimator.start();
+        }
+    }
+    private void rotateImage(float angle) {
+        mCurrentRotate = angle;
+        scannedImageView.setScale(0.85f,false);
+        scannedImageView.setRotationTo(mCurrentRotate);
+    }
+
     private void setImage(Bitmap bitmap, boolean animate) {
         scannedImageView.setImageBitmap(bitmap);
         scannedImageView.setScale(0.85f,animate);
+        scannedImageView.setRotationTo(mCurrentRotate);
     }
 
     String foname;
@@ -262,7 +306,7 @@ public class EditorFragment extends NavigationFragment {
         @Override
         public void onClick(View v) {
 
-            foname = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            foname = new SimpleDateFormat("dd MM yyyy (HH:mm:ss).pdf").format(new Date());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Nhập tên file:");

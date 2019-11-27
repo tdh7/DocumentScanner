@@ -40,11 +40,13 @@
     <string name="take_more">Take more</string>
     <string name="keep_scan">Keep Scan</string>
     <string name="continue_">Continue</string>
-    <string name="cropper">Crop Document</string>
+    <string name="crop_document">Crop Document</string>
+    <string name="cropper">Cropper</string>
     <string name="import_x">Import (%1$d)</string>
     <string name="manual">Manual Mode</string>
     <string name="auto_capture">Auto Capture</string>
     <string name="add_x">Add (%1$d)</string>
+    <string name="page_x_of_n">Page %1$d of %2$d</string>
     <string name="cancel">Cancel</string>
     <string name="done">Save file</string>
     <string name="applying_filter">Applying filter...</string>
@@ -67,4 +69,13 @@
     <string name="follow_system">Follow System</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    <string name="save">Save</string>
+    <string name="edit_documents">Edit Documents</string>
+    <string name="rotate_note">Rotate document</string>
+    <string name="add_pages">Add pages</string>
+    <string name="rotate">Rotate</string>
+    <string name="filter">Filter</string>
+    <string name="option">Options</string>
+    <string name="ratio_aspect">Ratio aspect</string>
+    <string name="rearrange">Rearrange</string>
 </resources>

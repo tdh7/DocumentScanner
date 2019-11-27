@@ -20,10 +20,14 @@
     <item name="light_is_666">#999</item>
     <item name="light_is_111">#EEE</item>
     <item name="light_is_eee">#111</item>
+    <item name="background_border_color_inactive">#212121</item>
+    <item name="background_border_color_active">#444</item>
     <item name="light_is_11000000">#10FFFFFF</item>
     <item name="light_is_22000000">#22FFFFFF</item>
     <item name="light_is_33000000">#33FFFFFF</item>
     <item name="divider_color">#22999999</item>
     <item name="choosing_button_color">#10FFFFFF</item>
+    <item name="menu_icon_tint">#AAA</item>
+    <item name="lightIsDarkFocus">#e8edd7</item>
 </style>
 </resources>

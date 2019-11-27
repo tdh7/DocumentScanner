@@ -1,5 +1,7 @@
 package com.tdh7.documentscanner.controller.picker;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
@@ -131,10 +133,23 @@ public class CropEdgeQuickView {
             if(canvasFilter instanceof QuickViewCanvasFilter)
                 ((QuickViewCanvasFilter) canvasFilter).setRotateValue(rotationDegrees);
             mFilterImageView.setBitmap(bitmap);
-            mLayout.setBackgroundColor(Color.BLACK);
-            mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
-            mMarkerView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
 
+            // 0.78
+            mCardView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                int w = 0,h = 0;
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    if(w==0)
+                    {
+                    w = mMarkerView.getViewWidth();
+                    h = mMarkerView.getViewHeight();
+                    }
+                    float value = (float) animation.getAnimatedValue();
+                    float paddingPercent = (1 - 0.78f)*value/2;
+                    mMarkerView.setPaddingAndInvalidate((int)(w*paddingPercent),(int)(h*paddingPercent),(int)(w*paddingPercent), (int)(h*paddingPercent));
+                }
+            }).start();
+            //mMarkerView.animate().scaleX(0.78f).scaleY(0.78f).setDuration(550).setInterpolator(new OvershootInterpolator()).start();
             ScanUtils.boundToViewPort(document.mEdgePoints, new float[]{1,1});
             mMarkerView.setPoints(document.mEdgePoints);
             mQuickViewCallback.onQuickViewAttach();
@@ -178,10 +193,24 @@ public class CropEdgeQuickView {
 
     public void detach() {
         mMarkerView.getPoints(points);
+        mMarkerView.getPoints(mBitmapDocument.mEdgePoints);
         if(mLayout!=null) {
            // mMarkerView.setState(MarkerView.STATE_HIDDEN);
-            mMarkerView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).start();
-            mCardView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).start();
+          //  mMarkerView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).start();
+            mCardView.animate().scaleX(1f).scaleY(1f).setDuration(350).setInterpolator(new OvershootInterpolator()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                int w = 0,h = 0;
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    if(w==0)
+                    {
+                        w = mMarkerView.getViewWidth();
+                        h = mMarkerView.getViewHeight();
+                    }
+                    float value = 1 - (float)  animation.getAnimatedValue();
+                    float paddingPercent = (1 - 0.78f)*value/2;
+                    mMarkerView.setPaddingAndInvalidate((int)(w*paddingPercent),(int)(h*paddingPercent),(int)(w*paddingPercent), (int)(h*paddingPercent));
+                }
+            }).start();
             mLayout.animate().alpha(0).setDuration(350).withEndAction(new Runnable() {
                 @Override
                 public void run() {

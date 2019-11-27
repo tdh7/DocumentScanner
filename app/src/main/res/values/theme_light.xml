@@ -16,10 +16,14 @@
     <item name="light_is_666">#666</item>
     <item name="light_is_111">#111</item>
     <item name="light_is_eee">#eee</item>
+    <item name="background_border_color_inactive">#eee</item>
+    <item name="background_border_color_active">#ccc</item>
     <item name="light_is_11000000">#10000000</item>
     <item name="light_is_22000000">#22000000</item>
     <item name="light_is_33000000">#33000000</item>
     <item name="divider_color">#22666666</item>
     <item name="choosing_button_color">#07000000</item>
+    <item name="menu_icon_tint">#555</item>
+    <item name="lightIsDarkFocus">@color/darkFocus</item>
 </style>
 </resources>

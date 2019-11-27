@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -35,6 +33,7 @@ import com.tdh7.documentscanner.model.DocumentInfo;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.dialog.LoadingScreenDialog;
+import com.tdh7.documentscanner.ui.editor.DocumentEditorFragment;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
 import com.tdh7.documentscanner.util.ScanConstants;
 import com.tdh7.documentscanner.util.ScanUtils;
@@ -45,6 +44,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import butterknife.BindDimen;
@@ -261,10 +262,12 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
                         if(fileArray!= null)
                         for (File f : fileArray) {
                             if (f.isFile() && f.getName().endsWith(".pdf")) {
-                                list.add(new DocumentInfo(f.getName(), f.getAbsolutePath(),
-                                        Util.humanReadableByteCount(f.length()) + " • " +
-                                                DateUtils.formatDateTime(getContext(), f.lastModified(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
-                                                        DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_WEEKDAY)));
+                                long t = f.lastModified();
+                                DocumentInfo info = new DocumentInfo(f.getName(),f.getAbsolutePath());
+                                info.setFileSize(f.length());
+                                info.setLastModified(f.lastModified());
+                                info.buildDescription(getContext());
+                                list.add(info);
                             }
                         }
                     }
@@ -275,6 +278,14 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
                 mSwipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
+                        Collections.sort(list,new Comparator<DocumentAdapter.DocumentObject>() {
+                            @Override
+                            public int compare(DocumentAdapter.DocumentObject o1, DocumentAdapter.DocumentObject o2) {
+                                if(o1 instanceof DocumentInfo && o2 instanceof DocumentInfo)
+                                    return (int) - (((DocumentInfo) o1).getLastModified() - ((DocumentInfo) o2).getLastModified());
+                                return 0;
+                            }
+                        });
                         list.add(0, new CountSectionItem("Scanned Documents",list.size()));
                         mAdapter.setData(list);
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -392,7 +403,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
 
     @Override
     public void onActionClick() {
-        presentFragment(EditorFragment.newInstance(mCropEdgeQuickView.getBitmapDocument()));
+        presentFragment(DocumentEditorFragment.newInstance().add(mCropEdgeQuickView.getBitmapDocument()));
         mCropEdgeQuickView.detach();
     }
     LoadingScreenDialog mLoadingDialog = null;

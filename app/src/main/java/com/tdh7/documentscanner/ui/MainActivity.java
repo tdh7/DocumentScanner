@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.ThemeStyle;
+import com.tdh7.documentscanner.controller.session.DocumentSession;
 import com.tdh7.documentscanner.ui.fragments.MainFragment;
 import com.tdh7.documentscanner.ui.permissionscreen.PermissionActivity;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
@@ -45,6 +46,8 @@ public class MainActivity extends PermissionActivity {
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR );
         mMainFragment = MainFragment.newInstance();
         initNavigation(savedInstanceState,R.id.container,mMainFragment);
+
+        DocumentSession.init();
         boolean hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
         if(hasPermission) {
             new Handler().post(this::openCamera);
@@ -84,6 +87,7 @@ public class MainActivity extends PermissionActivity {
     @Override
     protected void onDestroy() {
         ThemeStyle.destroy();
+        DocumentSession.destroy();
         super.onDestroy();
     }
 

@@ -87,4 +87,7 @@ dependencies {
     // Photo View
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
+
+    // SnapHelper
+    implementation 'com.github.takusemba:multisnaprecyclerview:2.0.1'
 }

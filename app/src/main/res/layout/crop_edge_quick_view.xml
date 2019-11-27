@@ -8,8 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:clickable="true"
     android:focusable="true"
-    tools:background="@android:color/black"
-    android:clipChildren="false"
+    android:background="#121212"
     tools:context="com.tdh7.documentscanner.ui.scansession.WorkingSessionFragment">
     <View
         android:id="@+id/status_bar"
@@ -124,7 +123,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Choose zone to scan"
-        android:textColor="@android:color/white"
+        android:textColor="?titleColor"
         android:gravity="center"
         android:textStyle="bold"
         android:textSize="16sp"
