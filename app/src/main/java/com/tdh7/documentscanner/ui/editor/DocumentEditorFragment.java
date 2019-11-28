@@ -120,6 +120,7 @@ public class DocumentEditorFragment extends NavigationFragment implements Functi
     @BindDimen(R.dimen.dp_unit)
     float mDpUnit;
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -129,14 +130,20 @@ public class DocumentEditorFragment extends NavigationFragment implements Functi
         mFunctionMenuAdapter.attachToRecyclerView(mMenuRecyclerView);
         mFunctionMenuAdapter.setMenuItemClickListener(this);
 
-        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.add_book,R.string.add_pages,R.string.rotate_note));
-        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.rescan,R.string.retake,R.string.rotate_note));
-        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_rotate_left_black_24dp,R.string.rotate,R.string.rotate_note));
-        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_photo_filter_black_24dp,R.string.filter,R.string.rotate_note));
-        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.crop,R.string.cropper,R.string.rotate_note));
-      //  mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.rearrange,R.string.rearrange,R.string.rotate_note));
-      //  mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.aspect,R.string.ratio_aspect,R.string.rotate_note));
-      //  mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.trash,R.string.delete,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.add_book,R.string.add_pages,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.rescan,R.string.retake,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_rotate_left_black_24dp,R.string.rotate,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_photo_filter_black_24dp,R.string.filter,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.crop,R.string.cropper,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.rearrange,R.string.rearrange,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.aspect,R.string.ratio_aspect,R.string.rotate_note));
+        //mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.trash,R.string.delete,R.string.rotate_note));
+
+        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_photo_black_24dp,R.string.original,R.string.original_description));
+        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_photo_filter_black_24dp,R.string.magic_color,R.string.magic_color_description));
+        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_color_lens_black_24dp,R.string.gray_scale,R.string.gray_scale_description));
+        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_wb_auto_black_24dp,R.string.b_and_w,R.string.b_and_w_description));
+        mFunctionList.add(new FunctionMenuAdapter.MenuItem(R.drawable.ic_rotate_right_black_24dp,R.string.rotate,R.string.rotate_right_description));
         mFunctionMenuAdapter.setData(mFunctionList);
 
         mPhotoViewAdapter = new PhotoViewAdapter();
@@ -145,12 +152,13 @@ public class DocumentEditorFragment extends NavigationFragment implements Functi
         mViewPager.setPageTransformer(new ViewPager2.PageTransformer() {
             @Override
             public void transformPage(@NonNull View page, float position) {
-                page.setTranslationY(Math.abs(position) * 50);
+                page.setTranslationY(Math.abs(position) * 50*mDpUnit);
             }
         });
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                mCurrentItem = position;
                 mPageNote.setText(getResources().getString(R.string.page_x_of_n,position+1,mPhotoViewAdapter.getItemCount()));
             }
         });
@@ -321,6 +329,7 @@ public class DocumentEditorFragment extends NavigationFragment implements Functi
         });
     }
 
+    private int mCurrentItem = 0;
 
     @Override
     public boolean isWhiteTheme(boolean current) {
@@ -344,16 +353,73 @@ public class DocumentEditorFragment extends NavigationFragment implements Functi
 
     @Override
     public void onMenuItemClick(FunctionMenuAdapter.MenuItem item, int position) {
+        int current = mCurrentItem;
+        if(current<0||current>mPhotoViewAdapter.getItemCount()) return;
+        BitmapDocument document = mDocumentSession.get(current);
+        if(document==null) return;
         switch (item.mTitleRes) {
             case R.string.add_pages:
                 break;
             case R.string.retake:
                 break;
             case R.string.rotate:
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        postShowLoading();
+                        document.applyTempFilterOrRotate(BitmapDocument.ACTION_ROTATE);
+                        postHideLoading();
+                        mRoot.postDelayed(() ->
+                        mPhotoViewAdapter.notifyItemChanged(current),125);
+                    }
+                });
+
                 break;
             case R.string.filter:
                 break;
             case R.string.cropper:
+                break;
+            case R.string.original:
+                document.applyTempFilterOrRotate(BitmapDocument.FILTER_NONE);
+                mPhotoViewAdapter.notifyItemChanged(current);
+                break;
+            case R.string.magic_color:
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        postShowLoading();
+                        document.applyTempFilterOrRotate(BitmapDocument.FILTER_MAGIC);
+
+                        postHideLoading();
+                        mRoot.postDelayed(() ->
+                                mPhotoViewAdapter.notifyItemChanged(current),125);
+                    }
+                });
+                break;
+            case R.string.gray_scale:
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        postShowLoading();
+                        document.applyTempFilterOrRotate(BitmapDocument.FILTER_GRAY_SCALE);
+                        postHideLoading();
+                        mRoot.postDelayed(() ->
+                                mPhotoViewAdapter.notifyItemChanged(current),125);
+                    }
+                });
+                break;
+            case R.string.b_and_w:
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        postShowLoading();
+                        document.applyTempFilterOrRotate(BitmapDocument.FILTER_BnW);
+                        postHideLoading();
+                        mRoot.postDelayed(() ->
+                                mPhotoViewAdapter.notifyItemChanged(current),125);
+                    }
+                });
+                mPhotoViewAdapter.notifyItemChanged(current);
                 break;
         }
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ứng dụng quét tài liệu</string>
+    <string name="app_name">Document Scanner</string>
     <string name="action_about">Thông tin</string>
     <string name="action_exit">Thoát</string>
     <string name="about_content">Môn: Quản lý dự án phần mềm\nNhóm: 10\nHọ tên: Nguyễn Văn Bình\nMSSV: 1412049\n\nPhần mềm hỗ trợ quét tài liệu từ hình ảnh chụp từ camera hoặc từ hình ảnh có sẵn trong thư viện ảnh. Phần mềm sẽ tự động nhận dạng vùng tài liệu, trong một số trường hợp không tự nhận dạng được thì có thể điều chỉnh bằng tay. Sau khi quét tài liệu xong, cho phép lưu ảnh ra file pdf và mở bằng ứng dụng đọc pdf có sẵn trong máy.</string>
@@ -78,4 +78,13 @@
     <string name="option">Options</string>
     <string name="ratio_aspect">Ratio aspect</string>
     <string name="rearrange">Rearrange</string>
+    <string name="original">Original</string>
+    <string name="magic_color">Magic Color</string>
+    <string name="gray_scale">Gray Scale</string>
+    <string name="b_and_w">B and W</string>
+    <string name="original_description">Original image</string>
+    <string name="magic_color_description">Apply the magic color filter</string>
+    <string name="gray_scale_description">Apply gray scale filter</string>
+    <string name="b_and_w_description">Apply Black White Filter</string>
+    <string name="rotate_right_description">Rotate 90 degrees clockwise</string>
 </resources>

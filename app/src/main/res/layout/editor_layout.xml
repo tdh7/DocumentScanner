@@ -23,7 +23,7 @@
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/ic_photo_black_24dp"
             android:singleLine="true"
-            android:text="Original"
+            android:text="@string/original"
             android:textSize="14sp"
             android:textAllCaps="false"
 
@@ -37,7 +37,7 @@
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/ic_photo_filter_black_24dp"
             android:singleLine="true"
-            android:text="Magic color"
+            android:text="@string/magic_color"
             android:textSize="14sp"
             android:textAllCaps="false"
             android:textColor="?light_is_000"  />
@@ -50,7 +50,7 @@
             android:background="@android:color/transparent"
             android:drawableTop="@drawable/ic_color_lens_black_24dp"
             android:singleLine="true"
-            android:text="Gray Mode"
+            android:text="@string/gray_scale"
             android:textSize="14sp"
             android:textAllCaps="false"
             android:textColor="?light_is_000"  />
@@ -65,7 +65,7 @@
             android:singleLine="true"
             android:textSize="14sp"
             android:textAllCaps="false"
-            android:text="B and W"
+            android:text="@string/b_and_w"
             android:textColor="?light_is_000" />
     </LinearLayout>
     <View

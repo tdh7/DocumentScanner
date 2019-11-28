@@ -10,8 +10,8 @@ android {
         applicationId "com.tdh7.documentscanner"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 3
-        versionName "1.1.1"
+        versionCode 4
+        versionName "1.5.1"
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true

@@ -137,4 +137,8 @@ public class DocumentSession {
 
         return buildMessage;
     }
+
+    public BitmapDocument get(int current) {
+        return mDocuments.get(current);
+    }
 }
