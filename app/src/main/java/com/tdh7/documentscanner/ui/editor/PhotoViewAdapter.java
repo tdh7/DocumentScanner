@@ -67,9 +67,9 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewAdapter.Phot
         public PhotoHolder(@NonNull View itemView) {
             super(itemView);
             mPhotoView = (PhotoView) itemView;
-            /*mPhotoView.setMinimumScale(1);
-            mPhotoView.setMediumScale(1.75f);
-            mPhotoView.setScale(1);;*/
+            mPhotoView.setMinimumScale(0.85f);
+            mPhotoView.setMediumScale(1f);
+            mPhotoView.setScale(0.85f);
             mPhotoView.setOnClickListener(this);
         }
         public void bind(BitmapDocument document) {
@@ -78,9 +78,7 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewAdapter.Phot
                 mPhotoView.setImageBitmap(document.mTempBitmap);
             else mPhotoView.setImageBitmap(document.mDocumentBitmap);
 
-      /*      if(mPhotoView.getScale()!=0.85f)
-            mPhotoView.setScale(0.85f,true);
-            else mPhotoView.setScale(0.85f,false);*/
+            mPhotoView.setScale(0.85f,false);
         }
 
         @Override

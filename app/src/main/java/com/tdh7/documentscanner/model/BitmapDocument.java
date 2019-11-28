@@ -57,12 +57,15 @@ public class BitmapDocument {
                 break;
             case FILTER_MAGIC:
                 mTempBitmap = ScanUtils.getMagicColorBitmap(mDocumentBitmap);
+                mRequestRotateAngle = mRotateAngle;
                 break;
             case FILTER_GRAY_SCALE:
                 mTempBitmap = ScanUtils.getGrayBitmap(mDocumentBitmap);
+                mRequestRotateAngle = mRotateAngle;
                 break;
             case FILTER_BnW:
                 mTempBitmap = ScanUtils.getBWBitmap(mDocumentBitmap);
+                mRequestRotateAngle = mRotateAngle;
                 break;
             case ACTION_ROTATE:
                 mRotateAngle+=90;

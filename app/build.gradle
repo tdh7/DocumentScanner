@@ -10,8 +10,8 @@ android {
         applicationId "com.tdh7.documentscanner"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 4
-        versionName "1.5.1"
+        versionCode 5
+        versionName "1.5.2"
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
@@ -85,8 +85,8 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.4.2'
 
     // Photo View
-    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation 'androidx.exifinterface:exifinterface:1.1.0'
 
     // SnapHelper
     implementation 'com.github.takusemba:multisnaprecyclerview:2.0.1'

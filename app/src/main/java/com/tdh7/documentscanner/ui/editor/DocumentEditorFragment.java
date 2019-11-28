@@ -274,8 +274,11 @@ public class DocumentEditorFragment extends NavigationFragment implements Functi
                     mRoot.postDelayed(() -> {
                         mDocumentSession.addAll(list);
                         refreshData();
-                        if(mPhotoViewAdapter.getItemCount()!=0)
-                        mViewPager.setCurrentItem(mPhotoViewAdapter.getItemCount()-1);
+                        if(mPhotoViewAdapter.getItemCount()!=0) {
+                            mCurrentItem = mPhotoViewAdapter.getItemCount() - 1;
+                            mPageNote.setText(getResources().getString(R.string.page_x_of_n,mCurrentItem+1,mPhotoViewAdapter.getItemCount()));
+                            mViewPager.setCurrentItem(mPhotoViewAdapter.getItemCount() - 1);
+                        }
                     },300);
                 }
                 mRawBitmapDocuments.clear();
