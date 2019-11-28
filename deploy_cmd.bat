@@ -1,3 +1,0 @@
-call gradlew assembleRelease
-call pip install requests
-call deploy.py --release.dir=app/build/outputs/apk/release --app.name="Document Scanner" --dropbox.token=Jq9LeS-qYuAAAAAAAAAAL2mgWHrGbyIMfjoeNtQPE-kM8cog1pXLIo0YMyFb_mxl --dropbox.folder=release --changelog.file=CHANGELOG --template.file=TEMPLATE --zapier.hook=https://hooks.zapier.com/hooks/catch/6105311/o4q8ldz/ --email.to=trung17dinhle@gmail.com
