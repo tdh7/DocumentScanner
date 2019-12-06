@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#5DAC81</color>
+    <color name="colorPrimaryDark">#4F916D</color>
+    <color name="colorAccent">#5DAC81</color>
+    <color name="windowBackground">#1C1C1C</color>
+    <color name="colorButtonNormal">#FFFFFB</color>
+    <color name="textColorPrimary">#FFFFFB</color>
+    <color name="textColorPrimaryInverse">#1C1C1C</color>
+    <color name="overlay">#AA1C1C1C</color>
+    <color name="divider">#333333</color>
+    <color name="filterBackground">#338c8c8c</color>
+    <color name="roundedColorOfImage">#33000000</color>
+    <color name="rounded_border">#ff8f8f8f</color>
+    <color name="toolbar_background">#fff2f2f2</color>
+    <color name="gallery_toolbar_background">#fff2f2f2</color>
+    <color name="gallery_album_divider_color">#ff2a2a2a</color>
+    <color name="gallery_imgv_placeholder_gradient_end">#f2f2f2</color>
+    <color name="gallery_imgv_placeholder_gradient_center">#cccccc</color>
+    <color name="gallery_imgv_placeholder_gradient_start">#a6a6a6</color>
+    <color name="edit_text_sticker_background">#33000000</color>
+    <color name="share_press_color">#555DAC81</color>
+    <color name="splashBackground">#ccffff</color>
+    <color name="splashTextColor">#FF4081</color>
+</resources>

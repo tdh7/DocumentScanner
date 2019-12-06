@@ -1,0 +1,130 @@
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_gravity="top"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@id/ic_switch"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_switch_trap"/>
+
+        </FrameLayout>
+
+        <!--<FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@id/ic_flash"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_flash_off_trap"/>
+
+        </FrameLayout>-->
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@id/ic_capture_record"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_capture_trap"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@id/ic_filter"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_filter_trap"/>
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25">
+
+            <ImageView
+                android:id="@id/ic_camera_tool"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_camera_tool_trap"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@id/show_hide_tool_box"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="bottom|left"
+        android:clickable="true"
+        android:text="@string/hide"
+        android:visibility="gone"
+        android:background="@drawable/rounded_shape_container"
+        />
+
+    <TextView
+        android:id="@id/clear_tool_box"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="bottom|right"
+        android:clickable="true"
+        android:text="@string/clear"
+        android:visibility="gone"
+        android:background="@drawable/rounded_shape_container"
+        />
+
+    <ImageView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:src="@drawable/capture_button_trap"
+        android:clickable="true"
+        android:id="@id/btnAction"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="15dp" />
+
+</FrameLayout>

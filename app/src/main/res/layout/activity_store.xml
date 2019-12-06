@@ -1,0 +1,64 @@
+<android.support.v4.widget.DrawerLayout
+    android:id="@id/gallery_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@id/gallery_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/gallery_toolbar_background"
+            android:minHeight="?actionBarSize"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@id/store_back_button"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/btn_gallery_effect_back"/>
+
+                <TextView
+                    android:id="@id/store_title"
+                    android:layout_toRightOf="@id/store_back_button"
+                    android:layout_toEndOf="@id/store_back_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Store"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!-- This will be replaced with detail fragment or grid fragment -->
+            <FrameLayout
+                android:id="@id/store_intent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </FrameLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

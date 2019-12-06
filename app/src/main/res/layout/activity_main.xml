@@ -1,0 +1,97 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".presentation.uis.activities.MainActivity">
+
+    <FrameLayout
+        android:id="@id/camera_top_container"
+        android:layout_width="match_parent"
+        android:layout_height="480dp"
+        android:layout_centerInParent="true">
+
+        <FrameLayout
+            android:id="@id/camera_top_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@id/filter_list_fragment"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_height="100dp"/>
+
+            <FrameLayout
+                android:id="@id/tool_fragment"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_height="100dp"/>
+
+            <FrameLayout
+                android:id="@id/quantity_tool"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_above="@id/tool_fragment"
+                android:layout_alignParentLeft="true">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:id="@id/quantity_text"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:visibility="gone"
+                        android:text="18"/>
+                    <nahuy.fithcmus.magiccam.presentation.uis.customs.views.VerticalSeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:max="36"
+                        android:id="@id/quantity_seek"
+                        android:splitTrack="false"
+                        android:visibility="gone"
+                        android:thumb="@drawable/custom_seek_bar_indicator"/>
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@id/color_tool"
+                android:layout_width="50dp"
+                android:layout_above="@id/tool_fragment"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true">
+                <com.rtugeek.android.colorseekbar.ColorSeekBar
+                    android:id="@id/color_seek"
+                    android:layout_width="match_parent"
+                    app:colorSeeds="@array/material_colors"
+                    app:isVertical="true"
+                    app:barHeight="10dp"
+                    android:layout_marginTop="50dp"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@id/camera_bottom_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

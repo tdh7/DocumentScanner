@@ -1,0 +1,83 @@
+<android.support.v4.widget.DrawerLayout
+    android:id="@id/gallery_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@id/gallery_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/gallery_toolbar_background"
+            android:minHeight="?actionBarSize"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@id/gallery_back_button"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/btn_gallery_effect_back"/>
+
+                <TextView
+                    android:id="@id/gallery_album_name"
+                    android:layout_toRightOf="@id/gallery_back_button"
+                    android:layout_toEndOf="@id/gallery_back_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@id/gallery_switch_mode"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_toStartOf="@id/gallery_choose_album"
+                    android:layout_toLeftOf="@id/gallery_choose_album"
+                    android:src="@drawable/btn_gallery_detail_mode"/>
+
+                <ImageView
+                    android:id="@id/gallery_choose_album"
+                    android:layout_width="50dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="50dp"
+                    android:src="@drawable/btn_gallery_choose_album"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <!-- This will be replaced with detail fragment or grid fragment -->
+        <FrameLayout
+            android:id="@id/gallery_intent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+    </LinearLayout>'
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@id/gallery_album_list"
+        android:layout_gravity="end"
+        android:layout_width="300dp"
+        android:background="@color/gallery_toolbar_background"
+        android:fitsSystemWindows="true"
+        android:layout_height="match_parent" />
+
+</android.support.v4.widget.DrawerLayout>

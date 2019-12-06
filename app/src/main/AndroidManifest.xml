@@ -1,0 +1,46 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="nahuy.fithcmus.magiccam">
+
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="25" />
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="true"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/NoActionBarAppTheme">
+        <activity android:name=".presentation.uis.activities.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".presentation.uis.activities.NavigateActivity" />
+        <activity android:name=".presentation.uis.activities.MainActivity" />
+        <activity android:name=".presentation.uis.activities.EditVideoActivity"/>
+        <activity android:name=".presentation.uis.activities.EditPhotoActivity"/>
+        <activity android:name=".presentation.uis.activities.SaveAndShareItemActivity"/>
+        <activity android:name=".presentation.uis.activities.GalleryActivity"/>
+        <activity android:name=".presentation.uis.activities.StoreActivity"/>
+        <!--
+        <activity android:name=".view.activity.GalleryActivity" />
+        <activity android:name=".view.activity.EditPhotoActivity"/>
+        <activity android:name=".view.activity.SaveAndShareItemActivity"/>-->
+    </application>
+
+</manifest>

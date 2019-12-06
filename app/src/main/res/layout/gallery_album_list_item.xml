@@ -1,0 +1,22 @@
+<LinearLayout
+    android:id="@id/gallery_album_container"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@id/gallery_album_cover"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:id="@id/gallery_album_name_in_list"
+        android:layout_marginLeft="10dp"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|left"/>
+
+</LinearLayout>

@@ -1,0 +1,119 @@
+<resources>
+    <item name="settings_list" type="id" />
+    <item name="settings_item_default" type="id" />
+    <item name="settings_item_text" type="id" />
+    <item name="settings_item_text2" type="id" />
+    <item name="settings_item_radio" type="id" />
+    <item name="settings_item_toggle" type="id" />
+    <item name="bottom_navigate" type="id" />
+    <item name="btnAction" type="id" />
+    <item name="btnCapture" type="id" />
+    <item name="button16_9" type="id" />
+    <item name="button1_1" type="id" />
+    <item name="button3_4" type="id" />
+    <item name="button4_3" type="id" />
+    <item name="button9_16" type="id" />
+    <item name="buttonCircle" type="id" />
+    <item name="buttonCropBack" type="id" />
+    <item name="buttonCustom" type="id" />
+    <item name="buttonDone" type="id" />
+    <item name="buttonFitImage" type="id" />
+    <item name="buttonFree" type="id" />
+    <item name="buttonRotateLeft" type="id" />
+    <item name="buttonRotateRight" type="id" />
+    <item name="buttonShowCircleButCropAsSquare" type="id" />
+    <item name="cameraFilter_spinner" type="id" />
+    <item name="cameraPreview_afl" type="id" />
+    <item name="camera_bottom_fragment" type="id" />
+    <item name="camera_surfaceView" type="id" />
+    <item name="camera_top_container" type="id" />
+    <item name="camera_top_fragment" type="id" />
+    <item name="cropImageView" type="id" />
+    <item name="edit_adjustment_bottom_seek_bar" type="id" />
+    <item name="edit_adjustment_bottom_title" type="id" />
+    <item name="edit_adjustment_top" type="id" />
+    <item name="edit_adjustment_top_seek_bar" type="id" />
+    <item name="edit_back" type="id" />
+    <item name="edit_bottom_navigate" type="id" />
+    <item name="edit_bottom_navigate_color" type="id" />
+    <item name="edit_bottom_navigate_container" type="id" />
+    <item name="edit_bottom_navigate_exposure" type="id" />
+    <item name="edit_bottom_navigate_sharpen" type="id" />
+    <item name="edit_cancel" type="id" />
+    <item name="edit_main_picture" type="id" />
+    <item name="edit_save" type="id" />
+    <item name="edit_sticker_text_view" type="id" />
+    <item name="edit_sticker_view" type="id" />
+    <item name="edit_text_view" type="id" />
+    <item name="edit_top_gl_view" type="id" />
+    <item name="filter_image" type="id" />
+    <item name="filter_list" type="id" />
+    <item name="filter_list_fragment" type="id" />
+    <item name="gallery_album_container" type="id" />
+    <item name="gallery_album_cover" type="id" />
+    <item name="gallery_album_list" type="id" />
+    <item name="gallery_album_name" type="id" />
+    <item name="gallery_album_name_in_list" type="id" />
+    <item name="gallery_back" type="id" />
+    <item name="gallery_back_button" type="id" />
+    <item name="gallery_choose_album" type="id" />
+    <item name="gallery_detail_mode_container" type="id" />
+    <item name="gallery_detail_mode_subinfo" type="id" />
+    <item name="gallery_detail_mode_sublist" type="id" />
+    <item name="gallery_grid_mode_container" type="id" />
+    <item name="gallery_grid_mode_imgv" type="id" />
+    <item name="gallery_intent" type="id" />
+    <item name="gallery_layout" type="id" />
+    <item name="gallery_switch_mode" type="id" />
+    <item name="gallery_title" type="id" />
+    <item name="gallery_to_camera" type="id" />
+    <item name="gallery_toolbar" type="id" />
+    <item name="gpu_image" type="id" />
+    <item name="gpu_text" type="id" />
+    <item name="ic_capture_record" type="id" />
+    <item name="ic_filter" type="id" />
+    <item name="ic_camera_tool" type="id" />
+    <item name="ic_flash" type="id" />
+    <item name="ic_switch" type="id" />
+    <item name="main_nav_image" type="id" />
+    <item name="main_nav_text" type="id" />
+    <item name="nav_image" type="id" />
+    <item name="nav_text" type="id" />
+    <item name="navigate_app_recycle" type="id" />
+    <item name="navigate_app_setting" type="id" />
+    <item name="navigate_app_store" type="id" />
+    <item name="photo_edit_bottom_fragment" type="id" />
+    <item name="photo_edit_top_fragment" type="id" />
+    <item name="share_goto_home" type="id" />
+    <item name="share_item_image" type="id" />
+    <item name="share_list_item" type="id" />
+    <item name="tab_bar" type="id" />
+    <item name="tab_layout" type="id" />
+    <item name="tmp_id1" type="id" />
+    <item name="tmp_id2" type="id" />
+    <item name="top_present_view" type="id" />
+    <item name="color_tool" type="id"/>
+    <item name="quantity_tool" type="id"/>
+    <item name="show_hide_tool_box" type="id"/>
+    <item name="tool_fragment" type="id"/>
+    <item name="quantity_text" type="id"/>
+    <item name="quantity_seek" type="id"/>
+    <item name="color_seek" type="id"/>
+    <item name="clear_tool_box" type="id"/>
+    <item name="video_trimmer" type="id"/>
+    <item name="process_video" type="id"/>
+    <item name="share_sharing" type="id"/>
+    <item name="store_back_button" type="id"/>
+    <item name="store_title" type="id"/>
+    <item name="store_intent" type="id"/>
+    <item name="store_list" type="id"/>
+    <item name="store_list_filter" type="id"/>
+    <item name="store_list_frame" type="id"/>
+    <item name="store_list_sticker" type="id"/>
+    <item name="store_list_sticker_text" type="id"/>
+    <item name="store_list_filter_holder" type="id"/>
+    <item name="store_list_frame_holder" type="id"/>
+    <item name="store_list_sticker_holder" type="id"/>
+    <item name="store_list_sticker_text_holder" type="id"/>
+    <item name="store_item_text" type="id"/>
+</resources>

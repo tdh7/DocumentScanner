@@ -1,0 +1,13 @@
+<FrameLayout android:id="@id/cameraPreview_afl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.opengl.GLSurfaceView
+        android:id="@id/camera_surfaceView"
+        android:layout_width="match_parent"
+        android:layout_gravity="top"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

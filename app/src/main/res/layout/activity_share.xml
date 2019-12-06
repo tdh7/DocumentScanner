@@ -1,0 +1,152 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@id/tmp_id1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/toolbar_background"
+        android:minHeight="?actionBarSize"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@id/gallery_back"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/ic_basic_back"/>
+
+            <TextView
+                android:id="@id/gallery_title"
+                android:layout_toRightOf="@id/gallery_back"
+                android:layout_toEndOf="@id/gallery_back"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save &amp; Share"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <TableLayout
+        android:layout_below="@id/tmp_id1"
+        android:id="@id/tmp_id2"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_column="1"
+                android:src="@drawable/ic_saved"/>
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_column="2"
+                android:layout_marginLeft="20dp"
+                android:layout_centerHorizontal="true">
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Saved"
+                        android:layout_column="1"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp">
+                    <TextView
+                        android:id="@id/edit_text_view"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="High Quality"
+                        android:layout_column="1"/>
+                </TableRow>
+            </TableLayout>
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@id/share_goto_home"
+        android:layout_below="@id/tmp_id2"
+        android:layout_centerHorizontal="true"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginLeft="14dp"
+        android:background="@drawable/rounded_share_shape_trap">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_btn_goto_home">
+
+        </ImageView>
+
+        <TextView
+            android:layout_marginLeft="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/back_to_home"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@id/share_sharing"
+        android:layout_below="@id/share_goto_home"
+        android:layout_centerHorizontal="true"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginLeft="14dp"
+        android:background="@drawable/rounded_share_shape_trap">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_share">
+
+        </ImageView>
+
+        <TextView
+            android:layout_marginLeft="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/share"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

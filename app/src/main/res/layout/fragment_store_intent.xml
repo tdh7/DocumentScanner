@@ -1,0 +1,95 @@
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Filter"/>
+        
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/store_list_filter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@id/store_list_filter_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/store_no_result" android:visibility="gone"/>
+        </FrameLayout>
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Frame"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/store_list_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@id/store_list_frame_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/store_no_result" android:visibility="gone"/>
+        </FrameLayout>
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Sticker"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/store_list_sticker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@id/store_list_sticker_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/store_no_result" android:visibility="gone"/>
+        </FrameLayout>
+ 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Sticker Text"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/store_list_sticker_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@id/store_list_sticker_text_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/store_no_result" android:visibility="gone"/>
+        </FrameLayout>
+    
+    </LinearLayout>
+</ScrollView>

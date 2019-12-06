@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MagicCam</string>
+    <string name="notify_permission_mess">You should provide all permissions to use app features</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
+    <string name="clear">Clear</string>
+    <string name="back_to_home">Back To Home</string>
+    <string name="share">Share</string>
+    <string name="store_no_result">No result found</string>
+</resources>
