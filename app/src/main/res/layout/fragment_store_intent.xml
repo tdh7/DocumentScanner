@@ -17,7 +17,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@id/store_list_filter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -38,7 +38,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@id/store_list_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -59,7 +59,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@id/store_list_sticker"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -80,7 +80,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@id/store_list_sticker_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

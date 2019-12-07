@@ -1,6 +1,6 @@
 package nahuy.fithcmus.magiccam.presentation.uis.customs.recycler_animations;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.animation.OvershootInterpolator;
 
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;

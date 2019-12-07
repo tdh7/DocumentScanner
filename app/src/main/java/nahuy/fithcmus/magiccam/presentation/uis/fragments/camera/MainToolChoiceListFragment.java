@@ -2,10 +2,10 @@ package nahuy.fithcmus.magiccam.presentation.uis.fragments.camera;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,21 +16,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nahuy.fithcmus.magiccam.R;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.GLToolCommander;
-import nahuy.fithcmus.magiccam.presentation.entities.shader_kit.effect_kit.MyGLEffectShader;
 import nahuy.fithcmus.magiccam.presentation.entities.shader_kit.tool_kit.MyToolGLShader;
 import nahuy.fithcmus.magiccam.presentation.entities.shader_kit.tool_kit.MyToolGlHeader;
-import nahuy.fithcmus.magiccam.presentation.presenters.ReadingFSHFilePresenter;
 import nahuy.fithcmus.magiccam.presentation.presenters.ToolGLHeaderPresenter;
 import nahuy.fithcmus.magiccam.presentation.uis.activities.MainActivity;
 import nahuy.fithcmus.magiccam.presentation.uis.adapters.MainToolAdapter;
-import nahuy.fithcmus.magiccam.presentation.uis.adapters.SubFilterAdapter;
 import nahuy.fithcmus.magiccam.presentation.uis.adapters.SubToolAdapter;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.decorations.RightHorizontalListDecoration;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.recycler_animations.AnimationMaker;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.ExternalToolCallback;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.FragMainInteract;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.MainContainerInterface;
-import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.SubContainerInterface;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.SubToolContainerInterface;
 
 /**

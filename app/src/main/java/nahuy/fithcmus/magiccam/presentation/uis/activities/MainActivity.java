@@ -8,35 +8,24 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PersistableBundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rtugeek.android.colorseekbar.ColorSeekBar;
 
-import net.bohush.geometricprogressview.GeometricProgressView;
-import net.bohush.geometricprogressview.TYPE;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +35,6 @@ import nahuy.fithcmus.magiccam.presentation.commanders.impl.CameraCommander;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.GLCommander;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.GlColorCommander;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.GlToolSizeCommander;
-import nahuy.fithcmus.magiccam.presentation.commanders.impl.MakeProductCommander;
 import nahuy.fithcmus.magiccam.presentation.entities.enums.CameraModeAction;
 import nahuy.fithcmus.magiccam.presentation.entities.enums.SwitchCamAction;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.ExternalToolCallback;
@@ -60,9 +48,6 @@ import nahuy.fithcmus.magiccam.presentation.uis.fragments.camera.MainBottomFragm
 import nahuy.fithcmus.magiccam.presentation.uis.fragments.camera.MainChoiceListFragment;
 import nahuy.fithcmus.magiccam.presentation.uis.fragments.camera.MainToolChoiceListFragment;
 import nahuy.fithcmus.magiccam.presentation.uis.fragments.camera.MainTopFragment;
-
-import static android.R.attr.color;
-import static android.R.attr.path;
 
 /**
  * Order of declare variable

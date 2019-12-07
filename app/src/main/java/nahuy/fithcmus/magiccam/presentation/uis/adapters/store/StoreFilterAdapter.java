@@ -2,7 +2,7 @@ package nahuy.fithcmus.magiccam.presentation.uis.adapters.store;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import nahuy.fithcmus.magiccam.R;
 import nahuy.fithcmus.magiccam.presentation.entities.shader_kit.effect_kit.MyGLEffectShader;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.StoreItemFragmentCalling;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.media.CamcorderProfile.get;
 
 /**

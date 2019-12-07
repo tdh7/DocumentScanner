@@ -1,9 +1,8 @@
 package nahuy.fithcmus.magiccam.presentation.uis.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import butterknife.ButterKnife;
 import nahuy.fithcmus.magiccam.R;

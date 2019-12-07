@@ -2,15 +2,12 @@ package nahuy.fithcmus.magiccam.presentation.uis.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -18,14 +15,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import nahuy.fithcmus.magiccam.R;
-import nahuy.fithcmus.magiccam.presentation.entities.shader_kit.MyGLShader;
 import nahuy.fithcmus.magiccam.presentation.entities.shader_kit.effect_kit.MyGLEffectShader;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.SubContainerInterface;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.CONTROL;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * Created by huy on 5/22/2017.

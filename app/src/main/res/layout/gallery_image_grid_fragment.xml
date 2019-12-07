@@ -1,4 +1,4 @@
-<android.support.v7.widget.RecyclerView android:id="@id/gallery_grid_mode_container"
+<androidx.recyclerview.widget.RecyclerView android:id="@id/gallery_grid_mode_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"

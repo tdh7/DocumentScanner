@@ -2,8 +2,8 @@ package nahuy.fithcmus.magiccam.presentation.uis.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nahuy.fithcmus.magiccam.R;
 import nahuy.fithcmus.magiccam.presentation.entities.shader_kit.tool_kit.MyToolGLShader;
-import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.SubContainerInterface;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.SubToolContainerInterface;
 
 /**

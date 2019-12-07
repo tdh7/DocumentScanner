@@ -2,9 +2,7 @@
     package="nahuy.fithcmus.magiccam">
 
 
-    <uses-sdk
-        android:minSdkVersion="21"
-        android:targetSdkVersion="25" />
+    <uses-sdk android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>

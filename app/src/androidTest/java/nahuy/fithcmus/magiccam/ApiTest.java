@@ -1,6 +1,6 @@
 package nahuy.fithcmus.magiccam;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +12,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.os.Build.VERSION_CODES.M;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
-import static okhttp3.Protocol.get;
 
 /**
  * Created by huy on 6/23/2017.

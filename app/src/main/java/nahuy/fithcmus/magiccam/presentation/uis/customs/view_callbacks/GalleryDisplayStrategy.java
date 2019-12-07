@@ -1,7 +1,7 @@
 package nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 

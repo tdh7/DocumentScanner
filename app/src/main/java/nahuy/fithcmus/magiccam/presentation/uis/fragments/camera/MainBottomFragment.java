@@ -3,9 +3,9 @@ package nahuy.fithcmus.magiccam.presentation.uis.fragments.camera;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 import nahuy.fithcmus.magiccam.R;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.BackCamCommander;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.FrontCamCommander;
@@ -30,8 +29,6 @@ import nahuy.fithcmus.magiccam.presentation.entities.enums.SwitchCamAction;
 import nahuy.fithcmus.magiccam.presentation.uis.activities.MainActivity;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.ExternalToolCallback;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.FragMainInteract;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * Created by huy on 5/19/2017.

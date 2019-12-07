@@ -1,13 +1,12 @@
 package nahuy.fithcmus.magiccam.presentation.uis.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Display;
 
 import butterknife.ButterKnife;
@@ -15,7 +14,6 @@ import nahuy.fithcmus.magiccam.R;
 import nahuy.fithcmus.magiccam.presentation.Constants;
 import nahuy.fithcmus.magiccam.presentation.commanders.callbacks.CallingAbstractCommander;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.EditGetProductCommander;
-import nahuy.fithcmus.magiccam.presentation.entities.enums.EditTopType;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.tools.BitmapUtils;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.tools.FragmentHelper;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.BottomNavigateFragmentInterface;

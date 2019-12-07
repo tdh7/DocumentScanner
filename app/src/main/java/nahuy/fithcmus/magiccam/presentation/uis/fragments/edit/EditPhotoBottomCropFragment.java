@@ -2,8 +2,8 @@ package nahuy.fithcmus.magiccam.presentation.uis.fragments.edit;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ import nahuy.fithcmus.magiccam.presentation.commanders.impl.crop.CropFreeCommand
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.crop.CropSquareCommander;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.crop.RotateLCommander;
 import nahuy.fithcmus.magiccam.presentation.commanders.impl.crop.RotateRCommander;
-import nahuy.fithcmus.magiccam.presentation.entities.enums.EditTopType;
 import nahuy.fithcmus.magiccam.presentation.uis.activities.EditPhotoActivity;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.BottomNavigateFragmentInterface;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.EditMainContainerInterface;

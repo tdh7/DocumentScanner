@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,6 @@ import nahuy.fithcmus.magiccam.R;
 import nahuy.fithcmus.magiccam.presentation.entities.MainNavItem;
 import nahuy.fithcmus.magiccam.presentation.uis.activities.GalleryActivity;
 import nahuy.fithcmus.magiccam.presentation.uis.activities.MainActivity;
-import nahuy.fithcmus.magiccam.presentation.uis.activities.NavigateActivity;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.tools.ToastHelper;
 
 import static nahuy.fithcmus.magiccam.presentation.Constants.DEBUG_MODE;

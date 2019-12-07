@@ -1,8 +1,8 @@
 package nahuy.fithcmus.magiccam.presentation.uis.customs.tools;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by nahuy on 5/24/2017.

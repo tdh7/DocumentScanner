@@ -11,15 +11,15 @@ android {
             }
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "nahuy.fithcmus.magiccam"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -36,51 +36,51 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    testImplementation 'junit:junit:4.12'
     // Optional -- Mockito framework
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.mockito:mockito-core:3.0.0'
     // Butter Knife
-    compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
-    // Glide
+    implementation 'com.jakewharton:butterknife:8.6.0'      // can't upgrade because compatible issue
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    // Glide6
     repositories {
         mavenCentral() // jcenter() works as well because it pulls from Maven Central
     }
     dependencies {
-        compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
-        compile 'com.android.support:support-v4:25.3.1'
-        annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
+        implementation 'com.github.bumptech.glide:glide:4.9.0'
+//        implementation 'com.android.support:support-v4:25.3.1'
+        annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     }
     // Tooltip library
-    compile 'com.tomergoldst.android:tooltips:1.0.6'
+    implementation 'com.tomergoldst.android:tooltips:1.0.6'
     //Sticker.
-    compile 'com.flying.xiaopo:sticker:1.6.0'
+    implementation 'com.flying.xiaopo:sticker:1.6.0'
     // PhotoView.
-    compile "com.github.chrisbanes:PhotoView:$rootProject.ext.photoViewVersion"
+    implementation "com.github.chrisbanes:PhotoView:$rootProject.ext.photoViewVersion"
     // GestureView.
-    compile 'com.alexvasilkov:gesture-views:2.2.0'
+    implementation 'com.alexvasilkov:gesture-views:2.5.2'
     // Crop View.
-    compile 'com.isseiaoki:simplecropview:1.1.4'
+    implementation 'com.isseiaoki:simplecropview:1.1.4'
     // Color seek bar
-    compile 'com.github.rtugeek:ColorSeekBar:1.4.3'
+    implementation 'com.github.rtugeek:ColorSeekBar:1.4.3'
     // Video trimmer
-    compile 'life.knowledge4:k4l-video-trimmer:1.0'
+    implementation 'life.knowledge4:k4l-video-trimmer:1.0'
     // Progress view
-    compile 'net.bohush.geometricprogressview:geometricprogressview:1.1.1'
+    implementation 'net.bohush.geometricprogressview:geometricprogressview:1.1.1'
     // Animator
-    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+    implementation 'jp.wasabeef:recyclerview-animators:2.2.6'
     // Splash Activity
-    compile 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
+    implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
     // Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     // JSON Parsing
-    compile 'com.google.code.gson:gson:2.6.1'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
 }

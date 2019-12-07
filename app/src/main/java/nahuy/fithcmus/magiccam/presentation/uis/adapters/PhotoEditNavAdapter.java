@@ -1,8 +1,6 @@
 package nahuy.fithcmus.magiccam.presentation.uis.adapters;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +12,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nahuy.fithcmus.magiccam.R;
-import nahuy.fithcmus.magiccam.presentation.commanders.impl.InvokeActivityCommander;
 import nahuy.fithcmus.magiccam.presentation.entities.EditNavItem;
-import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.BottomNavigateFragmentInterface;
 import nahuy.fithcmus.magiccam.presentation.uis.customs.view_callbacks.EditMainContainerInterface;
 
 /**

@@ -14,7 +14,7 @@
         android:background="@color/gallery_toolbar_background"
         android:src="@drawable/btn_gallery_camera"/>
 
-    <android.support.v7.widget.RecyclerView android:id="@id/gallery_detail_mode_container"
+    <androidx.recyclerview.widget.RecyclerView android:id="@id/gallery_detail_mode_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"

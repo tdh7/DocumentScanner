@@ -5,14 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import java.io.FileNotFoundException;
@@ -22,11 +20,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import nahuy.fithcmus.magiccam.R;
 import nahuy.fithcmus.magiccam.presentation.Constants;
-import nahuy.fithcmus.magiccam.presentation.presenters.ShareItemAccessObject;
-import nahuy.fithcmus.magiccam.presentation.uis.customs.decorations.RightHorizontalListDecoration;
-import nahuy.fithcmus.magiccam.presentation.uis.customs.tools.ToastHelper;
-
-import static nahuy.fithcmus.magiccam.R.string.share;
 
 /**
  * Created by huy on 3/12/2017.
