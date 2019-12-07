@@ -3,7 +3,7 @@ package nahuy.fithcmus.magiccam.data.clients.local;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.test.InstrumentationTestCase;
+//import android.test.InstrumentationTestCase;
 
 import java.io.File;
 import java.io.FileNotFoundException;

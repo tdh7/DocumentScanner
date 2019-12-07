@@ -8,7 +8,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.R.attr.id;
-import static junit.framework.Assert.assertTrue;
+//import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by huy on 6/24/2017.
