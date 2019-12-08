@@ -1,16 +1,15 @@
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".presentation.uis.activities.MainActivity">
 
     <FrameLayout
         android:id="@id/camera_top_container"
         android:layout_width="match_parent"
-        android:layout_height="480dp"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true">
 
         <FrameLayout
@@ -25,13 +24,13 @@
             <FrameLayout
                 android:id="@id/filter_list_fragment"
                 android:layout_width="match_parent"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:layout_height="100dp"/>
 
             <FrameLayout
                 android:id="@id/tool_fragment"
                 android:layout_width="match_parent"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:layout_height="100dp"/>
 
             <FrameLayout
@@ -92,6 +91,7 @@
     <FrameLayout
         android:id="@id/camera_bottom_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="150dp"
+        android:layout_gravity="bottom|center"/>
 
-</LinearLayout>
+</FrameLayout>

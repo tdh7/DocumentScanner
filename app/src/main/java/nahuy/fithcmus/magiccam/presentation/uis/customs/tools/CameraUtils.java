@@ -44,9 +44,9 @@ public class CameraUtils {
                     ppsfv.width + "x" + ppsfv.height);
         }
 
-        //for (Camera.Size size : parms.getSupportedPreviewSizes()) {
-        //    Log.d(TAG, "supported: " + size.width + "x" + size.height);
-        //}
+        for (Camera.Size size : parms.getSupportedPreviewSizes()) {
+            Log.d(TAG, "supported: " + size.width + "x" + size.height);
+        }
 
         for (Camera.Size size : parms.getSupportedPreviewSizes()) {
             if (size.width == width && size.height == height) {
