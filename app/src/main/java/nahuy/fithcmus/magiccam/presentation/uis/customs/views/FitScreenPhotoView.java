@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-import uk.co.senab.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoView;
 
 /**
  * Created by huy on 3/1/2017.
