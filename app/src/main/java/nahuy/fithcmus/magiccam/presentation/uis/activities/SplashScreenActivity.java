@@ -50,9 +50,9 @@ public class SplashScreenActivity extends AwesomeSplash {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // mp.stop();
+                finish();
                 startActivity(new Intent(SplashScreenActivity.this, NavigateActivity.class));
-                Toast.makeText(a, "Finish loading", Toast.LENGTH_LONG).show();
+                overridePendingTransition(0, 0);
             }
         }, LONG_DURATION);
     }
