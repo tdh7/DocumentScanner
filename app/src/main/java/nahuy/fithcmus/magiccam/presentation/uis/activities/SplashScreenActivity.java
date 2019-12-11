@@ -19,7 +19,7 @@ import nahuy.fithcmus.magiccam.R;
 
 public class SplashScreenActivity extends AwesomeSplash {
 
-    private static final int LONG_DURATION = 2000;
+    private static final int LONG_DURATION = 1250;
     private static final int NORMAL_DURATION = 100;
     private static final int TEXT_SIZE = 36;
 
@@ -45,7 +45,6 @@ public class SplashScreenActivity extends AwesomeSplash {
 
     @Override
     public void animationsFinished() {
-        final Activity a = this;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

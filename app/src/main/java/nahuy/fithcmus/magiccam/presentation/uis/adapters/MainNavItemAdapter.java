@@ -2,6 +2,7 @@ package nahuy.fithcmus.magiccam.presentation.uis.adapters;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +49,10 @@ public class MainNavItemAdapter extends RecyclerView.Adapter<MainNavItemAdapter.
         }
     }
 
+    @NonNull
     @Override
-    public MainNavItemAdapter.MainNavItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.main_nav_item, null);
+    public MainNavItemAdapter.MainNavItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.main_nav_item, parent,false);
 
         return new MainNavItemAdapter.MainNavItemViewHolder(v);
     }

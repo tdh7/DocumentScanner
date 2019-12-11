@@ -1,42 +1,51 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <View
+        android:id="@+id/wall"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#9CDBFF"/>
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/nav_logo"/>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp">
-
-        <ImageView
-            android:id="@id/navigate_app_setting"
-            android:layout_gravity="center|left"
-            android:layout_margin="40dp"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:scaleType="fitEnd"
-            android:background="@drawable/ic_nav_settings_trap" />
-
-        <ImageView
-            android:id="@id/navigate_app_store"
-            android:layout_gravity="center|right"
-            android:layout_marginRight="40dp"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:scaleType="fitEnd"
-            android:background="@drawable/ic_nav_store_trap" />
-
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/nav_logo"
+        app:layout_constraintTop_toTopOf="@id/wall"
+        app:layout_constraintBottom_toBottomOf="@id/wall"/>
+    <ImageView
+        android:id="@id/navigate_app_setting"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_nav_settings_trap"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintStart_toEndOf="@id/navigate_app_store"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+        android:id="@id/navigate_app_store"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_nav_store_trap"
+        app:layout_constraintTop_toTopOf="@id/navigate_app_setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/navigate_app_setting"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@id/navigate_app_recycle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/wall"
+        app:layout_constraintBottom_toTopOf="@id/navigate_app_setting"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
