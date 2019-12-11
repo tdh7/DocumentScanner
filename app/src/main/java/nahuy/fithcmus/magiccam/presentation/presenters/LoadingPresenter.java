@@ -146,7 +146,7 @@ public class LoadingPresenter {
     public ArrayList<MainNavItem> getMainNavItems() {
         ArrayList<MainNavItem> items = new ArrayList<>();
 
-        items.add(new MainNavItem("Camera", R.drawable.ic_nav_camera_trap, MainActivity.class));
+        items.add(new MainNavItem("Camera", R.drawable.ic_linked_camera_black_24dp, MainActivity.class));
         items.add(new MainNavItem("Gallery", R.drawable.ic_nav_gallery_trap, GalleryActivity.class));
 
         return items;
