@@ -29,5 +29,6 @@
     <item name="choosing_button_color">#10FFFFFF</item>
     <item name="menu_icon_tint">#AAA</item>
     <item name="lightIsDarkFocus">#e8edd7</item>
+    <item name="documentIcon">@drawable/doc2</item>
 </style>
 </resources>

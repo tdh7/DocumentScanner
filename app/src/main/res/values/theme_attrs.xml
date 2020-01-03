@@ -24,4 +24,5 @@
     <attr name="choosing_button_color" format="color"/>
     <attr name="menu_icon_tint" format="color"/>
     <attr name="lightIsDarkFocus" format="color"/>
+    <attr name="documentIcon" format="reference"/>
 </resources>

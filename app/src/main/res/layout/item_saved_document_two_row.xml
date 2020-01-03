@@ -28,7 +28,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
         android:padding="12dp"
-        android:src="@drawable/document_round_big"
+        android:src="?documentIcon"
         android:background="@drawable/doc_round"
         />
 
