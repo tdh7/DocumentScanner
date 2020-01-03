@@ -1,5 +1,6 @@
 package com.tdh7.documentscanner.ui.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,15 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
+import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
+import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.dialog.OptionBottomSheet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 
 public class PreferencesFragment extends NavigationFragment {
 
@@ -98,26 +102,42 @@ public class PreferencesFragment extends NavigationFragment {
         public boolean onOptionClicked(int optionID) {
             if (mFragment != null && mFragment.mCurrentOption != optionID && mFragment.getActivity() != null) {
                 mFragment.mCurrentOption = optionID;
+                MainActivity activity = (MainActivity) mFragment.getActivity();
                 switch (optionID) {
                     case R.string.follow_system:
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                        mFragment.getActivity().recreate();
+                        //activity.InitTheme();
+                        //mFragment.getActivity().recreate();
+                        activity.setTheme(R.style.ThemeDark);
+
                         detach();
                         break;
                     case R.string.light:
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        mFragment.getActivity().recreate();
+                        //mFragment.getActivity().recreate();
+                        //activity.InitTheme();
+                        activity.setTheme(R.style.ThemeDark);
+
                         detach();
                         break;
                     case R.string.dark:
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        mFragment.getActivity().recreate();
+                        //mFragment.getActivity().recreate();
+                        activity.setTheme(R.style.ThemeDark);
+                        //activity.InitTheme();
                         detach();
                         break;
                 }
             }
             return true;
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Toasty.normal(App.getInstance(),"new config received").show();
     }
 
     private int mCurrentOption;

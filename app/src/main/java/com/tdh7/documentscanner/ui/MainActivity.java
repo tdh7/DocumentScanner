@@ -41,7 +41,7 @@ public class MainActivity extends PermissionActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ThemeStyle.init(this, applySystemTheme());
+        InitTheme();
         setContentView(R.layout.main_activity_layout);
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR );
         mMainFragment = MainFragment.newInstance();
@@ -53,6 +53,10 @@ public class MainActivity extends PermissionActivity {
             new Handler().post(this::openCamera);
         }
 
+    }
+
+    public void InitTheme() {
+        ThemeStyle.init(this, applySystemTheme());
     }
 
     public boolean applySystemTheme() {
