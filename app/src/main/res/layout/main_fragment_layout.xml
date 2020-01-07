@@ -8,11 +8,12 @@
     android:id="@+id/drawer_parent"
     android:focusable="true"
     android:clickable="true">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/constraint_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?backColor">
+        android:background="?backColor"
+        app:layoutDescription="@xml/motion_main_screen">
         <com.tdh7.documentscanner.ui.widget.ScaleSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="0dp"
@@ -50,6 +51,18 @@
             android:clickable="true"
             android:focusable="true"
             android:visibility="gone"/>
+        <FrameLayout
+            android:id="@+id/status_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+            <View
+                android:id="@+id/status_bar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+        </FrameLayout>
         <View
             android:id="@+id/app_bar"
             android:layout_width="0dp"
@@ -58,7 +71,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_parent"
             android:layout_marginTop="8dp"
             android:background="?app_bar_background"/>
         <ImageView
@@ -164,19 +177,20 @@
             app:layout_constraintBottom_toBottomOf="@id/app_bar"
             tools:visibility="gone"
             />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
     <FrameLayout
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="?backColor"
         >
-        <fragment
-            android:id="@+id/fragment_drawer"
-            android:name="com.tdh7.documentscanner.ui.fragments.NavigationDrawerFragment"
-            android:layout_width="match_parent"
-            tools:layout="@layout/navigation_drawer"
-            android:layout_height="match_parent" />
+  <!--      <fragment
+        android:id="@+id/fragment_drawer"
+        android:name="com.tdh7.documentscanner.ui.fragments.NavigationDrawerFragment"
+        android:layout_width="match_parent"
+        tools:layout="@layout/navigation_drawer"
+        android:layout_height="match_parent" />-->
 
     </FrameLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

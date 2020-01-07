@@ -3,26 +3,24 @@ package com.tdh7.documentscanner.ui.scansession;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.ldt.navigation.NavigationFragment;
 import com.ldt.navigation.PresentStyle;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.filter.FilterImageView;
 import com.tdh7.documentscanner.controller.filter.canvas.CanvasFilter;
 import com.tdh7.documentscanner.controller.filter.canvas.QuickViewCanvasFilter;
+import com.tdh7.documentscanner.ui.fragments.BaseFragment;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fotoapparat.result.BitmapPhoto;
 
-public class WorkingSessionFragment extends NavigationFragment {
+public class WorkingSessionFragment extends BaseFragment {
     private static final String TAG = "WorkingSessionFragment";
 
     @BindDimen(R.dimen.dp_unit)
@@ -49,10 +47,9 @@ public class WorkingSessionFragment extends NavigationFragment {
 
     private Object mBitmapObject;
 
-    @Nullable
     @Override
-    protected View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.crop_edge_quick_view,container,false);
+    public int contentLayout() {
+        return R.layout.crop_edge_quick_view;
     }
 
     @Override

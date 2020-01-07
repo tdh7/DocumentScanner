@@ -177,4 +177,12 @@
         android:text="@string/about"
         android:gravity="center_vertical"
         />
+    <include
+        app:layout_constraintBottom_toBottomOf="parent"
+        layout="@layout/preview_flag_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

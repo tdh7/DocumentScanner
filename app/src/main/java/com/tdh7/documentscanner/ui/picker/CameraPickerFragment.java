@@ -29,6 +29,7 @@ import com.tdh7.documentscanner.controller.picker.EdgeFrameProcessor;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.editor.DocumentEditorFragment;
+import com.tdh7.documentscanner.ui.fragments.BaseFragment;
 import com.tdh7.documentscanner.ui.fragments.EditorFragment;
 import com.tdh7.documentscanner.ui.widget.CaptureIconView;
 import com.tdh7.documentscanner.ui.widget.MarkerView;
@@ -61,7 +62,7 @@ import static io.fotoapparat.selector.LensPositionSelectorsKt.back;
 import static io.fotoapparat.selector.PreviewFpsRangeSelectorsKt.highestFps;
 import static io.fotoapparat.selector.SensorSensitivitySelectorsKt.highestSensorSensitivity;
 
-public class CameraPickerFragment extends NavigationFragment implements CaptureIconView.CaptureListener, CropEdgeQuickView.QuickViewCallback {
+public class CameraPickerFragment extends BaseFragment implements CaptureIconView.CaptureListener, CropEdgeQuickView.QuickViewCallback {
     private static final String TAG = "CameraPickerFragment";
     public static final int PERMISSION_CAMERA = 1;
 
@@ -133,10 +134,9 @@ public class CameraPickerFragment extends NavigationFragment implements CaptureI
         void onCameraPickerComplete(int status, ArrayList<RawBitmapDocument> result);
     }
 
-    @Nullable
     @Override
-    protected View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.camera_picker_layout,container,false);
+    public int contentLayout() {
+        return R.layout.camera_picker_layout;
     }
 
     private View mPermissionView = null;

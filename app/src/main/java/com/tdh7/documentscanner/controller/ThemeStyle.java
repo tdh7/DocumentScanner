@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 
+import com.tdh7.documentscanner.R;
+
 import java.util.ArrayList;
 
 public class ThemeStyle {
@@ -50,7 +52,7 @@ public class ThemeStyle {
             if (!light) {
                 mActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                mActivity.getWindow().setNavigationBarColor(Color.BLACK);
+                mActivity.getWindow().setNavigationBarColor(mActivity.getResources().getColor(R.color.backColorDark));
             } else {
                 mActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 mActivity.getWindow().setNavigationBarColor(Color.WHITE);

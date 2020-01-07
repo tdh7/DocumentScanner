@@ -33,4 +33,5 @@
     <color name="search_hint_dark">#9AA0A5</color>
     <color name="app_bar_icon_tint_light">#626262</color>
     <color name="app_bar_icon_tint_dark">#9AA0A5</color>
+    <color name="backColorDark">#121212</color>
 </resources>

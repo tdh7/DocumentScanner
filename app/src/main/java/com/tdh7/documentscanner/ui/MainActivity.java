@@ -11,9 +11,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
+import com.ldt.navigation.FragNavigationController;
+import com.ldt.navigation.NavigationFragment;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.controller.ThemeStyle;
 import com.tdh7.documentscanner.controller.session.DocumentSession;
+import com.tdh7.documentscanner.ui.fragments.BaseFragment;
 import com.tdh7.documentscanner.ui.fragments.MainFragment;
 import com.tdh7.documentscanner.ui.permissionscreen.PermissionActivity;
 import com.tdh7.documentscanner.ui.picker.CameraPickerFragment;
@@ -30,6 +33,36 @@ public class MainActivity extends PermissionActivity {
     public static final String ACTION_OPEN_CAMERA_PICKER = PACKAGE_NAME + "open_camera_picker";
     public static final String ACTION_OPEN_MEDIA_PICKER =    PACKAGE_NAME + "open_media_picker";
     MainFragment mMainFragment;
+
+    public MainFragment getMainFragment() {
+    return mMainFragment;
+    }
+
+    @Override
+    public void setTheme(int resId) {
+        super.setTheme(resId);
+        if(R.style.ThemeDark== resId) {
+            getWindow().setBackgroundDrawableResource(R.color.backColorDark);
+            ThemeStyle.init(this,false);
+        } else {
+            getWindow().setBackgroundDrawableResource(android.R.color.white);
+            ThemeStyle.init(this,true);
+        }
+        updateNavigationControllerTheme();
+    }
+
+    public void updateNavigationControllerTheme() {
+        if(mMainFragment==null) return;
+        FragNavigationController controller = mMainFragment.getNavigationController();
+        if(controller!=null) {
+            int count = controller.getFragmentCount();
+            for(int i =0;i<count;i++) {
+                BaseFragment fragment = (BaseFragment) controller.getFragmentAt(i);
+                if(fragment!=null) fragment.updateTheme();
+            }
+        }
+    }
+
     public void openSystemCamera() {
         if(mMainFragment!=null) mMainFragment.openSystemCamera();
     }

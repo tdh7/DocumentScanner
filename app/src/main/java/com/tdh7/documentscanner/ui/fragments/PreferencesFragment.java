@@ -24,16 +24,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class PreferencesFragment extends NavigationFragment {
+public class PreferencesFragment extends BaseFragment {
 
     public static PreferencesFragment newInstance() {
         return new PreferencesFragment();
     }
 
-    @Nullable
     @Override
-    protected View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.pref_layout,container,false);
+    public int contentLayout() {
+        return R.layout.pref_layout;
     }
 
  /*   @Override
@@ -108,7 +107,7 @@ public class PreferencesFragment extends NavigationFragment {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                         //activity.InitTheme();
                         //mFragment.getActivity().recreate();
-                        activity.setTheme(R.style.ThemeDark);
+                        activity.setTheme(R.style.ThemeLight);
 
                         detach();
                         break;
@@ -116,7 +115,7 @@ public class PreferencesFragment extends NavigationFragment {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                         //mFragment.getActivity().recreate();
                         //activity.InitTheme();
-                        activity.setTheme(R.style.ThemeDark);
+                        activity.setTheme(R.style.ThemeLight);
 
                         detach();
                         break;

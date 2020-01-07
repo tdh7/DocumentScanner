@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,7 +58,7 @@ import es.dmoral.toasty.Toasty;
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_OPEN_MEDIA_PICKER;
 import static com.tdh7.documentscanner.ui.MainActivity.ACTION_PERMISSION_START_UP;
 
-public class MainFragment extends NavigationFragment implements CropEdgeQuickView.QuickViewActionCallback {
+public class MainFragment extends BaseFragment implements CropEdgeQuickView.QuickViewActionCallback {
     public static final String TAG ="MainFragment";
 
     public static final int REQUEST_CODE_START_SCAN_BY_LIBRARY = 10;
@@ -88,7 +89,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
 
     @Override
     public void onSetStatusBarMargin(int value) {
-        ((ViewGroup.MarginLayoutParams)mAppBar.getLayoutParams()).topMargin = value;
+        ((ViewGroup.MarginLayoutParams)mStatusBar.getLayoutParams()).height = value;
     }
 
     @BindView(R.id.constraint_parent)
@@ -97,6 +98,7 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
     @BindView(R.id.app_bar) View mAppBar;
     @BindView(R.id.app_icon) View mAppLogoIcon;
     @BindView(R.id.app_title) View mAppTitle;
+    @BindView(R.id.status_bar) View mStatusBar;
 
     public static MainFragment newInstance() {
 
@@ -111,18 +113,16 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         mDrawerParent.closeDrawer(GravityCompat.START);
     }
 
-    @Nullable
     @Override
-    protected View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.main_fragment_layout,container,false);
+    public int contentLayout() {
+        return R.layout.main_fragment_layout;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        mDrawerParent.setScrimColor(0x33000000);
-        mDrawerParent.setDrawerElevation(mOneDp * 2f);
+        initDrawer();
         mAdapter = new DocumentAdapter();
         mAdapter.setParentFragment(this);
         mRecyclerView.setAdapter(mAdapter);
@@ -141,6 +141,13 @@ public class MainFragment extends NavigationFragment implements CropEdgeQuickVie
         }
     }
 
+    @BindView(R.id.drawer)
+    FrameLayout mDrawer;
+    private void initDrawer() {
+        mDrawerParent.setScrimColor(0x33000000);
+        mDrawerParent.setDrawerElevation(mOneDp * 2f);
+        getChildFragmentManager().beginTransaction().replace(R.id.drawer,new NavigationDrawerFragment()).commit();
+    }
     @BindView(R.id.search_hint) View mSearchHint;
     @BindView(R.id.pick_camera_icon) View mCameraIcon;
     @BindView(R.id.pick_photo_icon) View mAddImageIcon;

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="16dp">
+    <TextView
+    android:id="@+id/switch_one"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginEnd="32dp"
+    android:textColor="?scanned_document_color"
+    android:textStyle="bold"
+    android:textSize="14sp"
+    android:paddingStart="8dp"
+    android:text="Switch One"
+    android:gravity="center"
+    android:layout_marginTop="16dp"
+    android:background="@drawable/background_focus_navigation_section"
+    />
+    <TextView
+        android:id="@+id/switch_two"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginEnd="32dp"
+        android:textColor="?scanned_document_color"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:paddingStart="8dp"
+        android:text="Switch Two"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/background_focus_navigation_section"
+        />
+    <TextView
+        android:id="@+id/switch_three"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginEnd="32dp"
+        android:textColor="?scanned_document_color"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:paddingStart="8dp"
+        android:text="Switch Three"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/background_focus_navigation_section"
+        />
+    <TextView
+        android:id="@+id/switch_four"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginEnd="32dp"
+        android:textColor="?scanned_document_color"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:paddingStart="8dp"
+        android:text="Switch Four"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/background_focus_navigation_section"
+        />
+</LinearLayout>

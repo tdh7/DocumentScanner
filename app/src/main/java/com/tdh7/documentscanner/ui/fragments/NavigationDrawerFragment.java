@@ -8,15 +8,20 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.Fragment;
 
 import com.ldt.navigation.NavigationFragment;
+import com.tdh7.documentscanner.App;
 import com.tdh7.documentscanner.R;
 import com.tdh7.documentscanner.ui.MainActivity;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 
 public class NavigationDrawerFragment extends Fragment {
 
@@ -61,5 +66,30 @@ public class NavigationDrawerFragment extends Fragment {
             mAppIcon.postDelayed((() ->
                     ((MainActivity) activity).presentFragment(PreferencesFragment.newInstance())),350);
         }
+    }
+
+    private  MainFragment getMainFragment() {
+        return ((MainActivity) Objects.requireNonNull(getActivity())).getMainFragment();
+    }
+
+    @OnClick(R.id.switch_one)
+    void switchOne() {
+        if(getActivity()!=null)
+        getActivity().setTheme(R.style.ThemeDark);
+    }
+
+    @OnClick(R.id.switch_two)
+    void switchTwo() {
+        if(getActivity()!=null)
+            getActivity().setTheme(R.style.ThemeLight);
+    }
+    @OnClick(R.id.switch_three)
+    void switchThree() {
+
+    }
+
+    @OnClick(R.id.switch_four)
+    void switchFour() {
+
     }
 }

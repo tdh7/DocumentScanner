@@ -24,6 +24,7 @@ import com.tdh7.documentscanner.model.BitmapDocument;
 import com.tdh7.documentscanner.model.RawBitmapDocument;
 import com.tdh7.documentscanner.ui.MainActivity;
 import com.tdh7.documentscanner.ui.dialog.LoadingScreenDialog;
+import com.tdh7.documentscanner.ui.fragments.BaseFragment;
 import com.tdh7.documentscanner.ui.permissionscreen.AskingDialog;
 import com.tdh7.documentscanner.util.ScanConstants;
 import com.tdh7.documentscanner.util.ScanUtils;
@@ -39,7 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 
-public class DocumentEditorFragment extends NavigationFragment implements FunctionMenuAdapter.MenuItemClickListener, PhotoViewAdapter.PhotoClickListener {
+public class DocumentEditorFragment extends BaseFragment implements FunctionMenuAdapter.MenuItemClickListener, PhotoViewAdapter.PhotoClickListener {
 
     @BindView(R.id.status_bar)
     View mStatusBar;
@@ -113,8 +114,8 @@ public class DocumentEditorFragment extends NavigationFragment implements Functi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.multipage_editor_layout, container,false);
+    public int contentLayout() {
+        return R.layout.multipage_editor_layout;
     }
 
     @BindDimen(R.dimen.dp_unit)

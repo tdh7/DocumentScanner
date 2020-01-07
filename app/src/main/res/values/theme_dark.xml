@@ -2,10 +2,10 @@
 <style name="ThemeDark" parent="ThemeDark.Base"/>
 <style name="ThemeDark.Base" parent="BaseTheme">
     <item name="android:windowBackground">#000100</item>
-    <item name="android:navigationBarColor">@android:color/black</item>
+    <item name="android:navigationBarColor">@color/backColorDark</item>
     <item name="android:windowLightStatusBar">false</item>
     <item name="android:windowLightNavigationBar">false</item>
-    <item name="backColor">#121212</item>
+    <item name="backColor">@color/backColorDark</item>
     <item name="titleColor">@color/tomato</item>
     <item name="search_hint_color">@color/search_hint_dark</item>
     <item name="app_bar_background">@drawable/background_app_bar_dark</item>

@@ -45,7 +45,7 @@ import java.util.Date;
 
 import es.dmoral.toasty.Toasty;
 
-public class EditorFragment extends NavigationFragment {
+public class EditorFragment extends BaseFragment {
 
     private View view;
     private View mStatusBar;
@@ -78,9 +78,8 @@ public class EditorFragment extends NavigationFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container) {
-        view = inflater.inflate(R.layout.editor_layout, null);
-        return view;
+    public int contentLayout() {
+        return R.layout.editor_layout;
     }
 
     @Override
